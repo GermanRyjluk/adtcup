@@ -11,6 +11,8 @@ import {
 import { colors } from './shared/colors';
 
 import { Home } from './screens/home.jsx';
+import { Login } from './screens/login';
+import { Register } from './screens/register';
 
 export default function App() {
   return (
