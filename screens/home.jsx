@@ -7,9 +7,9 @@ import {
   ImageBackground,
 } from 'react-native';
 
-import { colors } from '../shared/colors';
-
 import { Header } from '../components/header';
+
+import { colors } from '../shared/colors';
 
 import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
 
@@ -18,7 +18,7 @@ const events = [
   { name: 'FOSSACESIA', photo: 'null', date: '25-8-2023', price: '€10' },
   { name: 'SANTVIT', photo: 'null', date: '24-8-2023', price: '€20' },
 ];
-export const Home = () => {
+export default function Home({ navigation }) {
   return (
     <>
       <Header />
@@ -50,7 +50,7 @@ export const Home = () => {
       </TouchableOpacity>
     </>
   );
-};
+}
 const styles = StyleSheet.create({
   infoBox: {
     backgroundColor: colors.primary,

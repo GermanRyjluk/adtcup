@@ -31,7 +31,7 @@ const secondaryColor = colors.secondary;
 
 // const Stack = createStackNavigator();
 
-export const Login = () => {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -183,7 +183,7 @@ export const Login = () => {
       </ScrollView>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   backGround: {

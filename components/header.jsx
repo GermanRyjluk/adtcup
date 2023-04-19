@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { colors } from '../shared/colors';
 
@@ -6,6 +7,14 @@ import Icon from 'react-native-vector-icons/Octicons'; //Gear (gear) and Hamburg
 import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
 
 export const Header = () => {
+  const navigation = useNavigation();
+  const openDrawer = () => {
+    navigation.openDrawer();
+  };
+  const closeDrawer = () => {
+    navigation.closeDrawer();
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -23,7 +32,7 @@ export const Header = () => {
           <Icon1 name="trophy" size={25} color={colors.secondary} />
           <Text style={styles.text}>CUP</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => openDrawer()}>
           <Icon name="three-bars" size={25} color={colors.secondary} />
         </TouchableOpacity>
       </View>

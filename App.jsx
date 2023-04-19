@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import {
   Platform,
@@ -10,13 +11,12 @@ import {
 
 import { colors } from './shared/colors';
 
-import { Home } from './screens/home.jsx';
-import { Login } from './screens/login';
-import { Register } from './screens/register';
+import { NavigationContainer } from '@react-navigation/native';
+import { Drawer } from './navigation/homeDrawer';
 
 export default function App() {
   return (
-    <>
+    <NavigationContainer>
       <SafeAreaView
         style={{
           flex: 1,
@@ -24,10 +24,10 @@ export default function App() {
           // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         }}
       >
-        <Home />
+        <Drawer />
       </SafeAreaView>
       <StatusBar backgroundColor={colors.primary} />
-    </>
+    </NavigationContainer>
   );
 }
 
