@@ -1,21 +1,34 @@
-import { View, Text } from 'react-native';
 import React from 'react';
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from '../screens/home';
-import Login from '../screens/login';
+import Settings from '../screens/settings';
+import CustomDrawer from '../components/customDrawer';
 
-const drawer = createDrawerNavigator();
+import { colors } from '../shared/colors';
 
-export const Drawer = () => {
+const Drawer = createDrawerNavigator();
+
+export default function HomeDrawer() {
   return (
-    <drawer.Navigator
+    <Drawer.Navigator
       useLegacyImplementation={true}
       initialRouteName="Home"
-      screenOptions={{ headerShown: false }}
+      drawerContent={(props) => <CustomDrawer {...props} />}
+      screenOptions={{
+        headerShown: false,
+        drawerPosition: 'right',
+        drawerActiveBackgroundColor: colors.primary,
+        drawerActiveTintColor: '#fff',
+        drawerInactiveTintColor: '#333',
+        drawerLabelStyle: {
+          // fontFamily: 'Roboto-Medium',
+          fontSize: 15,
+        },
+      }}
     >
-      <drawer.Screen name="Home" component={Home} />
-      <drawer.Screen name="Login" component={Login} />
-    </drawer.Navigator>
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Settings" component={Settings} />
+    </Drawer.Navigator>
   );
-};
+}

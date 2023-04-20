@@ -12,22 +12,26 @@ import {
 import { colors } from './shared/colors';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { Drawer } from './navigation/homeDrawer';
+import MainStack from './navigation/mainStack';
+
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <SafeAreaView
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StatusBar backgroundColor={colors.primary} />
+        {/* <SafeAreaView
         style={{
           flex: 1,
-          backgroundColor: colors.bg,
+          backgroundColor: colors.primary,
           // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         }}
-      >
-        <Drawer />
-      </SafeAreaView>
-      <StatusBar backgroundColor={colors.primary} />
-    </NavigationContainer>
+      > */}
+        <MainStack />
+        {/* </SafeAreaView> */}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 

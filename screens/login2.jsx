@@ -1,3 +1,4 @@
+import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -13,6 +14,16 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
+// import { Svg, Path } from 'react-native-svg';
+
+// import { auth } from '../../firebase/firebase';
+// import { signInWithEmailAndPassword } from 'firebase/auth';
+
+import { Register } from './register';
+
+// import { fonts } from '../../shared/fonts.js';
+// const font = fonts;
+
 import { colors } from '../shared/colors';
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
@@ -22,6 +33,50 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  const user = { user: 'user' };
+
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       navigation.navigate('mainDrawer', {
+  //         userData: auth.currentUser?.email,
+  //       });
+  //     }
+  //   });
+
+  //   return () => {
+  //     unsubscribe;
+  //   };
+  // }, []);
+
+  const UserLogIn = () => {
+    // if (email.length != 0 && password.length != 0) {
+    //   signInWithEmailAndPassword(auth, email, password)
+    //     .then((UserCredential) => {
+    //       navigation.navigate('mainDrawer', {
+    //         userData: UserCredential.user.email,
+    //       });
+    //     })
+    //     .catch((e) => {
+    //       if (e.code == 'auth/user-not-found') {
+    //         Alert.alert('Email incorretto o inesistente');
+    //       }
+    //       if (e.code == 'auth/wrong-password') {
+    //         Alert.alert('Password errata');
+    //       }
+    //     });
+    // } else {
+    //   Alert.alert('Inserire credenziali');
+    // }
+  };
+
+  const pressHandlerRegister = () => {
+    navigation.navigate('Register');
+  };
+  const pressHandlerSkip = () => {
+    // navigation.navigate('mainDrawer', { userData: '' });
+  };
+
   const passwordIsVisible = () => {
     if (!isPasswordVisible) {
       return <Icon2 name="eye" size={20} color="white" />;
@@ -29,7 +84,6 @@ export default function Login({ navigation }) {
       return <Icon2 name="eye-slash" size={20} color="white" />;
     }
   };
-
   return (
     <KeyboardAwareScrollView style={styles.backGround}>
       <ScrollView style={styles.backGround}>
@@ -99,15 +153,10 @@ export default function Login({ navigation }) {
               </View>
             </View>
             <View style={styles.midTwo}>
-              <TouchableOpacity
-                style={styles.loginButton}
-                onPress={() => {
-                  navigation.navigate('EventInfo');
-                }}
-              >
+              <TouchableOpacity style={styles.loginButton} onPress={UserLogIn}>
                 <Text style={styles.buttonText}>ACCEDI</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={pressHandlerSkip}>
                 <Text style={styles.loginSubTextSkip}>Salta</Text>
               </TouchableOpacity>
             </View>
@@ -115,11 +164,7 @@ export default function Login({ navigation }) {
           <View style={styles.bottomZone}>
             <View style={{ flexDirection: 'row', marginBottom: 2 }}>
               <Text style={styles.loginSubText}>Non hai un'account?</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Register');
-                }}
-              >
+              <TouchableOpacity onPress={pressHandlerRegister}>
                 <Text style={styles.loginSubTextLink}>Registrati</Text>
               </TouchableOpacity>
             </View>

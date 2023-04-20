@@ -13,20 +13,25 @@ import { colors } from '../shared/colors';
 
 import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
 
+// import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 const events = [
   { name: 'LANGIAN', photo: 'null', date: '23-8-2023', price: '€15' },
   { name: 'FOSSACESIA', photo: 'null', date: '25-8-2023', price: '€10' },
   { name: 'SANTVIT', photo: 'null', date: '24-8-2023', price: '€20' },
 ];
 export default function Home({ navigation }) {
+  const handlePress = () => {
+    navigation.navigate('Login');
+  };
   return (
     <>
       <Header />
 
-      <ScrollView style={{ flex: 1, padding: 30 }}>
+      <ScrollView style={{ flex: 1, padding: 30, backgroundColor: colors.bg }}>
         {events.map((data, i) => {
           return (
-            <TouchableOpacity key={i}>
+            <TouchableOpacity key={i} onPress={() => handlePress()}>
               <View style={styles.eventCard}>
                 <Text style={styles.text}>{data.name}</Text>
                 <View style={styles.eventButton}>
@@ -40,7 +45,10 @@ export default function Home({ navigation }) {
         })}
         <View style={{ width: '100%', height: 90 }} />
       </ScrollView>
-      <TouchableOpacity style={styles.infoBox}>
+      <TouchableOpacity
+        style={styles.infoBox}
+        onPress={() => navigation.navigate('Intro')}
+      >
         <View style={styles.trophyBox}>
           <Icon1 name="trophy" size={50} color={colors.secondary} />
         </View>

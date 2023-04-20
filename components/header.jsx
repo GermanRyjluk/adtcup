@@ -18,9 +18,9 @@ export const Header = () => {
   return (
     <>
       <View style={styles.container}>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Icon name="gear" size={25} color={colors.secondary} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View
           style={{
             flexDirection: 'row',
@@ -32,7 +32,10 @@ export const Header = () => {
           <Icon1 name="trophy" size={25} color={colors.secondary} />
           <Text style={styles.text}>CUP</Text>
         </View>
-        <TouchableOpacity onPress={() => openDrawer()}>
+        <TouchableOpacity
+          style={{ position: 'absolute', right: 30 }}
+          onPress={() => openDrawer()}
+        >
           <Icon name="three-bars" size={25} color={colors.secondary} />
         </TouchableOpacity>
       </View>
@@ -44,12 +47,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.primary,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingHorizontal: 20,
     height: 58,
     width: '100%',
-    borderColor: 'black',
-    borderBottomWidth: 3,
   },
   text: {
     color: colors.secondary,

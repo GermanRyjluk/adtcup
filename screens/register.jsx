@@ -24,9 +24,9 @@ import { colors } from '../shared/colors';
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
-export const Register = () => {
+export default function Register({ navigation }) {
   const pressHandler = () => {
-    // navigation.goBack();
+    navigation.goBack();
   };
 
   const [newUserEmail, setUserEmail] = useState('');
@@ -36,6 +36,7 @@ export const Register = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const UserRegistration = async () => {
+    navigation.navigate('EventInfo');
     // if (newUserPassword.length >= 6) {
     //   if (
     //     newUserPassword.length != 0 &&
@@ -77,27 +78,6 @@ export const Register = () => {
     //         }
     //         console.log(e.code);
     //       }
-    //       // fetch("http://192.168.1.10:80/app/login/register.php", {
-    //       //   method: "POST",
-    //       //   headers: {
-    //       //     Accept: "application/json",
-    //       //     "Content-Type": "application/json",
-    //       //   },
-    //       //   body: JSON.stringify({
-    //       //     userName: newUserName,
-    //       //     email: newUserEmail,
-    //       //     password: newUserPassword,
-    //       //   }),
-    //       // })
-    //       //   .then((response) => response.json())
-    //       //   .then((responseJson) => {
-    //       //     if (responseJson == "success") {
-    //       //       navigation.navigate("mainDrawer", { role: "user" });
-    //       //     }
-    //       //   })
-    //       //   .catch((error) => {
-    //       //     console.error(error);
-    //       //   });
     //     } else {
     //       Alert.alert('Le password non coincidono');
     //     }
@@ -220,7 +200,7 @@ export const Register = () => {
       {/* <StatusBar style="light" /> */}
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
   backGround: {
     flex: 1,
