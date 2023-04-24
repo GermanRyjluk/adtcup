@@ -21,15 +21,15 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <StatusBar backgroundColor={colors.primary} />
-        {/* <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: colors.primary,
-          // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-        }}
-      > */}
-        <MainStack />
-        {/* </SafeAreaView> */}
+        <SafeAreaView
+          style={{
+            flex: 1,
+            backgroundColor: colors.primary,
+            // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+          }}
+        >
+          <MainStack />
+        </SafeAreaView>
       </NavigationContainer>
     </SafeAreaProvider>
   );

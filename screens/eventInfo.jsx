@@ -1,8 +1,15 @@
-import { StyleSheet, Text, View, ScrollView, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Dimensions,
+  Button,
+} from 'react-native';
 import React from 'react';
 import { colors } from '../shared/colors';
 
-export default function EventInfo() {
+export default function EventInfo({ navigation }) {
   const { width, height } = Dimensions.get('window');
   return (
     <ScrollView
@@ -35,6 +42,12 @@ export default function EventInfo() {
         }}
       >
         <Text style={styles.text}>Event info 2</Text>
+        <Button
+          title="Gioca"
+          onPress={() => {
+            navigation.navigate('OnGameTabs');
+          }}
+        />
       </View>
     </ScrollView>
   );

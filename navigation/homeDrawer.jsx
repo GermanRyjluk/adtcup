@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from '../screens/home';
 import Settings from '../screens/settings';
 import CustomDrawer from '../components/customDrawer';
+import OnGameTabs from './onGameTabs';
 
 import { colors } from '../shared/colors';
 
@@ -29,6 +30,7 @@ export default function HomeDrawer() {
     >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Settings" component={Settings} />
+      <Drawer.Screen name="OnGame" component={OnGameTabs} />
     </Drawer.Navigator>
   );
 }

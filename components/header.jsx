@@ -11,9 +11,9 @@ export const Header = () => {
   const openDrawer = () => {
     navigation.openDrawer();
   };
-  const closeDrawer = () => {
-    navigation.closeDrawer();
-  };
+  // const closeDrawer = () => {
+  //   navigation.closeDrawer();
+  // };
 
   return (
     <>

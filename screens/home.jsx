@@ -91,13 +91,13 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'black',
     //Ios Shadow
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 12,
+    // },
+    // shadowOpacity: 0.58,
+    // shadowRadius: 16.0,
     //Android Shadow
     elevation: 24,
   },
