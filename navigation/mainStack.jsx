@@ -11,6 +11,7 @@ import Register from '../screens/register';
 import EventInfo from '../screens/eventInfo';
 import EventStatus from '../screens/eventStatus';
 import OnGameTabs from './onGameTabs';
+import QrReader from '../screens/qrReader';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ export default function MainStack() {
       <Stack.Screen name="EventInfo" component={EventInfo} />
       <Stack.Screen name="EventStatus" component={EventStatus} />
       <Stack.Screen name="OnGameTabs" component={OnGameTabs} />
+      <Stack.Screen name="Qr" component={QrReader} />
     </Stack.Navigator>
   );
 }

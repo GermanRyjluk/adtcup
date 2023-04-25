@@ -33,8 +33,8 @@ export default function MyTabs({ navigation }) {
                 width: 70,
                 borderRadius: 35,
                 backgroundColor: colors.bg,
-                borderWidth: focused ? 3 : 0,
-                borderColor: 'black',
+                borderWidth: 4,
+                borderColor: focused ? 'black' : colors.primary,
               }}
             >
               <View>
@@ -69,8 +69,8 @@ export default function MyTabs({ navigation }) {
                 width: 90,
                 borderRadius: 45,
                 backgroundColor: colors.secondary,
-                borderWidth: focused ? 3 : 0,
-                borderColor: 'black',
+                borderWidth: 4,
+                borderColor: focused ? 'black' : colors.primary,
               }}
             >
               <View>
@@ -105,8 +105,8 @@ export default function MyTabs({ navigation }) {
                 width: 70,
                 borderRadius: 35,
                 backgroundColor: colors.bg,
-                borderWidth: focused ? 3 : 0,
-                borderColor: 'black',
+                borderWidth: 4,
+                borderColor: focused ? 'black' : colors.primary,
               }}
             >
               <View>
