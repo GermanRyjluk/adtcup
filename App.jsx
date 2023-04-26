@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from 'react-native';
 
 import { colors } from './shared/colors';
@@ -15,6 +16,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import MainStack from './navigation/mainStack';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import Onboarding from 'react-native-onboarding-swiper';
 
 export default function App() {
   return (
@@ -28,7 +31,30 @@ export default function App() {
             // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
           }}
         >
-          <MainStack />
+          <Onboarding
+            pages={[
+              {
+                backgroundColor: '#fff',
+                image: <Image source={require('./assets/icon.png')} />,
+                title: '1',
+                subtitle: 'Done with React Native Onboarding Swiper',
+              },
+              {
+                backgroundColor: '#fff',
+                image: <Image source={require('./assets/icon.png')} />,
+                title: '2',
+                subtitle: 'Done with React Native Onboarding Swiper',
+              },
+              {
+                backgroundColor: '#fff',
+                image: <Image source={require('./assets/icon.png')} />,
+                title: '3',
+                subtitle: 'Done with React Native Onboarding Swiper',
+              },
+            ]}
+            // onDone={<MainStack />}
+          />
+          {/* <MainStack /> */}
         </SafeAreaView>
       </NavigationContainer>
     </SafeAreaProvider>
