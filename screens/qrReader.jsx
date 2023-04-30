@@ -42,7 +42,7 @@ export default function App({ navigation, route }) {
   const handleBarcodeScanned = ({ data }) => {
     setScanned(true);
     setCode(data);
-    // navigation.navigate('scannedInfo', { bookingID: data, eventID: eventID });
+    navigation.navigate('Quiz', { quiz: data });
     console.log('Scanned: ' + data);
   };
 

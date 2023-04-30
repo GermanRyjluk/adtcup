@@ -6,7 +6,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { colors } from '../shared/colors';
 
 const Tab = createBottomTabNavigator();
-export default function MyTabs({ navigation }) {
+export default function MyTabs({ navigation, route }) {
   return (
     <Tab.Navigator
       initialRouteName="Quiz"

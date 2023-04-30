@@ -8,11 +8,11 @@ import {
   Alert,
   TextInput,
 } from 'react-native';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-// import { auth, db } from '../../firebase/firebase.js';
-// import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-// import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
@@ -26,7 +26,7 @@ const secondaryColor = colors.secondary;
 
 export default function Register({ navigation }) {
   const pressHandler = () => {
-    navigation.goBack();
+    navigation.navigate('Login');
   };
 
   const [newUserEmail, setUserEmail] = useState('');
@@ -36,57 +36,60 @@ export default function Register({ navigation }) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const UserRegistration = async () => {
-    navigation.navigate('EventInfo');
-    // if (newUserPassword.length >= 6) {
-    //   if (
-    //     newUserPassword.length != 0 &&
-    //     newUserName.length != 0 &&
-    //     newUserEmail.length != 0
-    //   ) {
-    //     if (newUserConfirmPassword === newUserPassword) {
-    //       try {
-    //         await createUserWithEmailAndPassword(
-    //           auth,
-    //           newUserEmail,
-    //           newUserPassword
-    //         )
-    //           .then((userCredential) => {
-    //             const docRef = setDoc(
-    //               doc(db, 'users/' + userCredential.user.uid),
-    //               {
-    //                 name: newUserName,
-    //                 email: newUserEmail,
-    //               }
-    //             );
-    //             console.log(docRef.name);
-    //             navigation.navigate('mainDrawer', {
-    //               userData: userCredential.user.email,
-    //             });
-    //           })
-    //           .catch((e) => console.log(e));
-    //         await updateProfile(auth.currentUser, {
-    //           displayName: newUserName,
-    //           // phoneNumber : 'asdasdasd',
-    //           // photoURL: 'asdasdas',
-    //         }).catch((err) => console.log(err));
-    //       } catch (e) {
-    //         if (e.code == 'auth/email-already-in-use') {
-    //           Alert.alert('Email già in uso');
-    //         }
-    //         if (e.code == 'auth/invalid-email') {
-    //           Alert.alert('Formato email errato (esempio@mail.com)');
-    //         }
-    //         console.log(e.code);
-    //       }
-    //     } else {
-    //       Alert.alert('Le password non coincidono');
-    //     }
-    //   } else {
-    //     Alert.alert('Inserire credenziali');
-    //   }
-    // } else {
-    //   Alert.alert('Password troppo corta');
-    // }
+    if (newUserPassword.length >= 6) {
+      if (
+        newUserPassword.length != 0 &&
+        newUserName.length != 0 &&
+        newUserEmail.length != 0
+      ) {
+        if (newUserConfirmPassword === newUserPassword) {
+          try {
+            await createUserWithEmailAndPassword(
+              auth,
+              newUserEmail,
+              newUserPassword
+            )
+              .then((userCredential) => {
+                const docRef = setDoc(
+                  doc(db, 'users/' + userCredential.user.uid),
+                  {
+                    name: newUserName,
+                    email: newUserEmail,
+                    photoURL:
+                      'https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg',
+                    currentQuiz: '1',
+                  }
+                );
+                console.log(docRef.name); //undefined :(
+                // navigation.navigate('Home', {
+                //   userData: userCredential.user.email,
+                // });
+              })
+              .catch((e) => console.log(e));
+            await updateProfile(auth.currentUser, {
+              displayName: newUserName,
+              // phoneNumber : 'asdasdasd',
+              photoURL:
+                'https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg',
+            }).catch((err) => console.log(err));
+          } catch (e) {
+            if (e.code == 'auth/email-already-in-use') {
+              Alert.alert('Email già in uso');
+            }
+            if (e.code == 'auth/invalid-email') {
+              Alert.alert('Formato email errato (esempio@mail.com)');
+            }
+            console.log(e.code);
+          }
+        } else {
+          Alert.alert('Le password non coincidono');
+        }
+      } else {
+        Alert.alert('Inserire credenziali');
+      }
+    } else {
+      Alert.alert('Password troppo corta');
+    }
   };
 
   const passwordIsVisible = () => {
@@ -98,7 +101,7 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <View style={styles.backGround}>
+    <KeyboardAwareScrollView style={styles.backGround}>
       <View style={styles.box}>
         <TouchableOpacity style={styles.goBack} onPress={pressHandler}>
           <Icon name="arrow-back-ios" size={20} color="white" />
@@ -198,7 +201,7 @@ export default function Register({ navigation }) {
         </View>
       </View>
       {/* <StatusBar style="light" /> */}
-    </View>
+    </KeyboardAwareScrollView>
   );
 }
 const styles = StyleSheet.create({
@@ -222,12 +225,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'center',
+    marginTop: 50,
   },
   midZone: {
     width: '100%',
     flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 50,
   },
   bottomZone: {
     position: 'absolute',

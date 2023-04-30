@@ -7,6 +7,9 @@ import CustomDrawer from '../components/customDrawer';
 import OnGameTabs from './onGameTabs';
 
 import { colors } from '../shared/colors';
+import Login from '../screens/login';
+import Register from '../screens/register';
+import QuizHome from '../screens/quizHome';
 
 const Drawer = createDrawerNavigator();
 
@@ -30,7 +33,24 @@ export default function HomeDrawer() {
     >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Settings" component={Settings} />
-      <Drawer.Screen name="OnGame" component={OnGameTabs} />
+      <Drawer.Screen name="Login" component={Login} />
+      <Drawer.Screen
+        name="Register"
+        component={Register}
+        options={{
+          drawerItemStyle: { height: 0 },
+        }}
+      />
+      {/* <Drawer.Screen
+        name="OnGame"
+        component={QuizHome}
+        options={
+          {
+            // drawerItemStyle: { height: 0 },
+          }
+        }
+      /> */}
+      {/* <Drawer.Screen name="OnGame" component={OnGameTabs} /> */}
     </Drawer.Navigator>
   );
 }

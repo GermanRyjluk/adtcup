@@ -12,6 +12,7 @@ import { Header } from '../components/header';
 import { colors } from '../shared/colors';
 
 import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
+import { auth } from '../firebase/firebase';
 
 // import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -22,7 +23,9 @@ const events = [
 ];
 export default function Home({ navigation }) {
   const handlePress = () => {
-    navigation.navigate('Login');
+    auth.currentUser
+      ? navigation.navigate('Quiz', { quiz: '' })
+      : navigation.navigate('EventInfo');
   };
   return (
     <>

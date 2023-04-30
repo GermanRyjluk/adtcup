@@ -13,6 +13,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 
+import { auth } from '../firebase/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
 import { colors } from '../shared/colors';
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
@@ -27,6 +30,25 @@ export default function Login({ navigation }) {
       return <Icon2 name="eye" size={20} color="white" />;
     } else if (isPasswordVisible) {
       return <Icon2 name="eye-slash" size={20} color="white" />;
+    }
+  };
+
+  const UserLogIn = () => {
+    if (email.length != 0 && password.length != 0) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((UserCredential) => {
+          navigation.navigate('Quiz', { quiz: '' });
+        })
+        .catch((e) => {
+          if (e.code == 'auth/user-not-found') {
+            Alert.alert('Email incorretto o inesistente');
+          }
+          if (e.code == 'auth/wrong-password') {
+            Alert.alert('Password errata');
+          }
+        });
+    } else {
+      Alert.alert('Inserire credenziali');
     }
   };
 
@@ -99,12 +121,7 @@ export default function Login({ navigation }) {
               </View>
             </View>
             <View style={styles.midTwo}>
-              <TouchableOpacity
-                style={styles.loginButton}
-                onPress={() => {
-                  navigation.navigate('EventInfo');
-                }}
-              >
+              <TouchableOpacity style={styles.loginButton} onPress={UserLogIn}>
                 <Text style={styles.buttonText}>ACCEDI</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => {}}>

@@ -13,11 +13,11 @@ import {
 import { colors } from './shared/colors';
 
 import { NavigationContainer } from '@react-navigation/native';
-import MainStack from './navigation/mainStack';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import Onboarding from 'react-native-onboarding-swiper';
+import AuthNavigator from './navigation/authNavigator';
 
 export default function App() {
   return (
@@ -31,7 +31,7 @@ export default function App() {
             // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
           }}
         >
-          <Onboarding
+          {/* <Onboarding
             pages={[
               {
                 backgroundColor: '#fff',
@@ -53,8 +53,8 @@ export default function App() {
               },
             ]}
             // onDone={<MainStack />}
-          />
-          {/* <MainStack /> */}
+          /> */}
+          <AuthNavigator />
         </SafeAreaView>
       </NavigationContainer>
     </SafeAreaProvider>

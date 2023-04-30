@@ -15,6 +15,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import { colors } from '../shared/colors';
+import { auth } from '../firebase/firebase';
+import { signOut } from 'firebase/auth';
 
 const CustomDrawer = (props) => {
   return (
@@ -25,7 +27,15 @@ const CustomDrawer = (props) => {
       >
         <View style={{ padding: 20, backgroundColor: colors.primary }}>
           <Image
-            source={require('../assets/user-profile.jpg')}
+            source={
+              auth.currentUser
+                ? {
+                    uri: auth.currentUser.photoURL,
+                  }
+                : {
+                    uri: 'https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE=',
+                  }
+            }
             style={{
               height: 80,
               width: 80,
@@ -41,7 +51,7 @@ const CustomDrawer = (props) => {
               marginBottom: 5,
             }}
           >
-            Giuseppe Bellisario
+            {auth.currentUser ? auth.currentUser.displayName : 'Anonimo'}
           </Text>
           {/* <View style={{ flexDirection: 'row' }}>
             <Text
@@ -75,7 +85,10 @@ const CustomDrawer = (props) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={{ paddingVertical: 15 }}>
+        <TouchableOpacity
+          onPress={() => auth.signOut()}
+          style={{ paddingVertical: 15 }}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Ionicons name="exit-outline" size={22} />
             <Text
