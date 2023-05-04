@@ -43,11 +43,6 @@ export function NotLoggedIn() {
       <Stack.Screen name="EventInfo" component={EventInfo} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
-      {/* <Stack.Screen name="EventStatus" component={EventStatus} />
-      <Stack.Screen name="Quiz" component={QuizHome} />
-      <Stack.Screen name="GameRules" component={GameRules} />
-      <Stack.Screen name="TeamInfo" component={TeamInfo} />
-      <Stack.Screen name="Qr" component={QrReader} /> */}
     </Stack.Navigator>
   );
 }

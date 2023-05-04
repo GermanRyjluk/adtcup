@@ -14,12 +14,24 @@ import { colors } from '../shared/colors';
 import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
 import { auth } from '../firebase/firebase';
 
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+const Tab = createMaterialTopTabNavigator();
+
 // import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-const events = [
+const currentEvents = [
   { name: 'LANGIAN', photo: 'null', date: '23-8-2023', price: '€15' },
   { name: 'FOSSACESIA', photo: 'null', date: '25-8-2023', price: '€10' },
   { name: 'SANTVIT', photo: 'null', date: '24-8-2023', price: '€20' },
+];
+const pastEvents = [
+  {
+    name: 'TORINO',
+    photo: '../assets/torino(fake).jpeg',
+    date: '09-05-2023',
+    price: '€15',
+  },
 ];
 export default function Home({ navigation }) {
   const handlePress = () => {
@@ -27,15 +39,14 @@ export default function Home({ navigation }) {
       ? navigation.navigate('Quiz', { quiz: '' })
       : navigation.navigate('EventInfo');
   };
-  return (
-    <>
-      <Header />
 
+  const HomeScrollView = () => {
+    return (
       <ScrollView style={{ flex: 1, padding: 30, backgroundColor: colors.bg }}>
-        {events.map((data, i) => {
+        {currentEvents.map((data, i) => {
           return (
             <TouchableOpacity key={i} onPress={() => handlePress()}>
-              <View style={styles.eventCard}>
+              <View style={[styles.eventCard, { height: 250 }]}>
                 <Text style={styles.text}>{data.name}</Text>
                 <View style={styles.eventButton}>
                   <Text style={[styles.text, { color: colors.primary }]}>
@@ -48,6 +59,67 @@ export default function Home({ navigation }) {
         })}
         <View style={{ width: '100%', height: 90 }} />
       </ScrollView>
+    );
+  };
+  const HistoryScrollView = () => {
+    return (
+      <ScrollView style={{ flex: 1, padding: 30, backgroundColor: colors.bg }}>
+        {pastEvents.map((data, i) => {
+          return (
+            <TouchableOpacity key={i} onPress={() => handlePress()}>
+              <ImageBackground
+                style={styles.eventCard}
+                source={require('../assets/torino(fake).jpeg')}
+                imageStyle={{
+                  borderRadius: 15,
+                  borderColor: colors.primary,
+                  borderWidth: 6,
+                }}
+              >
+                <View style={styles.eventButton}>
+                  <Text style={[styles.text, { color: colors.primary }]}>
+                    {data.name}
+                  </Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
+          );
+        })}
+        <View style={{ width: '100%', height: 90 }} />
+      </ScrollView>
+    );
+  };
+  return (
+    <>
+      <Header />
+
+      <Tab.Navigator
+        initialRouteName="homeScrollView"
+        screenOptions={{
+          tabBarStyle: { backgroundColor: colors.primary },
+          tabBarLabelStyle: {
+            fontSize: 15,
+            fontWeight: '800',
+            color: colors.secondary,
+          },
+          tabBarIndicatorStyle: { backgroundColor: colors.secondary },
+        }}
+      >
+        <Tab.Screen
+          name="homeScrollView"
+          component={HomeScrollView}
+          options={{
+            tabBarLabel: 'Eventi attuali',
+          }}
+        />
+        <Tab.Screen
+          name="historyScrollView"
+          component={HistoryScrollView}
+          options={{
+            tabBarLabel: 'Eventi passati',
+          }}
+        />
+      </Tab.Navigator>
       <TouchableOpacity
         style={styles.infoBox}
         onPress={() => navigation.navigate('Intro')}
@@ -110,7 +182,7 @@ const styles = StyleSheet.create({
   },
   eventCard: {
     width: '100%',
-    height: 250,
+    height: 350,
     backgroundColor: colors.primary,
     borderRadius: 15,
     justifyContent: 'center',

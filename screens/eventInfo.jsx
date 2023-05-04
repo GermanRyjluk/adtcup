@@ -48,7 +48,7 @@ export default function EventInfo({ navigation }) {
           title="Gioca"
           onPress={() => {
             auth.currentUser
-              ? navigation.navigate('Quiz', { quiz: '' })
+              ? navigation.navigate('Quiz')
               : navigation.navigate('Login');
           }}
           style={{

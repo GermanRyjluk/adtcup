@@ -1,12 +1,16 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View, Image, BackHandler } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from '../components/header';
 import { colors } from '../shared/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { QrButton } from '../components/qrButton';
-import { useEffect } from 'react';
-
 import { db, auth } from '../firebase/firebase';
+
+import {
+  useFocusEffect,
+  useRoute,
+  useIsFocused,
+} from '@react-navigation/native';
 
 import {
   collection,
@@ -17,22 +21,19 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { useState } from 'react';
 
 import { Footer } from '../components/footer';
-import { useCallback } from 'react';
 
 export default function QuizHome({ navigation, route }) {
   const [data, setData] = useState([null]);
-  const [quiz, setQuiz] = useState(route.params?.quiz);
 
   const fetchQuiz = useCallback(async () => {
     try {
-      const docSnap = await getDoc(doc(db, 'quiz', quiz));
+      const docSnap = await getDoc(doc(db, 'quiz', route.params.quiz));
       if (docSnap.exists()) {
         setData(docSnap.data());
         await updateDoc(doc(db, '/users', auth.currentUser.uid), {
-          currentQuiz: data['number'],
+          currentQuiz: docSnap.data()['number'],
         });
       } else {
         console.log('No such document!');
@@ -63,15 +64,37 @@ export default function QuizHome({ navigation, route }) {
     }
   }, []);
 
-  useEffect(() => {
-    if (quiz != '') {
+  const searchQuiz = async () => {
+    if (route.params?.quiz) {
+      console.log('Quiz: ', route.params?.quiz);
       console.log('Searching next quiz...');
       fetchQuiz();
-    } else if (quiz == '') {
+    } else {
       console.log('Searching current quiz...');
       findCurrentQuiz();
     }
+  };
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    searchQuiz();
   }, [route.params?.quiz]);
+
+  // Handle back button behvior
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const onBackPress = () => {
+  //       navigation.push('HomeDrawer');
+  //     };
+
+  //     const subscription = BackHandler.addEventListener(
+  //       'hardwareBackPress',
+  //       onBackPress
+  //     );
+
+  //     return () => subscription.remove();
+  //   }, [])
+  // );
 
   {
     if (data['type'] == 'both') {
