@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,32 +7,32 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
-} from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import { auth, db } from '../firebase/firebase';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from "../firebase/firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon2 from "react-native-vector-icons/FontAwesome";
 
 // import { fonts } from '../../shared/fonts.js';
 // const font = fonts;
 
-import { colors } from '../shared/colors';
+import { colors } from "../shared/colors";
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
 export default function Register({ navigation }) {
   const pressHandler = () => {
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   };
 
-  const [newUserEmail, setUserEmail] = useState('');
-  const [newUserName, setUserName] = useState('');
-  const [newUserPassword, setUserPassword] = useState('');
-  const [newUserConfirmPassword, setUserConfirmPassword] = useState('');
+  const [newUserEmail, setUserEmail] = useState("");
+  const [newUserName, setUserName] = useState("");
+  const [newUserPassword, setUserPassword] = useState("");
+  const [newUserConfirmPassword, setUserConfirmPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const UserRegistration = async () => {
@@ -51,13 +51,13 @@ export default function Register({ navigation }) {
             )
               .then((userCredential) => {
                 const docRef = setDoc(
-                  doc(db, 'users/' + userCredential.user.uid),
+                  doc(db, "users/" + userCredential.user.uid),
                   {
                     name: newUserName,
                     email: newUserEmail,
                     photoURL:
-                      'https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg',
-                    currentQuiz: '1',
+                      "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg",
+                    currentQuiz: "1",
                   }
                 );
                 console.log(docRef.name); //undefined :(
@@ -70,25 +70,25 @@ export default function Register({ navigation }) {
               displayName: newUserName,
               // phoneNumber : 'asdasdasd',
               photoURL:
-                'https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg',
+                "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg",
             }).catch((err) => console.log(err));
           } catch (e) {
-            if (e.code == 'auth/email-already-in-use') {
-              Alert.alert('Email già in uso');
+            if (e.code == "auth/email-already-in-use") {
+              Alert.alert("Email già in uso");
             }
-            if (e.code == 'auth/invalid-email') {
-              Alert.alert('Formato email errato (esempio@mail.com)');
+            if (e.code == "auth/invalid-email") {
+              Alert.alert("Formato email errato (esempio@mail.com)");
             }
             console.log(e.code);
           }
         } else {
-          Alert.alert('Le password non coincidono');
+          Alert.alert("Le password non coincidono");
         }
       } else {
-        Alert.alert('Inserire credenziali');
+        Alert.alert("Inserire credenziali");
       }
     } else {
-      Alert.alert('Password troppo corta');
+      Alert.alert("Password troppo corta");
     }
   };
 
@@ -123,7 +123,7 @@ export default function Register({ navigation }) {
                 underlineColorAndroid="transparent"
                 placeholder="Nome"
                 placeholderTextColor="rgba(200, 200, 200,0.7)"
-                returnKeyType={'next'}
+                returnKeyType={"next"}
               />
             </View>
             <View style={styles.inputBox}>
@@ -135,7 +135,7 @@ export default function Register({ navigation }) {
                 placeholder="Email"
                 placeholderTextColor="rgba(200, 200, 200,0.7)"
                 keyboardType="email-address"
-                returnKeyType={'next'}
+                returnKeyType={"next"}
               />
             </View>
             <View style={styles.inputBox}>
@@ -149,10 +149,10 @@ export default function Register({ navigation }) {
                 underlineColorAndroid="transparent"
                 placeholder="Password"
                 placeholderTextColor="rgba(200, 200, 200,0.7)"
-                returnKeyType={'next'}
+                returnKeyType={"next"}
               />
               <TouchableOpacity
-                style={{ position: 'absolute', right: 10 }}
+                style={{ position: "absolute", right: 10 }}
                 onPress={() => {
                   setIsPasswordVisible(!isPasswordVisible);
                 }}
@@ -174,7 +174,7 @@ export default function Register({ navigation }) {
                 onSubmitEditing={() => UserRegistration()}
               />
               <TouchableOpacity
-                style={{ position: 'absolute', right: 10 }}
+                style={{ position: "absolute", right: 10 }}
                 onPress={() => {
                   setIsPasswordVisible(!isPasswordVisible);
                 }}
@@ -212,51 +212,51 @@ const styles = StyleSheet.create({
 
   box: {
     flex: 1,
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20%',
-    paddingTop: '15%',
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "20%",
+    paddingTop: "15%",
   },
   topZone: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    alignItems: "flex-start",
+    justifyContent: "center",
     marginTop: 50,
   },
   midZone: {
-    width: '100%',
+    width: "100%",
     flex: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 50,
   },
   bottomZone: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "center",
   },
 
   midOne: {
-    width: '100%',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "flex-start",
+    justifyContent: "center",
     marginBottom: 15,
   },
   midTwo: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     margin: 15,
   },
 
   goBack: {
-    position: 'absolute',
+    position: "absolute",
     left: 50,
     top: 30,
   },
@@ -265,16 +265,16 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginLeft: 5,
     color: colors.secondary,
-    fontWeight: '800',
+    fontWeight: "800",
   },
   loginSubText: {
-    color: '#CDCDCD',
+    color: "#CDCDCD",
     // fontFamily: font,
     fontSize: 15,
     marginLeft: 5,
   },
   loginSubTextSkip: {
-    color: '#CDCDCD',
+    color: "#CDCDCD",
     // fontFamily: font,
     fontSize: 13,
     marginLeft: 5,
@@ -287,20 +287,20 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   inputBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
     height: 60,
     borderRadius: 10,
-    backgroundColor: 'rgba(210, 210, 210, 0.2)',
+    backgroundColor: "rgba(210, 210, 210, 0.2)",
     marginBottom: 20,
     padding: 10,
   },
   input: {
-    width: '90%',
+    width: "90%",
     height: 40,
-    color: 'white',
+    color: "white",
     // fontFamily: font,
     fontSize: 15,
     marginLeft: 10,
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
 
   logoText: {
     // fontFamily: font,
-    color: 'white',
+    color: "white",
     marginTop: -10,
     fontSize: 35,
   },
@@ -317,13 +317,13 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: secondaryColor,
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
     // fontFamily: font,
     color: colors.primary,
     fontSize: 25,
-    fontWeight: '800',
+    fontWeight: "800",
   },
 });

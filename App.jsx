@@ -19,6 +19,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Onboarding from "react-native-onboarding-swiper";
 import AuthNavigator from "./navigation/authNavigator";
 import GeolocationCheck from "./screens/geolocationCheck";
+import { Header } from "./components/header";
 
 export default function App() {
   return (
@@ -32,9 +33,10 @@ export default function App() {
             // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
           }}
         >
-          {/*<AuthNavigator />*/}
+          <Header />
+          <AuthNavigator />
 
-          <GeolocationCheck />
+          {/* <GeolocationCheck /> */}
         </SafeAreaView>
       </NavigationContainer>
     </SafeAreaProvider>
@@ -49,9 +51,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-{
-  /* <Onboarding
+-(
+  {
+    /* <Onboarding
       pages={[
         {
           backgroundColor: '#fff',
@@ -74,4 +76,5 @@ const styles = StyleSheet.create({
       ]}
       // onDone={<MainStack />}
     /> */
-}
+  }
+);

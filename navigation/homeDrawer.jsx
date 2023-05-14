@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import Home from '../screens/home';
-import Settings from '../screens/settings';
-import CustomDrawer from '../components/customDrawer';
-import OnGameTabs from './onGameTabs';
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import Home from "../screens/home";
+import Settings from "../screens/settings";
+import CustomDrawer from "../components/customDrawer";
+import OnGameTabs from "./onGameTabs";
 
-import { colors } from '../shared/colors';
-import Login from '../screens/login';
-import Register from '../screens/register';
-import QuizHome from '../screens/quizHome';
+import { colors } from "../shared/colors";
+import Login from "../screens/login";
+import Register from "../screens/register";
+import QuizHome from "../screens/quizHome";
 
 const Drawer = createDrawerNavigator();
 
@@ -21,10 +21,10 @@ export default function HomeDrawer() {
       drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerPosition: 'right',
+        drawerPosition: "right",
         drawerActiveBackgroundColor: colors.primary,
-        drawerActiveTintColor: '#fff',
-        drawerInactiveTintColor: '#333',
+        drawerActiveTintColor: "#fff",
+        drawerInactiveTintColor: "#333",
         drawerLabelStyle: {
           // fontFamily: 'Roboto-Medium',
           fontSize: 15,
@@ -41,16 +41,6 @@ export default function HomeDrawer() {
           drawerItemStyle: { height: 0 },
         }}
       />
-      {/* <Drawer.Screen
-        name="OnGame"
-        component={QuizHome}
-        options={
-          {
-            // drawerItemStyle: { height: 0 },
-          }
-        }
-      /> */}
-      {/* <Drawer.Screen name="OnGame" component={OnGameTabs} /> */}
     </Drawer.Navigator>
   );
 }
