@@ -55,25 +55,26 @@ const pastEvents = [
 
 export default function Home({ navigation }) {
   const checkBookingStatus = async (eventID) => {
-    // try {
-    //   const snapshot = getDocs(
-    //     collection(db, "/users", auth.currentUser.uid, "/bookings")
-    //   )
-    //     .then((data) => {
-    //     })
-    //     .catch((e) => console.error(e));
+    try {
+      const snapshot = await getDoc(
+        doc(db, "/events", eventID, "/bookings", auth.currentUser.uid)
+      ).catch((e) => console.error(e));
 
-    // if (snapshot) {
-    //   console.log(snapshot.data());
-    // } else {
-    //   console.log("Snapshot does not exist");
-    // }
-    // } catch (e) {
-    //   console.error(e);
-    // }
-    if (true) {
-      navigation.navigate("Quiz", { quiz: "" });
-    } else {
+      if (snapshot.exists()) {
+        if (snapshot.data().status == "pending") {
+          navigation.navigate("EventStatus", { status: "pending" });
+        } else if (snapshot.data().status == "pay") {
+          navigation.navigate("EventStatus", { status: "pay" });
+        } else if (snapshot.data().status == "can play") {
+          navigation.navigate("Ticket");
+        } else if (snapshot.data().status == "playing") {
+          navigation.navigate("Quiz", { quiz: "" });
+        }
+      } else {
+        navigation.navigate("EventInfo", { eventID: eventID });
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 

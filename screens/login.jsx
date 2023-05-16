@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,22 +7,23 @@ import {
   ScrollView,
   Alert,
   TextInput,
-} from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
-import Icon2 from 'react-native-vector-icons/FontAwesome';
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
+import Icon2 from "react-native-vector-icons/FontAwesome";
 
-import { auth } from '../firebase/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from "../firebase/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-import { colors } from '../shared/colors';
+import { colors } from "../shared/colors";
+import { collection, getDocs } from "firebase/firestore";
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const passwordIsVisible = () => {
@@ -37,18 +38,18 @@ export default function Login({ navigation }) {
     if (email.length != 0 && password.length != 0) {
       signInWithEmailAndPassword(auth, email, password)
         .then((UserCredential) => {
-          navigation.navigate('Quiz', { quiz: '' });
+          navigation.navigate("HomeDrawer");
         })
         .catch((e) => {
-          if (e.code == 'auth/user-not-found') {
-            Alert.alert('Email incorretto o inesistente');
+          if (e.code == "auth/user-not-found") {
+            Alert.alert("Email incorretto o inesistente");
           }
-          if (e.code == 'auth/wrong-password') {
-            Alert.alert('Password errata');
+          if (e.code == "auth/wrong-password") {
+            Alert.alert("Password errata");
           }
         });
     } else {
-      Alert.alert('Inserire credenziali');
+      Alert.alert("Inserire credenziali");
     }
   };
 
@@ -68,8 +69,8 @@ export default function Login({ navigation }) {
             <View
               style={{
                 // flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-evenly',
+                alignItems: "center",
+                justifyContent: "space-evenly",
                 marginTop: 50,
               }}
             >
@@ -96,7 +97,7 @@ export default function Login({ navigation }) {
                   placeholder="Email"
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
                   keyboardType="email-address"
-                  returnKeyType={'next'}
+                  returnKeyType={"next"}
                 />
               </View>
               <View style={styles.inputBox}>
@@ -111,7 +112,7 @@ export default function Login({ navigation }) {
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
                 />
                 <TouchableOpacity
-                  style={{ position: 'absolute', right: 10 }}
+                  style={{ position: "absolute", right: 10 }}
                   onPress={() => {
                     setIsPasswordVisible(!isPasswordVisible);
                   }}
@@ -130,11 +131,11 @@ export default function Login({ navigation }) {
             </View>
           </View>
           <View style={styles.bottomZone}>
-            <View style={{ flexDirection: 'row', marginBottom: 2 }}>
+            <View style={{ flexDirection: "row", marginBottom: 2 }}>
               <Text style={styles.loginSubText}>Non hai un'account?</Text>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('Register');
+                  navigation.navigate("Register");
                 }}
               >
                 <Text style={styles.loginSubTextLink}>Registrati</Text>
@@ -155,52 +156,52 @@ export default function Login({ navigation }) {
 
 const styles = StyleSheet.create({
   backGround: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     flex: 1,
     backgroundColor: primaryColor,
   },
 
   box: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '15%',
-    paddingTop: '20%',
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "15%",
+    paddingTop: "20%",
   },
   topZone: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     flex: 0.5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 50,
   },
   midZone: {
-    width: '100%',
+    width: "100%",
     flex: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   bottomZone: {
-    position: 'absolute',
-    bottom: '5%',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    position: "absolute",
+    bottom: "5%",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    justifyContent: "center",
   },
 
   midOne: {
-    width: '100%',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "flex-start",
+    justifyContent: "center",
     margin: 15,
   },
   midTwo: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
     margin: 15,
     marginBottom: 40,
   },
@@ -210,16 +211,16 @@ const styles = StyleSheet.create({
     // fontFamily: font,
     fontSize: 30,
     marginLeft: 5,
-    fontWeight: '800',
+    fontWeight: "800",
   },
   loginSubText: {
-    color: '#CDCDCD',
+    color: "#CDCDCD",
     // fontFamily: font,
     fontSize: 15,
     marginLeft: 5,
   },
   loginSubTextSkip: {
-    color: '#CDCDCD',
+    color: "#CDCDCD",
     // fontFamily: font,
     fontSize: 13,
     marginLeft: 5,
@@ -232,20 +233,20 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   inputBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
     height: 60,
     borderRadius: 10,
-    backgroundColor: 'rgba(210, 210, 210, 0.2)',
+    backgroundColor: "rgba(210, 210, 210, 0.2)",
     marginBottom: 20,
     padding: 10,
   },
   input: {
-    width: '90%',
+    width: "90%",
     height: 40,
-    color: 'white',
+    color: "white",
     // fontFamily: font,
     fontSize: 15,
     marginLeft: 10,
@@ -255,7 +256,7 @@ const styles = StyleSheet.create({
     // fontFamily: font,
     color: colors.secondary,
     fontSize: 40,
-    fontWeight: '800',
+    fontWeight: "800",
     marginHorizontal: 10,
   },
   loginButton: {
@@ -263,13 +264,13 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: secondaryColor,
     borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
     // fontFamily: font,
     color: colors.primary,
     fontSize: 25,
-    fontWeight: '800',
+    fontWeight: "800",
   },
 });

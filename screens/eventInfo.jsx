@@ -6,19 +6,19 @@ import {
   Dimensions,
   Button,
   TouchableOpacity,
-} from 'react-native';
-import React from 'react';
-import { colors } from '../shared/colors';
-import { auth } from '../firebase/firebase';
+} from "react-native";
+import React from "react";
+import { colors } from "../shared/colors";
+import { auth } from "../firebase/firebase";
 
-export default function EventInfo({ navigation }) {
-  const { width, height } = Dimensions.get('window');
+export default function EventInfo({ navigation, route }) {
+  const { width, height } = Dimensions.get("window");
   return (
     <ScrollView
       style={{ flex: 1 }}
       contentContainerStyle={{
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
         backgroundColor: colors.primary,
       }}
       horizontal={true}
@@ -29,8 +29,8 @@ export default function EventInfo({ navigation }) {
         style={{
           width,
           height,
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Text style={styles.text}>Event info 1</Text>
@@ -39,8 +39,8 @@ export default function EventInfo({ navigation }) {
         style={{
           width,
           height,
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Text style={styles.text}>Event info 2</Text>
@@ -48,21 +48,23 @@ export default function EventInfo({ navigation }) {
           title="Gioca"
           onPress={() => {
             auth.currentUser
-              ? navigation.navigate('Quiz')
-              : navigation.navigate('Login');
+              ? navigation.navigate("EventBooking", {
+                  eventID: route.params.eventID,
+                })
+              : navigation.navigate("Login");
           }}
           style={{
             height: 100,
             width: 200,
             backgroundColor: colors.secondary,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
             marginTop: 100,
             borderRadius: 15,
           }}
         >
           <Text
-            style={{ color: colors.primary, fontSize: 40, fontWeight: '800' }}
+            style={{ color: colors.primary, fontSize: 40, fontWeight: "800" }}
           >
             Gioca
           </Text>
@@ -75,12 +77,12 @@ export default function EventInfo({ navigation }) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     fontSize: 50,
-    color: '#ededed',
-    fontWeight: '800',
+    color: "#ededed",
+    fontWeight: "800",
   },
 });

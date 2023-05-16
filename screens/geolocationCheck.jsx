@@ -16,7 +16,7 @@ export default function GeolocationCheck() {
   const [userLocation, setUserLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const radius = 100;
+  const radius = 50;
 
   const searchCurrentUserLocation = () => {
     (async () => {
