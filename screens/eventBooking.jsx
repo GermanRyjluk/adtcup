@@ -16,6 +16,7 @@ export default function EventBooking({ navigation, route }) {
           auth.currentUser.uid
         ),
         {
+          uid: auth.currentUser.uid,
           name: auth.currentUser.displayName,
           email: auth.currentUser.email,
           status: "pending",

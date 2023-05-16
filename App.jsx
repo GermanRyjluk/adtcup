@@ -19,7 +19,6 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Onboarding from "react-native-onboarding-swiper";
 import { Header } from "./components/header";
 import AuthNavigator from "./navigation/authNavigator";
-import GeolocationCheck from "./screens/geolocationCheck";
 import Admin from "./navigation/adminStack";
 
 export default function App() {
@@ -34,11 +33,9 @@ export default function App() {
             // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
           }}
         >
-          {/* <Header /> */}
+          <Header />
           {/* <AuthNavigator /> */}
           <Admin />
-
-          {/* <GeolocationCheck /> */}
         </SafeAreaView>
       </NavigationContainer>
     </SafeAreaProvider>

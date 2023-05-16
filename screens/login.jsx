@@ -17,7 +17,6 @@ import { auth, db } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { colors } from "../shared/colors";
-import { collection, getDocs } from "firebase/firestore";
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: "15%",
-    paddingTop: "20%",
+    paddingTop: "0%",
   },
   topZone: {
     width: "100%",
