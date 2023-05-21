@@ -1,4 +1,12 @@
-import { Alert, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
@@ -6,9 +14,11 @@ import { colors } from "../../shared/colors";
 
 const eventID = "1VgaAztg9yvbzRLuIjql";
 
-export default function Teams() {
+export default function Teams({ navigation }) {
   const [players, setPlayers] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const getTeamsFromDB = useCallback(async () => {
+    setRefreshing(true);
     try {
       const snapshot = getDocs(
         collection(db, "/events", eventID, "/bookings")
@@ -18,6 +28,7 @@ export default function Teams() {
     } catch (e) {
       console.error(e);
     }
+    setRefreshing(false);
   }, []);
 
   useEffect(() => {
@@ -44,13 +55,24 @@ export default function Teams() {
     } else if (status == "pay") {
       try {
         await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
-          status: "can play",
+          status: "can play", //waiting team
         });
         Alert.alert("Aggiornato!", "Ora può giocare");
       } catch (e) {
         console.error(e);
       }
-    } else if (status == "can play") {
+    }
+    // else if (status == "waiting team") {
+    // try {
+    //   await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
+    //     status: "can play",
+    //   });
+    //   Alert.alert("Aggiornato!", "Ora può giocare");
+    // } catch (e) {
+    //   console.error(e);
+    // }
+    // }
+    else if (status == "can play") {
       Alert.alert("Il giocatore ancora avvia il gioco");
     } else if (status == "playing") {
       Alert.alert(
@@ -73,16 +95,22 @@ export default function Teams() {
         }
       );
     }
+    // getTeamsFromDB();
   };
 
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
-        alignItems: "center",
         backgroundColor: colors.primary,
         padding: 10,
       }}
+      contentContainerStyle={{
+        alignItems: "center",
+      }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={getTeamsFromDB} />
+      }
     >
       {players.map((player, i) => {
         return (
@@ -103,32 +131,58 @@ export default function Teams() {
             <Text style={{ fontSize: 20, fontWeight: "800" }}>
               {player.name}
             </Text>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "white",
-                padding: 10,
-                borderRadius: 10,
-                borderColor: "black",
-                borderWidth: 2,
-              }}
-              onPress={() => {
-                handleUpgradeState(player.status, player.uid);
-              }}
-            >
-              <Text
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
                 style={{
-                  color: "black",
-                  fontSize: 15,
-                  fontWeight: "800",
+                  backgroundColor: "white",
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: "black",
+                  borderWidth: 2,
+                }}
+                onPress={() => {
+                  navigation.navigate("PlayerSettings", {
+                    playerID: player.uid,
+                  });
                 }}
               >
-                --{">"}
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: 15,
+                    fontWeight: "800",
+                  }}
+                >
+                  edit
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "white",
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: "black",
+                  borderWidth: 2,
+                }}
+                onPress={() => {
+                  handleUpgradeState(player.status, player.uid);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: 15,
+                    fontWeight: "800",
+                  }}
+                >
+                  --{">"}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         );
       })}
-    </View>
+    </ScrollView>
   );
 }
 

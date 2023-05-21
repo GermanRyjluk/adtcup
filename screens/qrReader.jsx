@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
-import { Camera } from 'expo-camera';
-import Svg, { Path } from 'react-native-svg';
-import { BlurView } from 'expo-blur';
+import { Camera } from "expo-camera";
+import Svg, { Path } from "react-native-svg";
+import { BlurView } from "expo-blur";
 
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 // import { fonts } from '../../shared/fonts.js';
 // const font = fonts;
 
-import { colors } from '../shared/colors.jsx';
+import { colors } from "../shared/colors.jsx";
 
 export default function App({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -20,17 +20,17 @@ export default function App({ navigation, route }) {
   const askForPermissionCamera = () => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status == 'granted');
+      setHasPermission(status == "granted");
     })();
   };
   //Request Camera Permission
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       setScanned(false);
       setHasPermission(false);
       (async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
-        setHasPermission(status === 'granted');
+        setHasPermission(status === "granted");
       })();
     });
     return unsubscribe;
@@ -38,14 +38,14 @@ export default function App({ navigation, route }) {
 
   //Code Scan
   const handleBarcodeScanned = ({ type, data }) => {
-    console.log('Scanned: ', data);
+    // console.log("Scanned: ", data);
     setScanned(true);
     setCode(data);
   };
 
   //Handle pressed button to get quiz
   const getQuiz = () => {
-    navigation.navigate('Quiz', { quiz: code });
+    navigation.navigate("Quiz", { quiz: code });
   };
 
   //Check permissions
@@ -68,11 +68,11 @@ export default function App({ navigation, route }) {
               style={[
                 styles.text,
                 {
-                  backgroundColor: '#00FFE4',
+                  backgroundColor: "#00FFE4",
                   borderRadius: 10,
                   padding: 10,
                   fontSize: 25,
-                  textAlign: 'center',
+                  textAlign: "center",
                   color: colors.primary,
                 },
               ]}
@@ -105,7 +105,7 @@ export default function App({ navigation, route }) {
       {scanned ? (
         <TouchableOpacity onPress={getQuiz} style={styles.quizBox}>
           <Text
-            style={{ fontSize: 30, fontWeight: '800', color: colors.secondary }}
+            style={{ fontSize: 30, fontWeight: "800", color: colors.secondary }}
           >
             Ottieni indovinello!
           </Text>
@@ -118,25 +118,25 @@ export default function App({ navigation, route }) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  text: { fontSize: 25, fontWeight: '800', color: colors.secondary },
+  text: { fontSize: 25, fontWeight: "800", color: colors.secondary },
   messageBox: {
     backgroundColor: colors.bg,
-    position: 'absolute',
-    top: '3%',
+    position: "absolute",
+    top: "3%",
     padding: 25,
     borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   quizBox: {
     backgroundColor: colors.primary,
     padding: 30,
-    position: 'absolute',
-    bottom: '3%',
+    position: "absolute",
+    bottom: "3%",
     borderRadius: 10,
   },
 });

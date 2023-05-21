@@ -1,13 +1,27 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Platform,
+} from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 
-import MapView, { Circle, Marker } from "react-native-maps";
+import MapView, {
+  Circle,
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import * as Location from "expo-location";
 import { getDistance } from "geolib";
 
 import { colors } from "../shared/colors";
 
 export default function GeolocationCheck() {
+  const defaultProvider =
+    Platform.OS === "ios" ? PROVIDER_DEFAULT : PROVIDER_GOOGLE;
   const [position, setPosition] = useState({
     latitude: 45.060764,
     longitude: 7.645175,
@@ -25,9 +39,10 @@ export default function GeolocationCheck() {
         setErrorMsg("Permission to access location was denied");
         return;
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setUserLocation(location);
+      setInterval(async () => {
+        let location = await Location.getCurrentPositionAsync({});
+        setUserLocation(location);
+      }, 1000);
       //{"coords": {"accuracy": 12.697999954223633, "altitude": 307.1999816894531,
       //"altitudeAccuracy": 2.838839292526245, "heading": 0, "latitude": 45.0614778, "longitude": 7.6448868,
       //"speed": 0}, "mocked": false, "timestamp": 1683844215281}
@@ -59,8 +74,8 @@ export default function GeolocationCheck() {
         <View
           style={{
             position: "absolute",
-            top: 30,
-            left: 30,
+            top: 10,
+            right: 10,
             backgroundColor: colors.primary,
             padding: 20,
             borderRadius: 10,
@@ -93,11 +108,18 @@ export default function GeolocationCheck() {
     }
   };
 
+  useEffect(() => {
+    searchCurrentUserLocation();
+  }, []);
+
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        region={[position, { latitudeDelta: 0.09, longitudeDelta: 0.09 }]}
+        region={[position]}
+        provider={defaultProvider}
+        showsUserLocation
+        showsMyLocationButton
       >
         <Marker
           coordinate={position}
@@ -118,24 +140,12 @@ export default function GeolocationCheck() {
       <View style={styles.buttonBox}>
         <TouchableOpacity
           onPress={() => {
-            searchCurrentUserLocation();
-          }}
-          style={styles.box}
-        >
-          <Text
-            style={{ fontSize: 25, fontWeight: "800", color: colors.secondary }}
-          >
-            Ricarica!
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
             handlePlayButton();
           }}
           style={styles.box}
         >
           <Text
-            style={{ fontSize: 25, fontWeight: "800", color: colors.secondary }}
+            style={{ fontSize: 35, fontWeight: "800", color: colors.secondary }}
           >
             Gioca!
           </Text>
@@ -166,7 +176,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.primary,
-    padding: 30,
+    padding: 20,
+    width: "100%",
     borderRadius: 10,
   },
 });
