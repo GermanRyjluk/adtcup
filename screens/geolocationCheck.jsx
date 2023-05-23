@@ -42,7 +42,7 @@ export default function GeolocationCheck() {
       setInterval(async () => {
         let location = await Location.getCurrentPositionAsync({});
         setUserLocation(location);
-      }, 1000);
+      }, 5000);
       //{"coords": {"accuracy": 12.697999954223633, "altitude": 307.1999816894531,
       //"altitudeAccuracy": 2.838839292526245, "heading": 0, "latitude": 45.0614778, "longitude": 7.6448868,
       //"speed": 0}, "mocked": false, "timestamp": 1683844215281}
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   buttonBox: {
     position: "absolute",
-    bottom: 30,
+    bottom: 70,
     left: 30,
     right: 30,
     flexDirection: "row",

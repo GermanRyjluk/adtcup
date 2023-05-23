@@ -14,6 +14,8 @@ import { colors } from "../../shared/colors";
 
 const eventID = "1VgaAztg9yvbzRLuIjql";
 
+// status = pending - can pay - waiting team - can play - playing
+
 export default function Teams({ navigation }) {
   const [players, setPlayers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -38,6 +40,7 @@ export default function Teams({ navigation }) {
   const boxColorStatus = (status) => {
     if (status == "pending") return "#DF2A2A";
     if (status == "pay") return colors.secondary;
+    if (status == "waiting team") return "#FF6033";
     if (status == "can play") return "#3B9BE1";
     if (status == "playing") return "#2ADF7D";
   };
@@ -132,30 +135,32 @@ export default function Teams({ navigation }) {
               {player.name}
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "white",
-                  padding: 10,
-                  borderRadius: 10,
-                  borderColor: "black",
-                  borderWidth: 2,
-                }}
-                onPress={() => {
-                  navigation.navigate("PlayerSettings", {
-                    playerID: player.uid,
-                  });
-                }}
-              >
-                <Text
+              {player.status == "waiting team" ? (
+                <TouchableOpacity
                   style={{
-                    color: "black",
-                    fontSize: 15,
-                    fontWeight: "800",
+                    backgroundColor: "white",
+                    padding: 10,
+                    borderRadius: 10,
+                    borderColor: "black",
+                    borderWidth: 2,
+                  }}
+                  onPress={() => {
+                    navigation.navigate("PlayerSettings", {
+                      playerID: player.uid,
+                    });
                   }}
                 >
-                  edit
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: 15,
+                      fontWeight: "800",
+                    }}
+                  >
+                    edit
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
               <TouchableOpacity
                 style={{
                   backgroundColor: "white",

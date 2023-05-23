@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, BackHandler } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  BackHandler,
+  ScrollView,
+} from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { Header } from "../components/header";
 import { colors } from "../shared/colors";
@@ -108,7 +115,7 @@ export default function QuizHome({ navigation, route }) {
       return (
         <>
           {/* <Header /> */}
-          <View
+          <ScrollView
             style={{
               height: "100%",
               backgroundColor: colors.bg,
@@ -172,7 +179,7 @@ export default function QuizHome({ navigation, route }) {
             <View style={{ position: "absolute", bottom: 150, right: 15 }}>
               <QrButton />
             </View>
-          </View>
+          </ScrollView>
           <Footer />
         </>
       );
