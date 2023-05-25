@@ -39,13 +39,21 @@ export default function App({ navigation, route }) {
   //Code Scan
   const handleBarcodeScanned = ({ type, data }) => {
     // console.log("Scanned: ", data);
+    const options = {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false,
+    };
     setScanned(true);
     setCode(data);
   };
 
   //Handle pressed button to get quiz
   const getQuiz = () => {
-    navigation.navigate("Quiz", { quiz: code });
+    navigation.navigate({
+      name: "Quiz",
+      params: { quizID: code },
+      merge: true,
+    });
   };
 
   //Check permissions

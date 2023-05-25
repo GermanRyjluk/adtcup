@@ -3,7 +3,8 @@ import React from "react";
 import { colors } from "../shared/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-export default function Ticket({ navigation }) {
+export default function Ticket({ navigation, route }) {
+  const eventID = route.params.eventID;
   return (
     <View
       style={{
@@ -23,7 +24,7 @@ export default function Ticket({ navigation }) {
           borderRadius: 15,
         }}
         onPress={() => {
-          navigation.navigate("GeolocationCheck");
+          navigation.navigate("GeolocationCheck", { eventID: eventID });
         }}
       >
         <Text

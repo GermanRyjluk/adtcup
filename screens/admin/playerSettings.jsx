@@ -5,13 +5,14 @@ import { TextInput } from "react-native-gesture-handler";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 
-export default function PlayerSettings({ route }) {
+export default function PlayerSettings({ navigation, route }) {
   const eventID = "1VgaAztg9yvbzRLuIjql";
   const playerID = route.params.playerID;
   const [teamNum, setTeamNum] = useState("");
   const handlePress = async (team) => {
     if (team != "") {
       try {
+        // create events/teams/1/players/playerID
         const docRef = setDoc(
           doc(db, "/events", eventID, "/teams", teamNum, "/players", playerID),
           {
@@ -21,7 +22,14 @@ export default function PlayerSettings({ route }) {
         await updateDoc(doc(db, "/events", eventID, "/bookings", playerID), {
           status: "can play",
         });
+        await setDoc(doc(db, "/users", playerID, "/bookings", eventID), {
+          team: teamNum,
+        });
+        await setDoc(doc(db, "/events", eventID, "/teams", teamNum), {
+          lastScan: "vErhQU5ApvBVNfQwD8Td",
+        });
         Alert.alert("Aggiornato!");
+        navigation.goBack();
       } catch (e) {
         console.error(e);
       }

@@ -66,9 +66,9 @@ export default function Home({ navigation }) {
         } else if (snapshot.data().status == "pay") {
           navigation.navigate("EventStatus", { status: "pay" });
         } else if (snapshot.data().status == "can play") {
-          navigation.navigate("Ticket");
+          navigation.navigate("Ticket", { eventID: eventID });
         } else if (snapshot.data().status == "playing") {
-          navigation.navigate("Quiz", { quiz: "" });
+          navigation.navigate("Quiz", { eventID: eventID });
         }
       } else {
         navigation.navigate("EventInfo", { eventID: eventID });

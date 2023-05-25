@@ -5,6 +5,8 @@ import {
   Image,
   BackHandler,
   ScrollView,
+  RefreshControl,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { Header } from "../components/header";
@@ -12,6 +14,8 @@ import { colors } from "../shared/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { QrButton } from "../components/qrButton";
 import { db, auth } from "../firebase/firebase";
+
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 import {
   useFocusEffect,
@@ -33,85 +37,95 @@ import { Footer } from "../components/footer";
 import Loading from "../components/loading";
 
 export default function QuizHome({ navigation, route }) {
+  const [userTeam, setUserTeam] = useState("");
+  const [quizNum, setQuizNum] = useState("");
+  const [quizData, setQuizData] = useState([null]);
   const [data, setData] = useState([null]);
-  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchQuiz = useCallback(async (quizID) => {
-    try {
-      const docSnap = await getDoc(doc(db, "quiz", quizID)).then((snapshot) => {
+  const eventID = route.params.eventID;
+  const quizID = route.params.quizID;
+
+  const getQuiz = useCallback(async (team) => {
+    await getDoc(doc(db, "events", eventID, "teams", team)).then(
+      async (snapshot) => {
         if (snapshot.exists()) {
-          setData(snapshot.data());
-          updateDoc(doc(db, "/users", auth.currentUser.uid), {
-            currentQuiz: snapshot.data()["number"],
-          });
-          console.log("Update: ", data);
-          setLoading(false);
-        } else {
-          console.log("No such document!");
+          setQuizNum(snapshot.data()["lastQuiz"]);
+          await getDoc(doc(db, "events", eventID, "teams", team)).then(
+            async (snapshot) => {
+              if (snapshot.exists()) {
+                // console.log(snapshot.data()["lastQuiz"]);
+                setQuizData(snapshot.data()["lastQuiz"]);
+                await getDoc(
+                  doc(
+                    db,
+                    "events",
+                    eventID,
+                    "quiz",
+                    snapshot.data()["lastQuiz"]
+                  )
+                ).then((snapshot) => {
+                  if (snapshot.exists()) {
+                    setQuizData(snapshot.data());
+                    // console.log(snapshot.data()["message"]);
+                  }
+                });
+              }
+            }
+          );
+        }
+      }
+    );
+  }, []);
+
+  const getTeamAndQuiz = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const docRef = await getDoc(
+        doc(db, "/users", auth.currentUser.uid, "/bookings", eventID)
+      ).then(async (snapshot) => {
+        if (snapshot.exists()) {
+          console.log("Team: ", snapshot.data()["team"]);
+          setUserTeam(snapshot.data()["team"]);
+          getQuiz(snapshot.data()["team"]);
         }
       });
     } catch (e) {
       console.error(e);
     }
-  }, []);
+    setRefreshing(false);
+  });
 
-  const findCurrentQuiz = useCallback(async () => {
+  const getNewQuiz = useCallback(async () => {
     try {
-      const docSnap = await getDoc(doc(db, "/users", auth.currentUser.uid));
-      if (docSnap.exists()) {
-        const find = await getDocs(
-          query(
-            collection(db, "/quiz"),
-            where("number", "==", docSnap.data().currentQuiz)
-          )
-        );
-        if (find) {
-          find.forEach((doc) => setData(doc.data()));
+      await getDoc(doc(db, "events", eventID, "quiz", quizID)).then(
+        async (snapshot) => {
+          if (snapshot.exists()) {
+            setQuizData(snapshot.data());
+            await updateDoc(doc(db, "events", eventID, "teams", userTeam), {
+              lastQuiz: quizID,
+            });
+          }
         }
-      } else {
-        console.log("No user currentQuiz!");
-      }
+      );
     } catch (e) {
       console.error(e);
     }
-  }, []);
-
-  const isFocused = useIsFocused();
-
+  });
   useEffect(() => {
-    setLoading(true);
-    if (route.params?.quiz) {
-      console.log("Searching next quiz...");
-      fetchQuiz(route.params.quiz);
+    if (quizID == undefined) {
+      getTeamAndQuiz();
     } else {
-      console.log("Searching current quiz...");
-      findCurrentQuiz();
+      getNewQuiz();
     }
-    setLoading(false);
-  }, [route.params?.quiz]);
+  }, [route.params.eventID, route.params.quizID]);
 
-  // Handle back button behvior
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const onBackPress = () => {
-  //       navigation.push('HomeDrawer');
-  //     };
-
-  //     const subscription = BackHandler.addEventListener(
-  //       'hardwareBackPress',
-  //       onBackPress
-  //     );
-
-  //     return () => subscription.remove();
-  //   }, [])
-  // );
-
-  if (!data) {
+  if (!quizData) {
     return <Loading />;
   }
 
   {
-    if (data["type"] == "both") {
+    if (quizData["type"] == "both") {
       return (
         <>
           {/* <Header /> */}
@@ -121,13 +135,19 @@ export default function QuizHome({ navigation, route }) {
               backgroundColor: colors.bg,
               padding: 30,
             }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={getTeamAndQuiz}
+              />
+            }
           >
             <Text style={{ fontSize: 30, fontWeight: "800", marginBottom: 20 }}>
-              {data["number"]}/??
+              {quizData["number"]}/??
             </Text>
             <View>
               <Image
-                source={data["photo"] ? { uri: data["photo"] } : null}
+                source={quizData["photo"] ? { uri: quizData["photo"] } : null}
                 style={{
                   width: "100%",
                   height: 250,
@@ -150,11 +170,41 @@ export default function QuizHome({ navigation, route }) {
                 }}
               >
                 <Text style={{ fontSize: 20, fontWeight: "500" }}>
-                  {data["message"]}
+                  {quizData["message"]}
                 </Text>
               </TouchableOpacity>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <View
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 20,
+                }}
+              >
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={10}
+                  colors={[
+                    colors.primary,
+                    "#004777",
+                    "#F7B801",
+                    "#A30000",
+                    "#A30000",
+                  ]}
+                  colorsTime={[10, 7, 5, 2, 0]}
+                  onComplete={() => Alert.alert("Hint!")}
+                >
+                  {({ remainingTime }) => (
+                    <Text
+                      style={{
+                        fontSize: 50,
+                        fontWeight: "800",
+                      }}
+                    >
+                      {remainingTime}
+                    </Text>
+                  )}
+                </CountdownCircleTimer>
+                {/* <View
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
@@ -171,31 +221,37 @@ export default function QuizHome({ navigation, route }) {
                       fontWeight: "800",
                     }}
                   >
-                    {data["timeToHint"]}
+                    10:00
                   </Text>
-                </View>
+                </View> */}
               </View>
             </View>
-            <View style={{ position: "absolute", bottom: 150, right: 15 }}>
-              <QrButton />
-            </View>
           </ScrollView>
+          <View style={{ position: "absolute", bottom: 100, right: 15 }}>
+            <QrButton />
+          </View>
           <Footer />
         </>
       );
-    } else if (data["type"] == "message") {
+    } else if (quizData["type"] == "message") {
       return (
         <>
           {/* <Header /> */}
-          <View
+          <ScrollView
             style={{
               height: "100%",
               backgroundColor: colors.bg,
               padding: 30,
             }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={getTeamAndQuiz}
+              />
+            }
           >
             <Text style={{ fontSize: 30, fontWeight: "800", marginBottom: 20 }}>
-              {data["number"]}/??
+              {quizData["number"]}/??
             </Text>
             <View>
               <TouchableOpacity
@@ -211,11 +267,19 @@ export default function QuizHome({ navigation, route }) {
                 <Text style={{ fontSize: 25, fontWeight: "500" }}>
                   {/* Informazione sull'indovinello 1 che va avanti fino a quando non
                 diventa troppo lungo... */}
-                  {data["message"]}
+                  {quizData["message"]}
                 </Text>
               </TouchableOpacity>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <View
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={300}
+                  colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+                  colorsTime={[7, 5, 2, 0]}
+                >
+                  {({ remainingTime }) => <Text>{remainingTime}</Text>}
+                </CountdownCircleTimer>
+                {/* <View
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
@@ -232,35 +296,41 @@ export default function QuizHome({ navigation, route }) {
                       fontWeight: "800",
                     }}
                   >
-                    {data["timeToHint"]}
+                    10:00
                   </Text>
-                </View>
+                </View> */}
               </View>
             </View>
-            <View style={{ position: "absolute", bottom: 100, right: 15 }}>
-              <QrButton />
-            </View>
+          </ScrollView>
+          <View style={{ position: "absolute", bottom: 100, right: 15 }}>
+            <QrButton />
           </View>
           <Footer />
         </>
       );
-    } else if (data["type"] == "photo") {
+    } else if (quizData["type"] == "photo") {
       return (
         <>
           {/* <Header /> */}
-          <View
+          <ScrollView
             style={{
               height: "100%",
               backgroundColor: colors.bg,
               padding: 30,
             }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={getTeamAndQuiz}
+              />
+            }
           >
             <Text style={{ fontSize: 30, fontWeight: "800", marginBottom: 20 }}>
-              {data["number"]}/??
+              {quizData["number"]}/??
             </Text>
             <View>
               <Image
-                source={data["photo"] ? { uri: data["photo"] } : null}
+                source={quizData["photo"] ? { uri: quizData["photo"] } : null}
                 style={{
                   width: "100%",
                   height: 250,
@@ -289,14 +359,14 @@ export default function QuizHome({ navigation, route }) {
                       fontWeight: "800",
                     }}
                   >
-                    {data["timeToHint"]}
+                    10:00
                   </Text>
                 </View>
               </View>
             </View>
-            <View style={{ position: "absolute", bottom: 100, right: 15 }}>
-              <QrButton />
-            </View>
+          </ScrollView>
+          <View style={{ position: "absolute", bottom: 100, right: 15 }}>
+            <QrButton />
           </View>
           <Footer />
         </>
