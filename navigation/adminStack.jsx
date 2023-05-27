@@ -9,6 +9,7 @@ import Map from "../screens/admin/map";
 import Scoreboard from "../screens/admin/scoreboard";
 import Settings from "../screens/admin/settings";
 import PlayerSettings from "../screens/admin/playerSettings";
+import MapPlayers from "../screens/admin/mapPlayers";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function Admin() {
       <Stack.Screen name="Teams" component={Teams} />
       <Stack.Screen name="PlayerSettings" component={PlayerSettings} />
       <Stack.Screen name="Map" component={Map} />
+      <Stack.Screen name="MapPlayers" component={MapPlayers} />
       <Stack.Screen name="Scoreboard" component={Scoreboard} />
       <Stack.Screen name="Settings" component={Settings} />
     </Stack.Navigator>

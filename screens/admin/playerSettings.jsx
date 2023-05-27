@@ -26,7 +26,8 @@ export default function PlayerSettings({ navigation, route }) {
           team: teamNum,
         });
         await setDoc(doc(db, "/events", eventID, "/teams", teamNum), {
-          lastScan: "vErhQU5ApvBVNfQwD8Td",
+          lasQuiz: "vErhQU5ApvBVNfQwD8Td",
+          number: 1,
         });
         Alert.alert("Aggiornato!");
         navigation.goBack();

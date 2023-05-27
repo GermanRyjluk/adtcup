@@ -36,46 +36,50 @@ import {
 import { Footer } from "../components/footer";
 import Loading from "../components/loading";
 
+import { differenceInMilliseconds } from "date-fns";
+
 export default function QuizHome({ navigation, route }) {
   const [userTeam, setUserTeam] = useState("");
-  const [quizNum, setQuizNum] = useState("");
+  const [quizID, setQuizID] = useState(route.params?.quizID);
   const [quizData, setQuizData] = useState([null]);
-  const [data, setData] = useState([null]);
+
   const [refreshing, setRefreshing] = useState(false);
 
-  const eventID = route.params.eventID;
-  const quizID = route.params.quizID;
+  const [aboveZero, setAboveZero] = useState(false);
+
+  const [teamData, setTeamData] = useState([]); //lastQuiz, currentHint, timeOfScan, name, number
+
+  const currentTime = new Date();
+
+  const eventID = route.params?.eventID;
+
+  // ---------------- FETCH FUNCTIONS ---------------- //
 
   const getQuiz = useCallback(async (team) => {
-    await getDoc(doc(db, "events", eventID, "teams", team)).then(
-      async (snapshot) => {
-        if (snapshot.exists()) {
-          setQuizNum(snapshot.data()["lastQuiz"]);
-          await getDoc(doc(db, "events", eventID, "teams", team)).then(
-            async (snapshot) => {
+    try {
+      await getDoc(doc(db, "events", eventID, "teams", team)).then(
+        async (snapshot) => {
+          if (snapshot.exists()) {
+            setTeamData(snapshot.data());
+            // setLastScan(new Date(snapshot.data()["timeOfScan"]));
+            // setCurrentHint(snapshot.data()["currentHint"]);
+            // setQuizID(snapshot.data()["lastQuiz"]);
+            await getDoc(
+              doc(db, "events", eventID, "quiz", snapshot.data()["lastQuiz"])
+            ).then((snapshot) => {
               if (snapshot.exists()) {
-                // console.log(snapshot.data()["lastQuiz"]);
-                setQuizData(snapshot.data()["lastQuiz"]);
-                await getDoc(
-                  doc(
-                    db,
-                    "events",
-                    eventID,
-                    "quiz",
-                    snapshot.data()["lastQuiz"]
-                  )
-                ).then((snapshot) => {
-                  if (snapshot.exists()) {
-                    setQuizData(snapshot.data());
-                    // console.log(snapshot.data()["message"]);
-                  }
-                });
+                // console.log(snapshot.data());
+                setQuizData(snapshot.data());
               }
-            }
-          );
+            });
+          }
         }
-      }
-    );
+      );
+    } catch (e) {
+      console.error(e);
+    }
+    //   }
+    // );
   }, []);
 
   const getTeamAndQuiz = useCallback(async () => {
@@ -85,7 +89,7 @@ export default function QuizHome({ navigation, route }) {
         doc(db, "/users", auth.currentUser.uid, "/bookings", eventID)
       ).then(async (snapshot) => {
         if (snapshot.exists()) {
-          console.log("Team: ", snapshot.data()["team"]);
+          // console.log("Team: ", snapshot.data());
           setUserTeam(snapshot.data()["team"]);
           getQuiz(snapshot.data()["team"]);
         }
@@ -97,6 +101,7 @@ export default function QuizHome({ navigation, route }) {
   });
 
   const getNewQuiz = useCallback(async () => {
+    setRefreshing(true);
     try {
       await getDoc(doc(db, "events", eventID, "quiz", quizID)).then(
         async (snapshot) => {
@@ -111,14 +116,79 @@ export default function QuizHome({ navigation, route }) {
     } catch (e) {
       console.error(e);
     }
+    setRefreshing(false);
   });
+
+  // const getLastTeamData = async () => {
+  //   try {
+  //     await getDoc(doc(db, "events", eventID, "teams", userTeam)).then(
+  //       async (snapshot) => {
+  //         if (snapshot.exists()) {
+  //           setTeamData(snapshot.data());
+  //           // setLastScan(new Date(snapshot.data()["timeOfScan"]));
+  //           // setCurrentHint(snapshot.data()["currentHint"]);
+  //           // setQuizID(snapshot.data()["lastQuiz"]);
+  //         }
+  //       }
+  //     );
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
+
+  const getHint = async () => {
+    try {
+      await getDoc(
+        doc(
+          db,
+          "events",
+          eventID,
+          "quiz",
+          quizID,
+          "hints",
+          teamData["currentHint"]
+        )
+      ).then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log(snapshot.data()["message"]);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // ---------------- FETCH FUNCTIONS ---------------- //
+
   useEffect(() => {
     if (quizID == undefined) {
       getTeamAndQuiz();
+
+      // if (teamData !== undefined) {
+      //   let lastScan = new Date(teamData["timeOfScan"]);
+      //   console.log(differenceInMilliseconds(lastScan, currentTime) / 1000);
+      //   if (
+      //     300 -
+      //       differenceInMilliseconds(
+      //         currentTime,
+      //         new Date(teamData["timeOfScan"])
+      //       ) /
+      //         1000 <
+      //     0
+      //   ) {
+      //     console.log("first");
+      //     setAboveZero(false);
+      //     getHint();
+      //   } else {
+      //     setAboveZero(true);
+      //   }
+      // }
     } else {
       getNewQuiz();
     }
   }, [route.params.eventID, route.params.quizID]);
+
+  // ---------------- RENDER ---------------- //
 
   if (!quizData) {
     return <Loading />;
@@ -131,7 +201,6 @@ export default function QuizHome({ navigation, route }) {
           {/* <Header /> */}
           <ScrollView
             style={{
-              height: "100%",
               backgroundColor: colors.bg,
               padding: 30,
             }}
@@ -173,59 +242,58 @@ export default function QuizHome({ navigation, route }) {
                   {quizData["message"]}
                 </Text>
               </TouchableOpacity>
-              <View
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: 20,
-                }}
-              >
-                <CountdownCircleTimer
-                  isPlaying
-                  duration={10}
-                  colors={[
-                    colors.primary,
-                    "#004777",
-                    "#F7B801",
-                    "#A30000",
-                    "#A30000",
-                  ]}
-                  colorsTime={[10, 7, 5, 2, 0]}
-                  onComplete={() => Alert.alert("Hint!")}
-                >
-                  {({ remainingTime }) => (
-                    <Text
-                      style={{
-                        fontSize: 50,
-                        fontWeight: "800",
-                      }}
-                    >
-                      {remainingTime}
-                    </Text>
-                  )}
-                </CountdownCircleTimer>
-                {/* <View
+              {teamData["lastScan"] && aboveZero ? (
+                <View
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
-                    borderWidth: 4,
-                    borderRadius: 10,
-                    backgroundColor: "lime",
-                    marginTop: 30,
-                    width: "60%",
+                    marginTop: 20,
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: 60,
+                      fontSize: 30,
                       fontWeight: "800",
+                      marginBottom: 20,
                     }}
                   >
-                    10:00
+                    Nuovo indizio tra:{" "}
                   </Text>
-                </View> */}
-              </View>
+                  <CountdownCircleTimer
+                    isPlaying
+                    duration={
+                      300 -
+                      differenceInMilliseconds(
+                        currentTime,
+                        teamData["lastScan"]
+                      ) /
+                        1000
+                    }
+                    colors={[
+                      colors.primary,
+                      "#004777",
+                      "#F7B801",
+                      "#A30000",
+                      "#A30000",
+                    ]}
+                    colorsTime={[10, 7, 5, 2, 0]}
+                    onComplete={() => {}}
+                  >
+                    {({ remainingTime }) => (
+                      <Text
+                        style={{
+                          fontSize: 50,
+                          fontWeight: "800",
+                        }}
+                      >
+                        {remainingTime}
+                      </Text>
+                    )}
+                  </CountdownCircleTimer>
+                </View>
+              ) : null}
             </View>
+            <View style={{ width: "100%", height: 150 }}></View>
           </ScrollView>
           <View style={{ position: "absolute", bottom: 100, right: 15 }}>
             <QrButton />
@@ -265,8 +333,6 @@ export default function QuizHome({ navigation, route }) {
                 }}
               >
                 <Text style={{ fontSize: 25, fontWeight: "500" }}>
-                  {/* Informazione sull'indovinello 1 che va avanti fino a quando non
-                diventa troppo lungo... */}
                   {quizData["message"]}
                 </Text>
               </TouchableOpacity>
@@ -279,28 +345,9 @@ export default function QuizHome({ navigation, route }) {
                 >
                   {({ remainingTime }) => <Text>{remainingTime}</Text>}
                 </CountdownCircleTimer>
-                {/* <View
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderWidth: 4,
-                    borderRadius: 10,
-                    backgroundColor: "lime",
-                    marginTop: 30,
-                    width: "60%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 60,
-                      fontWeight: "800",
-                    }}
-                  >
-                    10:00
-                  </Text>
-                </View> */}
               </View>
             </View>
+            <View style={{ width: "100%", height: 150 }}></View>
           </ScrollView>
           <View style={{ position: "absolute", bottom: 100, right: 15 }}>
             <QrButton />
@@ -342,28 +389,17 @@ export default function QuizHome({ navigation, route }) {
                 }}
               />
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <View
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderWidth: 4,
-                    borderRadius: 10,
-                    backgroundColor: "lime",
-                    marginTop: 30,
-                    width: "60%",
-                  }}
+                <CountdownCircleTimer
+                  isPlaying
+                  duration={300}
+                  colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+                  colorsTime={[7, 5, 2, 0]}
                 >
-                  <Text
-                    style={{
-                      fontSize: 60,
-                      fontWeight: "800",
-                    }}
-                  >
-                    10:00
-                  </Text>
-                </View>
+                  {({ remainingTime }) => <Text>{remainingTime}</Text>}
+                </CountdownCircleTimer>
               </View>
             </View>
+            <View style={{ width: "100%", height: 150 }}></View>
           </ScrollView>
           <View style={{ position: "absolute", bottom: 100, right: 15 }}>
             <QrButton />
@@ -376,3 +412,26 @@ export default function QuizHome({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({});
+
+{
+  /* <View
+                 style={{
+                   justifyContent: "center",
+                   alignItems: "center",
+                   borderWidth: 4,
+                   borderRadius: 10,
+                   backgroundColor: "lime",
+                   marginTop: 30,
+                   width: "60%",
+                 }}
+               >
+                 <Text
+                   style={{
+                     fontSize: 60,
+                     fontWeight: "800",
+                   }}
+                 >
+                   10:00
+                 </Text>
+               </View> */
+}

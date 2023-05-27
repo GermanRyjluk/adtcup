@@ -34,8 +34,8 @@ export default function App() {
           }}
         >
           <Header />
-          {/* <AuthNavigator /> */}
-          <Admin />
+          <AuthNavigator />
+          {/* <Admin /> */}
         </SafeAreaView>
       </NavigationContainer>
     </SafeAreaProvider>
