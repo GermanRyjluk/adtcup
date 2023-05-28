@@ -16,6 +16,7 @@ import QuizHome from "../screens/quizHome";
 import GeolocationCheck from "../screens/geolocationCheck";
 import Ticket from "../screens/ticket";
 import EventBooking from "../screens/eventBooking";
+import Hints from "../screens/hints";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ export function LoggedIn() {
       <Stack.Screen name="Ticket" component={Ticket} />
       <Stack.Screen name="GeolocationCheck" component={GeolocationCheck} />
       <Stack.Screen name="Quiz" component={QuizHome} />
+      <Stack.Screen name="Hint" component={Hints} />
       <Stack.Screen name="GameRules" component={GameRules} />
       <Stack.Screen name="TeamInfo" component={TeamInfo} />
       <Stack.Screen name="Qr" component={QrReader} />

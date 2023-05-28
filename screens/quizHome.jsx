@@ -28,6 +28,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   query,
   updateDoc,
   where,
@@ -45,7 +46,7 @@ export default function QuizHome({ navigation, route }) {
 
   const [refreshing, setRefreshing] = useState(false);
 
-  const [aboveZero, setAboveZero] = useState(false);
+  const [aboveZero, setAboveZero] = useState(true);
 
   const [teamData, setTeamData] = useState([]); //lastQuiz, currentHint, timeOfScan, name, number
 
@@ -54,51 +55,6 @@ export default function QuizHome({ navigation, route }) {
   const eventID = route.params?.eventID;
 
   // ---------------- FETCH FUNCTIONS ---------------- //
-
-  const getQuiz = useCallback(async (team) => {
-    try {
-      await getDoc(doc(db, "events", eventID, "teams", team)).then(
-        async (snapshot) => {
-          if (snapshot.exists()) {
-            setTeamData(snapshot.data());
-            // setLastScan(new Date(snapshot.data()["timeOfScan"]));
-            // setCurrentHint(snapshot.data()["currentHint"]);
-            // setQuizID(snapshot.data()["lastQuiz"]);
-            await getDoc(
-              doc(db, "events", eventID, "quiz", snapshot.data()["lastQuiz"])
-            ).then((snapshot) => {
-              if (snapshot.exists()) {
-                // console.log(snapshot.data());
-                setQuizData(snapshot.data());
-              }
-            });
-          }
-        }
-      );
-    } catch (e) {
-      console.error(e);
-    }
-    //   }
-    // );
-  }, []);
-
-  const getTeamAndQuiz = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      const docRef = await getDoc(
-        doc(db, "/users", auth.currentUser.uid, "/bookings", eventID)
-      ).then(async (snapshot) => {
-        if (snapshot.exists()) {
-          // console.log("Team: ", snapshot.data());
-          setUserTeam(snapshot.data()["team"]);
-          getQuiz(snapshot.data()["team"]);
-        }
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    setRefreshing(false);
-  });
 
   const getNewQuiz = useCallback(async () => {
     setRefreshing(true);
@@ -114,78 +70,126 @@ export default function QuizHome({ navigation, route }) {
         }
       );
     } catch (e) {
-      console.error(e);
+      console.error("Error getting new quiz: ", e);
     }
     setRefreshing(false);
   });
 
-  // const getLastTeamData = async () => {
-  //   try {
-  //     await getDoc(doc(db, "events", eventID, "teams", userTeam)).then(
-  //       async (snapshot) => {
-  //         if (snapshot.exists()) {
-  //           setTeamData(snapshot.data());
-  //           // setLastScan(new Date(snapshot.data()["timeOfScan"]));
-  //           // setCurrentHint(snapshot.data()["currentHint"]);
-  //           // setQuizID(snapshot.data()["lastQuiz"]);
-  //         }
-  //       }
-  //     );
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
-
-  const getHint = async () => {
+  const getNewHint = async (quiz, hint) => {
     try {
       await getDoc(
-        doc(
-          db,
-          "events",
-          eventID,
-          "quiz",
-          quizID,
-          "hints",
-          teamData["currentHint"]
-        )
+        doc(db, "events", eventID, "quiz", quiz, "hints", hint)
       ).then((snapshot) => {
         if (snapshot.exists()) {
           console.log(snapshot.data()["message"]);
         }
       });
     } catch (e) {
-      console.error(e);
+      console.error("Error getting hint information: ", e);
     }
+  };
+
+  //Get team information
+  const getTeamInfo = async (team) => {
+    try {
+      await getDoc(doc(db, "events", eventID, "teams", team)).then(
+        async (snapshot) => {
+          if (snapshot.exists()) {
+            setTeamData(snapshot.data());
+
+            //Get last quiz scanned info
+
+            await getDoc(
+              doc(db, "events", eventID, "quiz", snapshot.data()["lastQuiz"])
+            ).then((snapshot) => {
+              if (snapshot.exists()) {
+                setQuizData(snapshot.data());
+              }
+            });
+
+            //Use last hint number and time
+
+            // console.log(
+            //   "Time:",
+            //   differenceInMilliseconds(
+            //     new Date(snapshot.data()["timeOfScan"]),
+            //     currentTime
+            //   ) / 1000
+            // );
+            if (
+              300 -
+                differenceInMilliseconds(
+                  currentTime,
+                  new Date(snapshot.data()["timeOfScan"])
+                ) /
+                  1000 <
+              0
+            ) {
+              // console.log("Searching next hint");
+              console.log("do not render countdown");
+              setAboveZero(false);
+              // getNewHint(
+              //   snapshot.data()["lastQuiz"],
+              //   snapshot.data()["currentHint"]
+              // );
+            } else {
+              console.log("render countdown");
+              setAboveZero(true);
+            }
+          }
+        }
+      );
+    } catch (e) {
+      console.error("Error fetchin team info: ", e);
+    }
+  };
+
+  //Get team number
+  const getTeamAndData = async () => {
+    setRefreshing(true);
+    try {
+      const docRef = await getDoc(
+        doc(db, "/users", auth.currentUser.uid, "/bookings", eventID)
+      ).then(async (snapshot) => {
+        if (snapshot.exists()) {
+          // console.log("Team: ", snapshot.data());
+          setUserTeam(snapshot.data()["team"]);
+          getTeamInfo(snapshot.data()["team"]);
+        }
+      });
+    } catch (e) {
+      console.error("Error fetching team number: ", e);
+    }
+    setRefreshing(false);
+  };
+
+  //On refresh
+  const handleRefresh = () => {
+    if (quizID == undefined) {
+      getTeamAndData();
+    } else {
+      getNewQuiz();
+    }
+  };
+
+  //handle countdown completed
+  const handleCompletedCountdown = async (quiz, hint) => {
+    console.log("Countdown completed: ", hint);
+    //Add new hint to team collection
+
+    //Update lastScan and hint number
+    // let now = new Date();
+    // await updateDoc(doc(db, "events", eventID, "teams", userTeam), {
+    //   timeOfScan: now.toString(),
+    //   currentHint: hint + 1,
+    // });
+    navigation.navigate("TeamInfo");
   };
 
   // ---------------- FETCH FUNCTIONS ---------------- //
 
   useEffect(() => {
-    if (quizID == undefined) {
-      getTeamAndQuiz();
-
-      // if (teamData !== undefined) {
-      //   let lastScan = new Date(teamData["timeOfScan"]);
-      //   console.log(differenceInMilliseconds(lastScan, currentTime) / 1000);
-      //   if (
-      //     300 -
-      //       differenceInMilliseconds(
-      //         currentTime,
-      //         new Date(teamData["timeOfScan"])
-      //       ) /
-      //         1000 <
-      //     0
-      //   ) {
-      //     console.log("first");
-      //     setAboveZero(false);
-      //     getHint();
-      //   } else {
-      //     setAboveZero(true);
-      //   }
-      // }
-    } else {
-      getNewQuiz();
-    }
+    handleRefresh();
   }, [route.params.eventID, route.params.quizID]);
 
   // ---------------- RENDER ---------------- //
@@ -207,7 +211,7 @@ export default function QuizHome({ navigation, route }) {
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
-                onRefresh={getTeamAndQuiz}
+                onRefresh={handleRefresh}
               />
             }
           >
@@ -242,7 +246,7 @@ export default function QuizHome({ navigation, route }) {
                   {quizData["message"]}
                 </Text>
               </TouchableOpacity>
-              {teamData["lastScan"] && aboveZero ? (
+              {teamData && aboveZero ? (
                 <View
                   style={{
                     justifyContent: "center",
@@ -257,7 +261,7 @@ export default function QuizHome({ navigation, route }) {
                       marginBottom: 20,
                     }}
                   >
-                    Nuovo indizio tra:{" "}
+                    Nuovo indizio tra:
                   </Text>
                   <CountdownCircleTimer
                     isPlaying
@@ -265,7 +269,7 @@ export default function QuizHome({ navigation, route }) {
                       300 -
                       differenceInMilliseconds(
                         currentTime,
-                        teamData["lastScan"]
+                        new Date(teamData["timeOfScan"])
                       ) /
                         1000
                     }
@@ -276,8 +280,13 @@ export default function QuizHome({ navigation, route }) {
                       "#A30000",
                       "#A30000",
                     ]}
-                    colorsTime={[10, 7, 5, 2, 0]}
-                    onComplete={() => {}}
+                    colorsTime={[200, 100, 25, 10, 5]}
+                    onComplete={() => {
+                      handleCompletedCountdown(
+                        teamData["lastQuiz"],
+                        teamData["currentHint"]
+                      );
+                    }}
                   >
                     {({ remainingTime }) => (
                       <Text
@@ -314,7 +323,7 @@ export default function QuizHome({ navigation, route }) {
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
-                onRefresh={getTeamAndQuiz}
+                onRefresh={handleRefresh}
               />
             }
           >
@@ -368,7 +377,7 @@ export default function QuizHome({ navigation, route }) {
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
-                onRefresh={getTeamAndQuiz}
+                onRefresh={handleRefresh}
               />
             }
           >
