@@ -13,6 +13,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   orderBy,
   query,
   updateDoc,
@@ -65,19 +66,47 @@ export default function Scoreboard() {
     getTeamsFromDB();
   }, []);
 
-  const handleIncrease = (name) => {
-    const updatedData = teams.map((item) =>
-      item.name === name ? { ...item, points: item.points + 1 } : item
-    );
-    setTeams(updatedData);
-    console.log(teams);
+  const updateDB = async (type, number, points) => {
+    if (type == "add") {
+      try {
+        await updateDoc(
+          doc(db, "events", eventID, "teams", number.toString()),
+          {
+            points: increment(1),
+          }
+        );
+      } catch (e) {
+        console.error("Error increasing: ", e);
+      }
+    } else if (type == "minus") {
+      try {
+        await updateDoc(
+          doc(db, "events", eventID, "teams", number.toString()),
+          {
+            points: increment(-1),
+          }
+        );
+      } catch (e) {
+        console.error("Error decreasing: ", e);
+      }
+    }
   };
-  const handleDecrease = (name) => {
-    const updatedData = teams.map((item) =>
-      item.name === name ? { ...item, points: item.points - 1 } : item
+
+  const handleIncrease = async (number, points) => {
+    const updatedData = teams.map((team) =>
+      team.number === number ? { ...team, points: team.points + 1 } : team
     );
     setTeams(updatedData);
     console.log(teams);
+    updateDB("add", number, points);
+  };
+  const handleDecrease = (number, points) => {
+    const updatedData = teams.map((team) =>
+      team.number === number ? { ...team, points: team.points - 1 } : team
+    );
+    setTeams(updatedData);
+    console.log(teams);
+    updateDB("minus", number, points);
   };
 
   return (
@@ -125,7 +154,12 @@ export default function Scoreboard() {
             >
               <View>
                 <Text
-                  style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "800",
+                    marginBottom: 3,
+                    color: colors.bg,
+                  }}
                 >
                   {team.name}: {team.points}
                 </Text>
@@ -145,7 +179,7 @@ export default function Scoreboard() {
                     borderRadius: 20,
                     marginHorizontal: 10,
                   }}
-                  onPress={() => handleIncrease(team.name)}
+                  onPress={() => handleIncrease(team.number, team.points)}
                 >
                   <Text
                     style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
@@ -162,7 +196,7 @@ export default function Scoreboard() {
                     alignItems: "center",
                     borderRadius: 20,
                   }}
-                  onPress={() => handleDecrease(team.name)}
+                  onPress={() => handleDecrease(team.number, team.points)}
                 >
                   <Text
                     style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}

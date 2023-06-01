@@ -18,6 +18,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { RefreshControl } from "react-native";
 
 export default function Scoreboard({ route }) {
   const [isPublic, setIsPublic] = useState(false);
@@ -46,12 +47,26 @@ export default function Scoreboard({ route }) {
 
   useEffect(() => {
     getTeamsFromDB();
+    console.log(teams);
   }, []);
 
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.primary, padding: 20 }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={getTeamsFromDB} />
+      }
     >
+      <Text
+        style={{
+          fontSize: 40,
+          fontWeight: "800",
+          color: colors.secondary,
+          marginBottom: 20,
+        }}
+      >
+        CLASSIFICA
+      </Text>
       {teams.map((team, i) => {
         return (
           <View
@@ -60,14 +75,72 @@ export default function Scoreboard({ route }) {
               width: "100%",
               height: 70,
               justifyContent: "space-between",
+              backgroundColor: colors.bg,
+              marginBottom: 20,
+              borderRadius: 20,
+              alignItems: "center",
+              justifyContent: "center",
             }}
             key={i}
           >
-            <View>
+            <View
+              style={{
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                backgroundColor: colors.secondary,
+                marginLeft: 20,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Text
-                style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
+                style={{
+                  fontSize: 20,
+                  fontWeight: "800",
+                  marginBottom: 3,
+                  color: colors.primary,
+                }}
               >
-                {team.name}: {team.points}
+                {i + 1}
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 2,
+                marginHorizontal: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "800",
+                  marginBottom: 3,
+                  color: colors.primary,
+                }}
+              >
+                {team.name}
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                height: "100%",
+                borderRadius: 20,
+                backgroundColor: colors.secondary,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: "800",
+                  marginBottom: 3,
+                  color: colors.primary,
+                }}
+              >
+                {team.points}K
               </Text>
             </View>
           </View>

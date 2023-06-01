@@ -1,10 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-import { colors } from '../shared/colors';
+import { colors } from "../shared/colors";
 
-import Icon from 'react-native-vector-icons/Octicons'; //Gear (gear) and Hamburger(three-bars)
-import Icon1 from 'react-native-vector-icons/FontAwesome5'; //Trophy (trophy)
+import Icon from "react-native-vector-icons/Octicons"; //Gear (gear) and Hamburger(three-bars)
+import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
+import { QrButton } from "./qrButton";
 
 export const Footer = () => {
   const navigation = useNavigation();
@@ -14,12 +15,12 @@ export const Footer = () => {
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('GameRules');
+            navigation.navigate("GameRules");
           }}
           style={{
             top: -15,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
             height: 70,
             width: 70,
             borderRadius: 35,
@@ -30,17 +31,35 @@ export const Footer = () => {
         >
           <View>
             <Image
-              source={require('../assets/yellow_trophy.png')}
+              source={require("../assets/yellow_trophy.png")}
               resizeMode="contain"
               style={{
                 width: 30,
                 height: 30,
-                tintColor: 'black',
+                tintColor: "black",
               }}
             />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
+          style={{
+            top: -35,
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            backgroundColor: "black",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onPress={() => navigation.navigate("Qr")}
+        >
+          <Image
+            style={{ width: "50%", height: "50%" }}
+            source={require("../assets/qr.png")}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.navigate('Quiz');
           }}
@@ -67,15 +86,15 @@ export const Footer = () => {
               }}
             />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('TeamInfo');
+            navigation.navigate("TeamInfo");
           }}
           style={{
             top: -15,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
             height: 70,
             width: 70,
             borderRadius: 35,
@@ -86,7 +105,7 @@ export const Footer = () => {
         >
           <View>
             <Image
-              source={require('../assets/teamIcon.png')}
+              source={require("../assets/teamIcon.png")}
               resizeMode="contain"
               style={{
                 width: 30,
@@ -102,20 +121,20 @@ export const Footer = () => {
 };
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     height: 58,
-    width: '100%',
+    width: "100%",
   },
   text: {
     color: colors.secondary,
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: "800",
     marginHorizontal: 5,
   },
 });

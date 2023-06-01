@@ -37,14 +37,16 @@ const currentEvents = [
   {
     id: "1VgaAztg9yvbzRLuIjql",
     name: "FOSSACESIA",
-    photo: "null",
+    photo:
+      "https://www.chietitoday.it/~media/horizontal-hi/67481805668942/fossacesia-marina-2.jpg",
     date: "25-8-2023",
     price: "€10",
   },
   {
     id: "1VgaAztg9yvbzRLuIjql",
     name: "SANTVIT",
-    photo: "null",
+    photo:
+      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Porto_di_San_Vito_Chietino_02.JPG",
     date: "24-8-2023",
     price: "€20",
   },
@@ -104,37 +106,60 @@ export default function Home({ navigation }) {
               onPress={() => handlePress(data.id, data.scoreboardPublic)}
               style={styles.eventCard}
             >
-              <View style={styles.eventButton}>
-                <Text style={[styles.text, { color: colors.primary }]}>
-                  {data.name}
-                </Text>
-              </View>
               <ImageBackground
                 source={{ uri: data.photo }}
                 imageStyle={{
                   borderRadius: 15,
-                  borderWidth: 5,
-                  borderColor: colors.primary,
                 }}
                 style={{
-                  flex: 5,
+                  flex: 2,
                   height: "100%",
                   width: "100%",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
+              />
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                  width: "100%",
+                  padding: 15,
+                }}
               >
-                <View style={styles.playButton}>
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <Text
-                    style={[
-                      styles.text,
-                      { color: colors.primary, marginBottom: 5 },
-                    ]}
+                    style={{ color: "white", fontSize: 25, fontWeight: "800" }}
                   >
-                    GIOCA
+                    {data.name}
+                  </Text>
+                  <Text
+                    style={{ color: "white", fontSize: 15, fontWeight: "500" }}
+                  >
+                    {data.date}
                   </Text>
                 </View>
-              </ImageBackground>
+                <View
+                  style={{
+                    width: "100%",
+                    height: 50,
+                    backgroundColor: colors.secondary,
+                    borderRadius: 15,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 25, fontWeight: "800" }}>Gioca</Text>
+                </View>
+              </View>
             </TouchableOpacity>
           );
         })}
@@ -181,7 +206,8 @@ export default function Home({ navigation }) {
           tabBarLabelStyle: {
             fontSize: 15,
             letterSpacing: 1,
-            fontFamily: font,
+            fontWeight: "800",
+            // fontFamily: font,
             color: colors.secondary,
           },
           tabBarIndicatorStyle: { backgroundColor: colors.secondary },
@@ -231,13 +257,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     borderTopWidth: 3,
-    borderTopColor: "black",
+    borderTopColor: colors.secondary,
   },
   text: {
     color: colors.secondary,
     fontSize: 30,
     marginHorizontal: 5,
-    fontFamily: font,
+    fontWeight: "800",
+    // fontFamily: font,
   },
   trophyBox: {
     position: "absolute",
@@ -250,7 +277,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 100,
     borderWidth: 3,
-    borderColor: "black",
+    borderColor: colors.secondary,
     //Ios Shadow
     // shadowColor: '#000',
     // shadowOffset: {

@@ -3,6 +3,7 @@ import React from "react";
 import { Header } from "../components/header";
 import { colors } from "../shared/colors";
 import { QrButton } from "../components/qrButton";
+import { Footer } from "../components/footer";
 
 export default function GameRules({ navigation }) {
   return (
@@ -48,10 +49,11 @@ export default function GameRules({ navigation }) {
         <Text style={{ fontSize: 20, fontWeight: "500", marginVertical: 5 }}>
           7- Non fare farti le pippe
         </Text>
-        <View style={{ position: "absolute", bottom: 100, right: 15 }}>
+        {/* <View style={{ position: "absolute", bottom: 100, right: 15 }}>
           <QrButton />
-        </View>
+        </View> */}
       </View>
+      <Footer />
     </>
   );
 }

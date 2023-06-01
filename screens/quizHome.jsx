@@ -219,96 +219,264 @@ export default function QuizHome({ navigation, route }) {
     return <Loading />;
   }
 
-  return (
-    <>
-      <ScrollView
-        style={{
-          backgroundColor: colors.bg,
-          padding: 20,
-          paddingTop: 20,
-        }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-        }
-      >
-        <Text style={{ fontSize: 25, fontWeight: "800", marginBottom: 20 }}>
-          {quizData["number"]}/??
-        </Text>
-        <View>
-          {quizData["type"] == "both" || quizData["type"] == "photo" ? (
+  if (quizData.type == "both") {
+    return (
+      <>
+        <ScrollView
+          style={{ padding: 20, flex: 1, backgroundColor: colors.bg }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+        >
+          <View
+            style={{
+              width: "100%",
+              height: 500,
+              backgroundColor: colors.primary,
+              borderRadius: 20,
+            }}
+          >
             <Image
-              source={quizData["photo"] ? { uri: quizData["photo"] } : null}
+              source={{ uri: quizData.photo }}
               style={{
                 width: "100%",
-                height: 250,
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 20,
-                borderRadius: 10,
-                marginBottom: 20,
+                height: "50%",
+                borderTopRightRadius: 20,
+                borderTopLeftRadius: 20,
               }}
             />
-          ) : null}
-          {quizData["type"] == "both" || quizData["type"] == "message" ? (
-            <TouchableOpacity
+            <View
               style={{
-                backgroundColor: "#d9d9d9",
-                height: 100,
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 15,
-                borderRadius: 10,
-                borderWidth: 5,
-                borderColor: colors.primary,
+                padding: 20,
+                borderBottomRightRadius: 20,
+                borderBottomLeftRadius: 20,
+                height: "50%",
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: "500" }}>
-                {quizData["message"]}
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "800",
+                  color: colors.secondary,
+                  marginBottom: 20,
+                }}
+              >
+                Indovinello
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "800",
+                  color: "white",
+                  marginBottom: 10,
+                }}
+              >
+                {quizData.message}
+              </Text>
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 10,
+                  left: 20,
+                  width: "100%",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "800",
+                    color: "white",
+                    marginBottom: 10,
+                  }}
+                >
+                  {quizData.number}/??
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                width: "100%",
+                height: 80,
+                marginTop: 20,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  height: "100%",
+                  width: 150,
+                  backgroundColor: colors.primary,
+                  borderRadius: 30,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() =>
+                  navigation.navigate("Hint", {
+                    eventID: eventID,
+                    userTeam: userTeam,
+                  })
+                }
+              >
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontWeight: "800",
+                    color: colors.secondary,
+                  }}
+                >
+                  Indizi
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  height: "100%",
+                  width: 150,
+                  backgroundColor: colors.primary,
+                  borderRadius: 30,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() =>
+                  scoreboardPublic
+                    ? navigation.navigate("userScoreboard")
+                    : Alert.alert(
+                        "Classifica non disponibile",
+                        "In questa fase della gara non è possibile vedere la classifica"
+                      )
+                }
+              >
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontWeight: "800",
+                    color: colors.secondary,
+                  }}
+                >
+                  Classifica
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ width: "100%", height: 150 }}></View>
+        </ScrollView>
+        <Footer />
+      </>
+    );
+  } else if (quizData.type == "message") {
+    return (
+      <>
+        <ScrollView
+          style={{ padding: 20, flex: 1, backgroundColor: colors.bg }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+        >
+          <View
+            style={{
+              width: "100%",
+              height: 500,
+              backgroundColor: colors.primary,
+              borderRadius: 20,
+            }}
+          >
+            <View
+              style={{
+                padding: 20,
+                borderBottomRightRadius: 20,
+                borderBottomLeftRadius: 20,
+                height: "50%",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "800",
+                  color: colors.secondary,
+                  marginBottom: 20,
+                }}
+              >
+                Indovinello
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "800",
+                  color: "white",
+                  marginBottom: 10,
+                }}
+              >
+                {quizData.message}
+              </Text>
+            </View>
+            <View
+              style={{
+                position: "absolute",
+                bottom: 10,
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "800",
+                  color: "white",
+                  marginBottom: 10,
+                }}
+              >
+                {quizData.number}/??
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              width: "100%",
+              height: 80,
+              marginTop: 20,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                height: "100%",
+                width: 150,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() =>
+                navigation.navigate("Hint", {
+                  eventID: eventID,
+                  userTeam: userTeam,
+                })
+              }
+            >
+              <Text
+                style={{
+                  fontSize: 25,
+                  fontWeight: "800",
+                  color: colors.secondary,
+                }}
+              >
+                Indizi
               </Text>
             </TouchableOpacity>
-          ) : null}
-          <TouchableOpacity
-            style={{
-              backgroundColor: colors.primary,
-              height: 100,
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 15,
-              borderRadius: 10,
-              marginTop: 20,
-            }}
-            onPress={() =>
-              navigation.navigate("Hint", {
-                eventID: eventID,
-                userTeam: userTeam,
-              })
-            }
-          >
-            <Text
-              style={{
-                fontSize: 30,
-                fontWeight: "800",
-                color: colors.secondary,
-              }}
-            >
-              INDIZI
-            </Text>
-          </TouchableOpacity>
-          {scoreboardPublic ? (
+
             <TouchableOpacity
               style={{
-                backgroundColor: "#D6D6D6",
-                height: 100,
-                width: "100%",
+                height: "100%",
+                width: 150,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
                 alignItems: "center",
                 justifyContent: "center",
-                padding: 15,
-                borderRadius: 10,
-                marginTop: 20,
-                borderWidth: 5,
-                borderColor: colors.primary,
               }}
               onPress={() =>
                 scoreboardPublic
@@ -321,24 +489,263 @@ export default function QuizHome({ navigation, route }) {
             >
               <Text
                 style={{
-                  fontSize: 30,
+                  fontSize: 25,
                   fontWeight: "800",
-                  color: colors.primary,
+                  color: colors.secondary,
                 }}
               >
-                CLASSIFICA
+                Classifica
               </Text>
             </TouchableOpacity>
-          ) : null}
-        </View>
-        <View style={{ width: "100%", height: 150 }}></View>
-      </ScrollView>
-      <View style={{ position: "absolute", bottom: 100, right: 15 }}>
-        <QrButton />
-      </View>
-      <Footer />
-    </>
-  );
+          </View>
+          <View style={{ width: "100%", height: 150 }}></View>
+        </ScrollView>
+        <Footer />
+      </>
+    );
+  } else if (quizData.type == "photo") {
+    return (
+      <>
+        <ScrollView
+          style={{ padding: 20, flex: 1, backgroundColor: colors.bg }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+        >
+          <View
+            style={{
+              width: "100%",
+              height: 500,
+              backgroundColor: colors.primary,
+              borderRadius: 20,
+            }}
+          >
+            <Image
+              source={{ uri: quizData.photo }}
+              style={{
+                width: "100%",
+                height: "85%",
+                borderTopRightRadius: 20,
+                borderTopLeftRadius: 20,
+              }}
+            />
+            <View
+              style={{
+                width: "100%",
+                height: "15%",
+                backgroundColor: colors.primary,
+                borderRadius: 20,
+                alignItems: "center",
+                justifyContent: "center",
+                paddingTop: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 25,
+                  fontWeight: "800",
+                  color: "white",
+                  marginBottom: 10,
+                }}
+              >
+                {quizData.number}/??
+              </Text>
+            </View>
+
+            <View
+              style={{
+                width: "100%",
+                height: 80,
+                marginTop: 20,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  height: "100%",
+                  width: 150,
+                  backgroundColor: colors.primary,
+                  borderRadius: 30,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() =>
+                  navigation.navigate("Hint", {
+                    eventID: eventID,
+                    userTeam: userTeam,
+                  })
+                }
+              >
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontWeight: "800",
+                    color: colors.secondary,
+                  }}
+                >
+                  Indizi
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  height: "100%",
+                  width: 150,
+                  backgroundColor: colors.primary,
+                  borderRadius: 30,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() =>
+                  scoreboardPublic
+                    ? navigation.navigate("userScoreboard")
+                    : Alert.alert(
+                        "Classifica non disponibile",
+                        "In questa fase della gara non è possibile vedere la classifica"
+                      )
+                }
+              >
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontWeight: "800",
+                    color: colors.secondary,
+                  }}
+                >
+                  Classifica
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ width: "100%", height: 150 }}></View>
+        </ScrollView>
+        <Footer />
+      </>
+    );
+  }
+
+  // return (
+  //   <>
+  //     <ScrollView
+  //       style={{
+  //         backgroundColor: colors.bg,
+  //         padding: 20,
+  //         paddingTop: 20,
+  //       }}
+  //       refreshControl={
+  //         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+  //       }
+  //     >
+  //       <Text style={{ fontSize: 25, fontWeight: "800", marginBottom: 20 }}>
+  //         {quizData["number"]}/??
+  //       </Text>
+  //       <View>
+  //         {quizData["type"] == "both" || quizData["type"] == "photo" ? (
+  //           <Image
+  //             source={quizData["photo"] ? { uri: quizData["photo"] } : null}
+  //             style={{
+  //               width: "100%",
+  //               height: 250,
+  //               alignItems: "center",
+  //               justifyContent: "center",
+  //               padding: 20,
+  //               borderRadius: 10,
+  //               marginBottom: 20,
+  //             }}
+  //           />
+  //         ) : null}
+  //         {quizData["type"] == "both" || quizData["type"] == "message" ? (
+  //           <TouchableOpacity
+  //             style={{
+  //               backgroundColor: "#d9d9d9",
+  //               height: 100,
+  //               width: "100%",
+  //               alignItems: "center",
+  //               justifyContent: "center",
+  //               padding: 15,
+  //               borderRadius: 10,
+  //               borderWidth: 5,
+  //               borderColor: colors.primary,
+  //             }}
+  //           >
+  //             <Text style={{ fontSize: 20, fontWeight: "500" }}>
+  //               {quizData["message"]}
+  //             </Text>
+  //           </TouchableOpacity>
+  //         ) : null}
+  //         <TouchableOpacity
+  //           style={{
+  //             backgroundColor: colors.primary,
+  //             height: 100,
+  //             width: "100%",
+  //             alignItems: "center",
+  //             justifyContent: "center",
+  //             padding: 15,
+  //             borderRadius: 10,
+  //             marginTop: 20,
+  //           }}
+  //           onPress={() =>
+  //             navigation.navigate("Hint", {
+  //               eventID: eventID,
+  //               userTeam: userTeam,
+  //             })
+  //           }
+  //         >
+  //           <Text
+  //             style={{
+  //               fontSize: 30,
+  //               fontWeight: "800",
+  //               color: colors.secondary,
+  //             }}
+  //           >
+  //             INDIZI
+  //           </Text>
+  //         </TouchableOpacity>
+  //         {scoreboardPublic ? (
+  //           <TouchableOpacity
+  //             style={{
+  //               backgroundColor: "#D6D6D6",
+  //               height: 100,
+  //               width: "100%",
+  //               alignItems: "center",
+  //               justifyContent: "center",
+  //               padding: 15,
+  //               borderRadius: 10,
+  //               marginTop: 20,
+  //               borderWidth: 5,
+  //               borderColor: colors.primary,
+  //             }}
+  //             onPress={() =>
+  //               scoreboardPublic
+  //                 ? navigation.navigate("userScoreboard")
+  //                 : Alert.alert(
+  //                     "Classifica non disponibile",
+  //                     "In questa fase della gara non è possibile vedere la classifica"
+  //                   )
+  //             }
+  //           >
+  //             <Text
+  //               style={{
+  //                 fontSize: 30,
+  //                 fontWeight: "800",
+  //                 color: colors.primary,
+  //               }}
+  //             >
+  //               CLASSIFICA
+  //             </Text>
+  //           </TouchableOpacity>
+  //         ) : null}
+  //       </View>
+  //       <View style={{ width: "100%", height: 150 }}></View>
+  //     </ScrollView>
+  //     {/* <View style={{ position: "absolute", bottom: 100, right: 15 }}>
+  //       <QrButton />
+  //     </View> */}
+  //     <Footer />
+  //   </>
+  // );
 }
 
 const styles = StyleSheet.create({});

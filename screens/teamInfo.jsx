@@ -5,6 +5,7 @@ import { colors } from "../shared/colors";
 import { Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { QrButton } from "../components/qrButton";
+import { Footer } from "../components/footer";
 
 export default function TeamInfo() {
   return (
@@ -55,10 +56,11 @@ export default function TeamInfo() {
             Qui ci saranno altre info della squadra utili all'amministrazione
           </Text>
         </View>
-        <View style={{ position: "absolute", bottom: 100, right: 15 }}>
+        {/* <View style={{ position: "absolute", bottom: 100, right: 15 }}>
           <QrButton />
-        </View>
+        </View> */}
       </View>
+      <Footer />
     </>
   );
 }
