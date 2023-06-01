@@ -1,10 +1,12 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 
 import { colors } from "../shared/colors";
 
 import Icon from "react-native-vector-icons/Octicons"; //Gear (gear) and Hamburger(three-bars)
 import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
+
+import { font } from "../shared/fonts";
 
 export const Header = () => {
   const navigation = useNavigation();
@@ -29,7 +31,12 @@ export const Header = () => {
           }}
         >
           <Text style={styles.text}>ADT</Text>
-          <Icon1 name="trophy" size={25} color={colors.secondary} />
+          <Image
+            source={require("../assets/icon-nobg.png")}
+            style={{ height: 30, width: 30, top: 3 }}
+            resizeMethod="auto"
+          />
+          {/* <Icon1 name="trophy" size={25} color={colors.secondary} /> */}
           <Text style={styles.text}>CUP</Text>
         </View>
         <TouchableOpacity
@@ -54,8 +61,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.secondary,
-    fontSize: 20,
-    fontWeight: "800",
+    fontSize: 25,
     marginHorizontal: 5,
+    fontFamily: font,
   },
 });

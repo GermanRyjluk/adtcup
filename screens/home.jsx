@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   ImageBackground,
+  Image,
 } from "react-native";
 
 import { Header } from "../components/header";
@@ -17,6 +18,8 @@ import { auth, db } from "../firebase/firebase";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
+import { font } from "../shared/fonts";
+
 const Tab = createMaterialTopTabNavigator();
 
 // import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -25,9 +28,11 @@ const currentEvents = [
   {
     id: "1VgaAztg9yvbzRLuIjql",
     name: "LANGIAN",
-    photo: "null",
+    photo:
+      "https://www.virtuquotidiane.it/wp-content/uploads/2017/07/lancianonotte.jpg",
     date: "23-8-2023",
     price: "€15",
+    scoreboardPublic: true,
   },
   {
     id: "1VgaAztg9yvbzRLuIjql",
@@ -54,7 +59,7 @@ const pastEvents = [
 ];
 
 export default function Home({ navigation }) {
-  const checkBookingStatus = async (eventID) => {
+  const checkBookingStatus = async (eventID, scoreboardPublic) => {
     try {
       const snapshot = await getDoc(
         doc(db, "/events", eventID, "/bookings", auth.currentUser.uid)
@@ -66,9 +71,14 @@ export default function Home({ navigation }) {
         } else if (snapshot.data().status == "pay") {
           navigation.navigate("EventStatus", { status: "pay" });
         } else if (snapshot.data().status == "can play") {
-          navigation.navigate("Ticket", { eventID: eventID });
+          navigation.navigate("Ticket", {
+            eventID: eventID,
+          });
         } else if (snapshot.data().status == "playing") {
-          navigation.navigate("Quiz", { eventID: eventID });
+          navigation.navigate("Quiz", {
+            eventID: eventID,
+            scoreboardPublic: scoreboardPublic,
+          });
         }
       } else {
         navigation.navigate("EventInfo", { eventID: eventID });
@@ -78,9 +88,9 @@ export default function Home({ navigation }) {
     }
   };
 
-  const handlePress = (eventID) => {
+  const handlePress = (eventID, scoreboardPublic) => {
     auth.currentUser
-      ? checkBookingStatus(eventID)
+      ? checkBookingStatus(eventID, scoreboardPublic)
       : navigation.navigate("EventInfo");
   };
 
@@ -89,15 +99,42 @@ export default function Home({ navigation }) {
       <ScrollView style={{ flex: 1, padding: 30, backgroundColor: colors.bg }}>
         {currentEvents.map((data, i) => {
           return (
-            <TouchableOpacity key={i} onPress={() => handlePress(data.id)}>
-              <View style={[styles.eventCard, { height: 250 }]}>
-                <Text style={styles.text}>{data.name}</Text>
-                <View style={styles.eventButton}>
-                  <Text style={[styles.text, { color: colors.primary }]}>
-                    Gioca
+            <TouchableOpacity
+              key={i}
+              onPress={() => handlePress(data.id, data.scoreboardPublic)}
+              style={styles.eventCard}
+            >
+              <View style={styles.eventButton}>
+                <Text style={[styles.text, { color: colors.primary }]}>
+                  {data.name}
+                </Text>
+              </View>
+              <ImageBackground
+                source={{ uri: data.photo }}
+                imageStyle={{
+                  borderRadius: 15,
+                  borderWidth: 5,
+                  borderColor: colors.primary,
+                }}
+                style={{
+                  flex: 5,
+                  height: "100%",
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View style={styles.playButton}>
+                  <Text
+                    style={[
+                      styles.text,
+                      { color: colors.primary, marginBottom: 5 },
+                    ]}
+                  >
+                    GIOCA
                   </Text>
                 </View>
-              </View>
+              </ImageBackground>
             </TouchableOpacity>
           );
         })}
@@ -143,7 +180,8 @@ export default function Home({ navigation }) {
           tabBarStyle: { backgroundColor: colors.primary },
           tabBarLabelStyle: {
             fontSize: 15,
-            fontWeight: "800",
+            letterSpacing: 1,
+            fontFamily: font,
             color: colors.secondary,
           },
           tabBarIndicatorStyle: { backgroundColor: colors.secondary },
@@ -169,7 +207,11 @@ export default function Home({ navigation }) {
         onPress={() => navigation.navigate("Intro")}
       >
         <View style={styles.trophyBox}>
-          <Icon1 name="trophy" size={50} color={colors.secondary} />
+          {/* <Icon1 name="trophy" size={50} color={colors.secondary} /> */}
+          <Image
+            source={require("../assets/trophyY.png")}
+            style={{ width: 63, height: 63 }}
+          />
         </View>
         <View style={styles.textBox}>
           <Text style={styles.text}>Manuale ADT</Text>
@@ -194,8 +236,8 @@ const styles = StyleSheet.create({
   text: {
     color: colors.secondary,
     fontSize: 30,
-    fontWeight: "800",
     marginHorizontal: 5,
+    fontFamily: font,
   },
   trophyBox: {
     position: "absolute",
@@ -234,15 +276,26 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   eventButton: {
-    position: "absolute",
-    bottom: 0,
+    flex: 1,
     width: "100%",
-    height: 60,
+    height: 40,
     backgroundColor: colors.secondary,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 5,
     borderColor: colors.primary,
     borderRadius: 15,
+  },
+  playButton: {
+    position: "absolute",
+    bottom: 20,
+    backgroundColor: colors.secondary,
+    height: 50,
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: colors.primary,
   },
 });

@@ -38,7 +38,7 @@ export default function App({ navigation, route }) {
 
   //Code Scan
   const handleBarcodeScanned = ({ type, data }) => {
-    // console.log("Scanned: ", data);
+    console.log("Scanned: ", data);
     const options = {
       enableVibrateFallback: true,
       ignoreAndroidSystemSettings: false,

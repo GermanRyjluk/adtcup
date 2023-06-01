@@ -1,1 +1,1 @@
-export const fonts = {};
+export const font = "cherry-regular";

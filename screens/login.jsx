@@ -35,18 +35,14 @@ export default function Login({ navigation }) {
 
   const UserLogIn = () => {
     if (email.length != 0 && password.length != 0) {
-      signInWithEmailAndPassword(auth, email, password)
-        .then((UserCredential) => {
-          navigation.navigate("HomeDrawer");
-        })
-        .catch((e) => {
-          if (e.code == "auth/user-not-found") {
-            Alert.alert("Email incorretto o inesistente");
-          }
-          if (e.code == "auth/wrong-password") {
-            Alert.alert("Password errata");
-          }
-        });
+      signInWithEmailAndPassword(auth, email, password).catch((e) => {
+        if (e.code == "auth/user-not-found") {
+          Alert.alert("Email incorretto o inesistente");
+        }
+        if (e.code == "auth/wrong-password") {
+          Alert.alert("Password errata");
+        }
+      });
     } else {
       Alert.alert("Inserire credenziali");
     }

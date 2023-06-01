@@ -30,6 +30,7 @@ import {
   getDocs,
   increment,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -38,10 +39,10 @@ import { Footer } from "../components/footer";
 import Loading from "../components/loading";
 
 import { differenceInMilliseconds } from "date-fns";
+import { differenceInMinutes } from "date-fns";
 
 export default function QuizHome({ navigation, route }) {
   const [userTeam, setUserTeam] = useState("");
-  const [quizID, setQuizID] = useState(route.params?.quizID);
   const [quizData, setQuizData] = useState([null]);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -50,22 +51,46 @@ export default function QuizHome({ navigation, route }) {
 
   const [teamData, setTeamData] = useState([]); //lastQuiz, currentHint, timeOfScan, name, number
 
-  const currentTime = new Date();
+  const [scoreboardPublic, setScoreboardPublic] = useState(false);
 
-  const eventID = route.params?.eventID;
+  const eventID = route.params.eventID;
+  const quizID = route.params.quizID;
+  const currentTime = new Date();
 
   // ---------------- FETCH FUNCTIONS ---------------- //
 
-  const getNewQuiz = useCallback(async () => {
+  //Get Scoreboard status
+  const checkScoreboard = async () => {
+    try {
+      await getDoc(doc(db, "events", eventID)).then((snapshot) => {
+        if (snapshot.exists()) {
+          setScoreboardPublic(snapshot.data()["scoreboardPublic"]);
+        }
+      });
+    } catch (e) {
+      console.error("Error getting scoreboard status: ", e);
+    }
+  };
+
+  //Get new quiz and update database
+  const getNewQuiz = useCallback(async (quiz, team) => {
     setRefreshing(true);
     try {
-      await getDoc(doc(db, "events", eventID, "quiz", quizID)).then(
+      await getDoc(doc(db, "events", eventID, "quiz", quiz)).then(
         async (snapshot) => {
           if (snapshot.exists()) {
             setQuizData(snapshot.data());
-            await updateDoc(doc(db, "events", eventID, "teams", userTeam), {
+            await updateDoc(doc(db, "events", eventID, "teams", team), {
               lastQuiz: quizID,
+              timeOfScan: currentTime,
             });
+            await setDoc(
+              doc(db, "events", eventID, "teams", team, "quiz", quiz),
+              {
+                scanned: true,
+                time: currentTime,
+              }
+            );
           }
         }
       );
@@ -74,20 +99,6 @@ export default function QuizHome({ navigation, route }) {
     }
     setRefreshing(false);
   });
-
-  const getNewHint = async (quiz, hint) => {
-    try {
-      await getDoc(
-        doc(db, "events", eventID, "quiz", quiz, "hints", hint)
-      ).then((snapshot) => {
-        if (snapshot.exists()) {
-          console.log(snapshot.data()["message"]);
-        }
-      });
-    } catch (e) {
-      console.error("Error getting hint information: ", e);
-    }
-  };
 
   //Get team information
   const getTeamInfo = async (team) => {
@@ -107,35 +118,38 @@ export default function QuizHome({ navigation, route }) {
               }
             });
 
-            //Use last hint number and time
+            //Use last time to calculate number of hints available
 
+            // const numberOfHints =
             // console.log(
-            //   "Time:",
             //   differenceInMilliseconds(
-            //     new Date(snapshot.data()["timeOfScan"]),
-            //     currentTime
+            //     currentTime,
+            //     new Date(snapshot.data()["timeOfScan"])
             //   ) / 1000
             // );
-            if (
-              300 -
-                differenceInMilliseconds(
-                  currentTime,
-                  new Date(snapshot.data()["timeOfScan"])
-                ) /
-                  1000 <
-              0
-            ) {
-              // console.log("Searching next hint");
-              console.log("do not render countdown");
-              setAboveZero(false);
-              // getNewHint(
-              //   snapshot.data()["lastQuiz"],
-              //   snapshot.data()["currentHint"]
-              // );
-            } else {
-              console.log("render countdown");
-              setAboveZero(true);
-            }
+
+            // console.log(snapshot.data()["timeOfScan"].toDate());
+
+            // if (
+            //   300 -
+            //     differenceInMilliseconds(
+            //       currentTime,
+            //       new Date(snapshot.data()["timeOfScan"])
+            //     ) /
+            //       1000 <
+            //   0
+            // ) {
+            //   // console.log("Searching next hint");
+            //   console.log("do not render countdown");
+            //   setAboveZero(false);
+            //   // getNewHint(
+            //   //   snapshot.data()["lastQuiz"],
+            //   //   snapshot.data()["currentHint"]
+            //   // );
+            // } else {
+            //   console.log("render countdown");
+            //   setAboveZero(true);
+            // }
           }
         }
       );
@@ -165,10 +179,13 @@ export default function QuizHome({ navigation, route }) {
 
   //On refresh
   const handleRefresh = () => {
-    if (quizID == undefined) {
+    checkScoreboard();
+    if (quizID === undefined) {
+      console.log("Last Quiz");
       getTeamAndData();
     } else {
-      getNewQuiz();
+      console.log("New Quiz: ", quizID);
+      getNewQuiz(quizID, userTeam);
     }
   };
 
@@ -183,8 +200,12 @@ export default function QuizHome({ navigation, route }) {
     //   timeOfScan: now.toString(),
     //   currentHint: hint + 1,
     // });
-    navigation.navigate("TeamInfo");
+    navigation.navigate("Hint", { hintID: hint });
   };
+
+  //Get scoreboard status
+
+  //Get number of hints to be shown
 
   // ---------------- FETCH FUNCTIONS ---------------- //
 
@@ -198,249 +219,184 @@ export default function QuizHome({ navigation, route }) {
     return <Loading />;
   }
 
-  {
-    if (quizData["type"] == "both") {
-      return (
-        <>
-          {/* <Header /> */}
-          <ScrollView
+  return (
+    <>
+      <ScrollView
+        style={{
+          backgroundColor: colors.bg,
+          padding: 20,
+          paddingTop: 20,
+        }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+      >
+        <Text style={{ fontSize: 25, fontWeight: "800", marginBottom: 20 }}>
+          {quizData["number"]}/??
+        </Text>
+        <View>
+          {quizData["type"] == "both" || quizData["type"] == "photo" ? (
+            <Image
+              source={quizData["photo"] ? { uri: quizData["photo"] } : null}
+              style={{
+                width: "100%",
+                height: 250,
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 20,
+                borderRadius: 10,
+                marginBottom: 20,
+              }}
+            />
+          ) : null}
+          {quizData["type"] == "both" || quizData["type"] == "message" ? (
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#d9d9d9",
+                height: 100,
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 15,
+                borderRadius: 10,
+                borderWidth: 5,
+                borderColor: colors.primary,
+              }}
+            >
+              <Text style={{ fontSize: 20, fontWeight: "500" }}>
+                {quizData["message"]}
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+          <TouchableOpacity
             style={{
-              backgroundColor: colors.bg,
-              padding: 30,
+              backgroundColor: colors.primary,
+              height: 100,
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 15,
+              borderRadius: 10,
+              marginTop: 20,
             }}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={handleRefresh}
-              />
+            onPress={() =>
+              navigation.navigate("Hint", {
+                eventID: eventID,
+                userTeam: userTeam,
+              })
             }
           >
-            <Text style={{ fontSize: 30, fontWeight: "800", marginBottom: 20 }}>
-              {quizData["number"]}/??
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: "800",
+                color: colors.secondary,
+              }}
+            >
+              INDIZI
             </Text>
-            <View>
-              <Image
-                source={quizData["photo"] ? { uri: quizData["photo"] } : null}
+          </TouchableOpacity>
+          {scoreboardPublic ? (
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#D6D6D6",
+                height: 100,
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 15,
+                borderRadius: 10,
+                marginTop: 20,
+                borderWidth: 5,
+                borderColor: colors.primary,
+              }}
+              onPress={() =>
+                scoreboardPublic
+                  ? navigation.navigate("userScoreboard")
+                  : Alert.alert(
+                      "Classifica non disponibile",
+                      "In questa fase della gara non è possibile vedere la classifica"
+                    )
+              }
+            >
+              <Text
                 style={{
-                  width: "100%",
-                  height: 250,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 20,
-                  borderRadius: 10,
-                  marginBottom: 20,
-                }}
-              />
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#d9d9d9",
-                  height: 100,
-                  width: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 15,
-                  borderRadius: 10,
+                  fontSize: 30,
+                  fontWeight: "800",
+                  color: colors.primary,
                 }}
               >
-                <Text style={{ fontSize: 20, fontWeight: "500" }}>
-                  {quizData["message"]}
-                </Text>
-              </TouchableOpacity>
-              {teamData && aboveZero ? (
-                <View
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: 20,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 30,
-                      fontWeight: "800",
-                      marginBottom: 20,
-                    }}
-                  >
-                    Nuovo indizio tra:
-                  </Text>
-                  <CountdownCircleTimer
-                    isPlaying
-                    duration={
-                      300 -
-                      differenceInMilliseconds(
-                        currentTime,
-                        new Date(teamData["timeOfScan"])
-                      ) /
-                        1000
-                    }
-                    colors={[
-                      colors.primary,
-                      "#004777",
-                      "#F7B801",
-                      "#A30000",
-                      "#A30000",
-                    ]}
-                    colorsTime={[200, 100, 25, 10, 5]}
-                    onComplete={() => {
-                      handleCompletedCountdown(
-                        teamData["lastQuiz"],
-                        teamData["currentHint"]
-                      );
-                    }}
-                  >
-                    {({ remainingTime }) => (
-                      <Text
-                        style={{
-                          fontSize: 50,
-                          fontWeight: "800",
-                        }}
-                      >
-                        {remainingTime}
-                      </Text>
-                    )}
-                  </CountdownCircleTimer>
-                </View>
-              ) : null}
-            </View>
-            <View style={{ width: "100%", height: 150 }}></View>
-          </ScrollView>
-          <View style={{ position: "absolute", bottom: 100, right: 15 }}>
-            <QrButton />
-          </View>
-          <Footer />
-        </>
-      );
-    } else if (quizData["type"] == "message") {
-      return (
-        <>
-          {/* <Header /> */}
-          <ScrollView
-            style={{
-              height: "100%",
-              backgroundColor: colors.bg,
-              padding: 30,
-            }}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={handleRefresh}
-              />
-            }
-          >
-            <Text style={{ fontSize: 30, fontWeight: "800", marginBottom: 20 }}>
-              {quizData["number"]}/??
-            </Text>
-            <View>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#d9d9d9",
-                  width: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 15,
-                  borderRadius: 10,
-                }}
-              >
-                <Text style={{ fontSize: 25, fontWeight: "500" }}>
-                  {quizData["message"]}
-                </Text>
-              </TouchableOpacity>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <CountdownCircleTimer
-                  isPlaying
-                  duration={300}
-                  colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-                  colorsTime={[7, 5, 2, 0]}
-                >
-                  {({ remainingTime }) => <Text>{remainingTime}</Text>}
-                </CountdownCircleTimer>
-              </View>
-            </View>
-            <View style={{ width: "100%", height: 150 }}></View>
-          </ScrollView>
-          <View style={{ position: "absolute", bottom: 100, right: 15 }}>
-            <QrButton />
-          </View>
-          <Footer />
-        </>
-      );
-    } else if (quizData["type"] == "photo") {
-      return (
-        <>
-          {/* <Header /> */}
-          <ScrollView
-            style={{
-              height: "100%",
-              backgroundColor: colors.bg,
-              padding: 30,
-            }}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={handleRefresh}
-              />
-            }
-          >
-            <Text style={{ fontSize: 30, fontWeight: "800", marginBottom: 20 }}>
-              {quizData["number"]}/??
-            </Text>
-            <View>
-              <Image
-                source={quizData["photo"] ? { uri: quizData["photo"] } : null}
-                style={{
-                  width: "100%",
-                  height: 250,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 20,
-                  borderRadius: 10,
-                  marginBottom: 20,
-                }}
-              />
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <CountdownCircleTimer
-                  isPlaying
-                  duration={300}
-                  colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
-                  colorsTime={[7, 5, 2, 0]}
-                >
-                  {({ remainingTime }) => <Text>{remainingTime}</Text>}
-                </CountdownCircleTimer>
-              </View>
-            </View>
-            <View style={{ width: "100%", height: 150 }}></View>
-          </ScrollView>
-          <View style={{ position: "absolute", bottom: 100, right: 15 }}>
-            <QrButton />
-          </View>
-          <Footer />
-        </>
-      );
-    }
-  }
+                CLASSIFICA
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+        </View>
+        <View style={{ width: "100%", height: 150 }}></View>
+      </ScrollView>
+      <View style={{ position: "absolute", bottom: 100, right: 15 }}>
+        <QrButton />
+      </View>
+      <Footer />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({});
 
 {
-  /* <View
-                 style={{
-                   justifyContent: "center",
-                   alignItems: "center",
-                   borderWidth: 4,
-                   borderRadius: 10,
-                   backgroundColor: "lime",
-                   marginTop: 30,
-                   width: "60%",
-                 }}
-               >
-                 <Text
-                   style={{
-                     fontSize: 60,
-                     fontWeight: "800",
-                   }}
-                 >
-                   10:00
-                 </Text>
-               </View> */
+  /* {teamData && aboveZero ? (
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 20,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 30,
+            fontWeight: "800",
+            marginBottom: 20,
+          }}
+        >
+          Nuovo indizio tra:
+        </Text>
+        <CountdownCircleTimer
+          isPlaying
+          duration={
+            300 -
+            differenceInMilliseconds(
+              currentTime,
+              new Date(teamData["timeOfScan"])
+            ) /
+              1000
+          }
+          colors={[
+            colors.primary,
+            "#004777",
+            "#F7B801",
+            "#A30000",
+            "#A30000",
+          ]}
+          colorsTime={[200, 100, 25, 10, 5]}
+          onComplete={() => {
+            handleCompletedCountdown(
+              teamData["lastQuiz"],
+              teamData["currentHint"]
+            );
+          }}
+        >
+          {({ remainingTime }) => (
+            <Text
+              style={{
+                fontSize: 50,
+                fontWeight: "800",
+              }}
+            >
+              {remainingTime}
+            </Text>
+          )}
+        </CountdownCircleTimer>
+      </View>
+    ) : null} */
 }

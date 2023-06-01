@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Platform,
   SafeAreaView,
@@ -21,7 +21,35 @@ import { Header } from "./components/header";
 import AuthNavigator from "./navigation/authNavigator";
 import Admin from "./navigation/adminStack";
 
+import * as Font from "expo-font";
+
 export default function App() {
+  const getFonts = () => {
+    return Font.loadAsync({
+      "cherry-regular": require("./assets/fonts/CherryBomb.ttf"),
+    });
+  };
+
+  const [appIsReady, setAppIsReady] = useState(false);
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // SplashScreen.preventAutoHideAsync();
+        await getFonts();
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+        // SplashScreen.hideAsync();
+      }
+    }
+
+    prepare();
+  }, []);
+
+  if (!appIsReady) {
+    return null;
+  }
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -33,9 +61,7 @@ export default function App() {
             // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
           }}
         >
-          <Header />
           <AuthNavigator />
-          {/* <Admin /> */}
         </SafeAreaView>
       </NavigationContainer>
     </SafeAreaProvider>
