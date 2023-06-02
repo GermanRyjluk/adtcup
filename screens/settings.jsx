@@ -4,9 +4,11 @@ import { Header } from "../components/header";
 
 export default function Settings() {
   return (
-    <View>
-      {/* <Header /> */}
-      <Text>Settings</Text>
-    </View>
+    <>
+      <Header />
+      <View>
+        <Text>Settings</Text>
+      </View>
+    </>
   );
 }

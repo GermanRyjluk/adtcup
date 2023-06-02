@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
-import HomeDrawer from "./homeDrawer";
 import Intro from "../screens/intro";
 import Login from "../screens/login";
 import Register from "../screens/register";
@@ -22,10 +21,11 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/firebase";
 import Admin from "./adminStack";
 import { Header } from "../components/header";
+import Home from "../screens/home";
 
 const Stack = createStackNavigator();
 
-export function LoggedIn() {
+export function LoggedInStack() {
   const [userData, setUserData] = useState(null);
   console.log("Logged In");
 
@@ -58,7 +58,7 @@ export function LoggedIn() {
             screenOptions={{ headerShown: false }}
             initialRouteName="HomeDrawer"
           >
-            <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
+            <Stack.Screen name="HomeDrawer" component={Home} />
             <Stack.Screen name="Intro" component={Intro} />
             <Stack.Screen name="EventInfo" component={EventInfo} />
             <Stack.Screen name="EventBooking" component={EventBooking} />
@@ -80,18 +80,18 @@ export function LoggedIn() {
     }
   }
 }
-export function NotLoggedIn() {
+export function NotLoggedInStack() {
   console.log("Not Logged In");
   return (
     <>
       <Header />
 
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
+        <Stack.Screen name="HomeDrawer" component={Home} />
         <Stack.Screen name="Intro" component={Intro} />
         <Stack.Screen name="EventInfo" component={EventInfo} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
+        {/* <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} /> */}
       </Stack.Navigator>
     </>
   );

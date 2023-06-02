@@ -24,9 +24,9 @@ export const Footer = () => {
             height: 70,
             width: 70,
             borderRadius: 35,
-            backgroundColor: colors.bg,
-            borderWidth: 4,
-            borderColor: colors.primary,
+            backgroundColor: colors.primary,
+            borderWidth: 3,
+            borderColor: colors.secondary,
           }}
         >
           <View>
@@ -36,7 +36,7 @@ export const Footer = () => {
               style={{
                 width: 30,
                 height: 30,
-                tintColor: "black",
+                tintColor: colors.secondary,
               }}
             />
           </View>
@@ -47,14 +47,16 @@ export const Footer = () => {
             width: 100,
             height: 100,
             borderRadius: 50,
-            backgroundColor: "black",
+            backgroundColor: colors.primary,
+            borderWidth: 3,
+            borderColor: colors.secondary,
             justifyContent: "center",
             alignItems: "center",
           }}
           onPress={() => navigation.navigate("Qr")}
         >
           <Image
-            style={{ width: "50%", height: "50%" }}
+            style={{ width: "50%", height: "50%", tintColor: colors.secondary }}
             source={require("../assets/qr.png")}
             resizeMode="contain"
           />
@@ -98,9 +100,9 @@ export const Footer = () => {
             height: 70,
             width: 70,
             borderRadius: 35,
-            backgroundColor: colors.bg,
-            borderWidth: 4,
-            borderColor: colors.primary,
+            backgroundColor: colors.primary,
+            borderWidth: 3,
+            borderColor: colors.secondary,
           }}
         >
           <View>
@@ -110,7 +112,7 @@ export const Footer = () => {
               style={{
                 width: 30,
                 height: 30,
-                tintColor: colors.primary,
+                tintColor: colors.secondary,
               }}
             />
           </View>
@@ -130,6 +132,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     height: 58,
     width: "100%",
+    borderTopColor: colors.secondary,
+    borderWidth: 3,
   },
   text: {
     color: colors.secondary,

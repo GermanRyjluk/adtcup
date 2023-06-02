@@ -7,6 +7,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import CustomDrawer from "../components/customDrawer";
 import { colors } from "../shared/colors";
 import { Header } from "../components/header";
+import NotLoggedInDrawer, { LoggedInDrawer } from "./homeDrawer";
 
 const Drawer = createDrawerNavigator();
 
@@ -22,41 +23,41 @@ export default function AuthNavigator() {
     return checkUser();
   }, []);
 
-  // return (
-  //   <Drawer.Navigator
-  //     useLegacyImplementation={true}
-  //     initialRouteName="Home"
-  //     drawerContent={(props) => <CustomDrawer {...props} />}
-  //     screenOptions={{
-  //       headerShown: false,
-  //       drawerPosition: "right",
-  //       drawerActiveBackgroundColor: colors.primary,
-  //       drawerActiveTintColor: "#fff",
-  //       drawerInactiveTintColor: "#333",
-  //       drawerLabelStyle: {
-  //         // fontFamily: 'Roboto-Medium',
-  //         fontSize: 15,
-  //       },
-  //     }}
-  //   >
-  //     {user ? (
-  //       <Drawer.Screen
-  //         name="LoggedIn"
-  //         component={LoggedIn}
-  //         options={{ header: () => <Header /> }}
-  //       />
-  //     ) : (
-  //       <Drawer.Screen
-  //         name="NotLoggedIn"
-  //         component={NotLoggedIn}
-  //         options={{ header: () => <Header /> }}
-  //       />
-  //     )}
-  //   </Drawer.Navigator>
-  // );
-
-  return <>{user ? <LoggedIn /> : <NotLoggedIn />}</>;
+  return <>{user ? <LoggedInDrawer /> : <NotLoggedInDrawer />}</>;
 }
+
+// return (
+//   <Drawer.Navigator
+//     useLegacyImplementation={true}
+//     initialRouteName="Home"
+//     drawerContent={(props) => <CustomDrawer {...props} />}
+//     screenOptions={{
+//       headerShown: false,
+//       drawerPosition: "right",
+//       drawerActiveBackgroundColor: colors.primary,
+//       drawerActiveTintColor: "#fff",
+//       drawerInactiveTintColor: "#333",
+//       drawerLabelStyle: {
+//         // fontFamily: 'Roboto-Medium',
+//         fontSize: 15,
+//       },
+//     }}
+//   >
+//     {user ? (
+//       <Drawer.Screen
+//         name="LoggedIn"
+//         component={LoggedIn}
+//         options={{ header: () => <Header /> }}
+//       />
+//     ) : (
+//       <Drawer.Screen
+//         name="NotLoggedIn"
+//         component={NotLoggedIn}
+//         options={{ header: () => <Header /> }}
+//       />
+//     )}
+//   </Drawer.Navigator>
+// );
 
 // options={{
 //   drawerItemStyle: { height: 0 },

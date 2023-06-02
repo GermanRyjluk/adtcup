@@ -6,6 +6,7 @@ import {
   View,
   ImageBackground,
   Image,
+  Alert,
 } from "react-native";
 
 import { Header } from "../components/header";
@@ -141,11 +142,11 @@ export default function Home({ navigation }) {
                   >
                     {data.name}
                   </Text>
-                  <Text
+                  {/* <Text
                     style={{ color: "white", fontSize: 15, fontWeight: "500" }}
                   >
                     {data.date}
-                  </Text>
+                  </Text> */}
                 </View>
                 <View
                   style={{
@@ -172,22 +173,64 @@ export default function Home({ navigation }) {
       <ScrollView style={{ flex: 1, padding: 30, backgroundColor: colors.bg }}>
         {pastEvents.map((data, i) => {
           return (
-            <TouchableOpacity key={i} onPress={() => handlePress()}>
+            <TouchableOpacity
+              key={i}
+              onPress={() => {
+                Alert.alert("Spiacenti", "Funzionalità non ancora disponibile");
+              }}
+              style={[styles.eventCard, { height: 400 }]}
+            >
               <ImageBackground
-                style={styles.eventCard}
                 source={require("../assets/torino(fake).jpeg")}
                 imageStyle={{
                   borderRadius: 15,
-                  borderColor: colors.primary,
-                  borderWidth: 6,
+                }}
+                style={{
+                  flex: 2,
+                  height: "100%",
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              />
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                  width: "100%",
+                  padding: 15,
                 }}
               >
-                <View style={styles.eventButton}>
-                  <Text style={[styles.text, { color: colors.primary }]}>
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{ color: "white", fontSize: 25, fontWeight: "800" }}
+                  >
                     {data.name}
                   </Text>
                 </View>
-              </ImageBackground>
+                <View
+                  style={{
+                    width: "100%",
+                    height: 50,
+                    backgroundColor: colors.secondary,
+                    borderRadius: 15,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 25, fontWeight: "800" }}>
+                    Esplora
+                  </Text>
+                </View>
+              </View>
             </TouchableOpacity>
           );
         })}

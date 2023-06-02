@@ -43,7 +43,7 @@ export default function EventInfo({ navigation, route }) {
           <View
             style={{
               width: "100%",
-              height: "95%",
+              height: "96%",
               backgroundColor: colors.primary,
               borderRadius: 20,
               padding: 20,
@@ -74,7 +74,7 @@ export default function EventInfo({ navigation, route }) {
           <View
             style={{
               width: "100%",
-              height: "95%",
+              height: "96%",
               backgroundColor: colors.primary,
               borderRadius: 20,
               padding: 20,
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   pageIndicator: {
     left: 0,
     right: 0,
-    bottom: 30,
+    bottom: 20,
     position: "absolute",
   },
 });
