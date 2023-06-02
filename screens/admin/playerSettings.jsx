@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { colors } from "../../shared/colors";
 import { TextInput } from "react-native-gesture-handler";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
 
 export default function PlayerSettings({ navigation, route }) {
   const eventID = "1VgaAztg9yvbzRLuIjql";
   const playerID = route.params.playerID;
+  const playerName = route.params.playerName;
   const [teamNum, setTeamNum] = useState("");
   const handlePress = async (team) => {
     if (team != "") {
@@ -17,6 +18,7 @@ export default function PlayerSettings({ navigation, route }) {
           doc(db, "/events", eventID, "/teams", teamNum, "/players", playerID),
           {
             status: "can play",
+            name: playerName,
           }
         );
         await updateDoc(doc(db, "/events", eventID, "/bookings", playerID), {
@@ -26,8 +28,11 @@ export default function PlayerSettings({ navigation, route }) {
           team: teamNum,
         });
         await setDoc(doc(db, "/events", eventID, "/teams", teamNum), {
-          lasQuiz: "vErhQU5ApvBVNfQwD8Td",
+          name: "",
+          lastQuiz: "vErhQU5ApvBVNfQwD8Td",
           number: 1,
+          points: 0,
+          timeOfScan: new Date(),
         });
         Alert.alert("Aggiornato!");
         navigation.goBack();

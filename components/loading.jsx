@@ -7,7 +7,6 @@ export default function Loading() {
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color={colors.primary} />
-      <StatusBar backgroundColor={"white"} />
     </View>
   );
 }

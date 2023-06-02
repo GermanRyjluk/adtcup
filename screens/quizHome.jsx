@@ -109,7 +109,6 @@ export default function QuizHome({ navigation, route }) {
             setTeamData(snapshot.data());
 
             //Get last quiz scanned info
-
             await getDoc(
               doc(db, "events", eventID, "quiz", snapshot.data()["lastQuiz"])
             ).then((snapshot) => {

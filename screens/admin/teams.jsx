@@ -68,24 +68,22 @@ export default function Teams({ navigation }) {
     } else if (status == "pay") {
       try {
         await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
-          status: "can play", //waiting team
+          status: "waiting team",
         });
         Alert.alert("Aggiornato!", "Ora può giocare");
       } catch (e) {
         console.error(e);
       }
-    }
-    // else if (status == "waiting team") {
-    // try {
-    //   await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
-    //     status: "can play",
-    //   });
-    //   Alert.alert("Aggiornato!", "Ora può giocare");
-    // } catch (e) {
-    //   console.error(e);
-    // }
-    // }
-    else if (status == "can play") {
+    } else if (status == "waiting team") {
+      try {
+        Alert.alert(
+          "Inserire squadra!",
+          "inserire prima il numero della squadra a cui appartiene il giocatore (se gia fatto ricarica la pagina)"
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    } else if (status == "can play") {
       Alert.alert("Il giocatore ancora avvia il gioco");
     } else if (status == "playing") {
       Alert.alert(
@@ -141,6 +139,7 @@ export default function Teams({ navigation }) {
               onPress={() => {
                 navigation.navigate("PlayerSettings", {
                   playerID: player.uid,
+                  playerName: player.name,
                 });
               }}
             >

@@ -51,6 +51,7 @@ export default function GeolocationCheck({ navigation, route }) {
         doc(db, "/events", eventID, "/bookings", auth.currentUser.uid),
         {
           status: "playing",
+          name: auth.currentUser.displayName,
         }
       );
       navigation.navigate("Quiz", { eventID: eventID });

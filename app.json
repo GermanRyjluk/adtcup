@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#1B4D98"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -22,7 +24,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "package": "com.ryyuuk.ADTCUP"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,6 +42,11 @@
           "locationAlwaysAndWhenInUsePermission": "Allow ADT CUP to use your location."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1ba79ce8-d2ce-40fc-97c4-b2eeca5f889a"
+      }
+    }
   }
 }
