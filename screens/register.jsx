@@ -9,6 +9,7 @@ import {
   TextInput,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Header } from '../components/header'
 
 import { auth, db } from "../firebase/firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -16,6 +17,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 // import { fonts } from '../../shared/fonts.js';
 // const font = fonts;
@@ -101,107 +103,116 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <KeyboardAwareScrollView style={styles.backGround}>
-      <View style={styles.box}>
-        <TouchableOpacity style={styles.goBack} onPress={pressHandler}>
-          <Icon name="arrow-back-ios" size={20} color="white" />
-        </TouchableOpacity>
-        <View style={styles.topZone}>
-          <Text style={styles.loginText}>Crea un'account</Text>
-          <Text style={styles.loginSubText}>
-            Riempire correttamente tutti i campi
-          </Text>
-        </View>
+    <>
+      {/* <Header /> */}
+      <KeyboardAwareScrollView style={styles.backGround}>
+        <View style={styles.box}>
+          <View style={styles.topZone}>
+            <TouchableOpacity
+              style={{ marginBottom: 50 }} onPress={() => navigation.navigate("Login")}>
 
-        <View style={styles.midZone}>
-          <View style={styles.midOne}>
-            <View style={styles.inputBox}>
-              <Icon name="person" size={20} color="white" />
-              <TextInput
-                style={styles.input}
-                onChangeText={(tryName) => setUserName(tryName)}
-                underlineColorAndroid="transparent"
-                placeholder="Nome"
-                placeholderTextColor="rgba(200, 200, 200,0.7)"
-                returnKeyType={"next"}
+              <Ionicons
+                name="arrow-back"
+                size={40}
+                color={colors.secondary}
               />
+            </TouchableOpacity>
+            <Text style={styles.loginText}>Crea un'account</Text>
+            <Text style={styles.loginSubText}>
+              Riempire correttamente tutti i campi
+            </Text>
+          </View>
+
+          <View style={styles.midZone}>
+            <View style={styles.midOne}>
+              <View style={styles.inputBox}>
+                <Icon name="person" size={20} color="white" />
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(tryName) => setUserName(tryName)}
+                  underlineColorAndroid="transparent"
+                  placeholder="Nome"
+                  placeholderTextColor="rgba(200, 200, 200,0.7)"
+                  returnKeyType={"next"}
+                />
+              </View>
+              <View style={styles.inputBox}>
+                <Icon name="alternate-email" size={20} color="white" />
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(tryEmail) => setUserEmail(tryEmail)}
+                  underlineColorAndroid="transparent"
+                  placeholder="Email"
+                  placeholderTextColor="rgba(200, 200, 200,0.7)"
+                  keyboardType="email-address"
+                  returnKeyType={"next"}
+                />
+              </View>
+              <View style={styles.inputBox}>
+                <Icon name="lock" size={20} color="white" />
+                <TextInput
+                  style={styles.input}
+                  secureTextEntry={!isPasswordVisible}
+                  onChangeText={(tryUserPassword) =>
+                    setUserPassword(tryUserPassword)
+                  }
+                  underlineColorAndroid="transparent"
+                  placeholder="Password"
+                  placeholderTextColor="rgba(200, 200, 200,0.7)"
+                  returnKeyType={"next"}
+                />
+                <TouchableOpacity
+                  style={{ position: "absolute", right: 20 }}
+                  onPress={() => {
+                    setIsPasswordVisible(!isPasswordVisible);
+                  }}
+                >
+                  {passwordIsVisible()}
+                </TouchableOpacity>
+              </View>
+              <View style={styles.inputBox}>
+                <Icon name="lock" size={20} color="white" />
+                <TextInput
+                  style={styles.input}
+                  secureTextEntry={!isPasswordVisible}
+                  onChangeText={(tryUserPassword) =>
+                    setUserConfirmPassword(tryUserPassword)
+                  }
+                  underlineColorAndroid="transparent"
+                  placeholder="Conferma Password"
+                  placeholderTextColor="rgba(200, 200, 200,0.7)"
+                  onSubmitEditing={() => UserRegistration()}
+                />
+                <TouchableOpacity
+                  style={{ position: "absolute", right: 10 }}
+                  onPress={() => {
+                    setIsPasswordVisible(!isPasswordVisible);
+                  }}
+                >
+                  {passwordIsVisible()}
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.inputBox}>
-              <Icon name="alternate-email" size={20} color="white" />
-              <TextInput
-                style={styles.input}
-                onChangeText={(tryEmail) => setUserEmail(tryEmail)}
-                underlineColorAndroid="transparent"
-                placeholder="Email"
-                placeholderTextColor="rgba(200, 200, 200,0.7)"
-                keyboardType="email-address"
-                returnKeyType={"next"}
-              />
-            </View>
-            <View style={styles.inputBox}>
-              <Icon name="lock" size={20} color="white" />
-              <TextInput
-                style={styles.input}
-                secureTextEntry={!isPasswordVisible}
-                onChangeText={(tryUserPassword) =>
-                  setUserPassword(tryUserPassword)
-                }
-                underlineColorAndroid="transparent"
-                placeholder="Password"
-                placeholderTextColor="rgba(200, 200, 200,0.7)"
-                returnKeyType={"next"}
-              />
+            <View style={styles.midTwo}>
               <TouchableOpacity
-                style={{ position: "absolute", right: 10 }}
-                onPress={() => {
-                  setIsPasswordVisible(!isPasswordVisible);
-                }}
+                style={styles.loginButton}
+                onPress={UserRegistration}
               >
-                {passwordIsVisible()}
-              </TouchableOpacity>
-            </View>
-            <View style={styles.inputBox}>
-              <Icon name="lock" size={20} color="white" />
-              <TextInput
-                style={styles.input}
-                secureTextEntry={!isPasswordVisible}
-                onChangeText={(tryUserPassword) =>
-                  setUserConfirmPassword(tryUserPassword)
-                }
-                underlineColorAndroid="transparent"
-                placeholder="Conferma Password"
-                placeholderTextColor="rgba(200, 200, 200,0.7)"
-                onSubmitEditing={() => UserRegistration()}
-              />
-              <TouchableOpacity
-                style={{ position: "absolute", right: 10 }}
-                onPress={() => {
-                  setIsPasswordVisible(!isPasswordVisible);
-                }}
-              >
-                {passwordIsVisible()}
+                <Text style={styles.buttonText}>REGISTRATI</Text>
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.midTwo}>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={UserRegistration}
-            >
-              <Text style={styles.buttonText}>REGISTRATI</Text>
+
+          <View style={styles.bottomZone}>
+            <Text style={styles.loginSubText}>Hai già un'account?</Text>
+            <TouchableOpacity onPressOut={pressHandler}>
+              <Text style={styles.loginSubTextLink}>Accedi</Text>
             </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.bottomZone}>
-          <Text style={styles.loginSubText}>Hai già un'account?</Text>
-          <TouchableOpacity onPressOut={pressHandler}>
-            <Text style={styles.loginSubTextLink}>Accedi</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      {/* <StatusBar style="light" /> */}
-    </KeyboardAwareScrollView>
+        {/* <StatusBar style="light" /> */}
+      </KeyboardAwareScrollView>
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -217,7 +228,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: "20%",
-    paddingTop: "15%",
+    paddingTop: "0%",
   },
   topZone: {
     width: "100%",
@@ -295,7 +306,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "rgba(210, 210, 210, 0.2)",
     marginBottom: 20,
-    padding: 10,
+    padding: 20,
   },
   input: {
     width: "90%",

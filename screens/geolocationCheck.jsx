@@ -22,6 +22,7 @@ import { compareAsc } from "date-fns";
 import { colors } from "../shared/colors";
 import { auth, db } from "../firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import { Header } from "../components/header";
 
 export default function GeolocationCheck({ navigation, route }) {
   const defaultProvider =
@@ -373,52 +374,55 @@ export default function GeolocationCheck({ navigation, route }) {
   ];
 
   return (
-    <View style={styles.container}>
-      {Platform.OS !== "ios" ? (
-        <MapView
-          style={styles.map}
-          region={[position, { latitudeDelta: 0.0922, longitudeDelta: 0.0421 }]}
-          provider={defaultProvider}
-          customMapStyle={mapstyle}
-          showsUserLocation
-          showsMyLocationButton
-        >
-          <Marker
-            coordinate={position}
-            title="ADT CUP"
-            description="Go to this position to start the game"
-          ></Marker>
-          {renderPosition()}
-
-          <Circle
-            center={position}
-            radius={radius}
-            strokeWidth={3}
-            strokeColor={colors.secondary}
-            fillColor="rgba(244,244,244,0.2)"
-          />
-        </MapView>
-      ) : (
-        <TouchableOpacity>
-          <Text>Google maps link</Text>
-        </TouchableOpacity>
-      )}
-      {renderDistance()}
-      <View style={styles.buttonBox}>
-        <TouchableOpacity
-          onPress={() => {
-            handlePlayButton();
-          }}
-          style={styles.box}
-        >
-          <Text
-            style={{ fontSize: 35, fontWeight: "800", color: colors.secondary }}
+    <>
+      <Header />
+      <View style={styles.container}>
+        {Platform.OS !== "ios" ? (
+          <MapView
+            style={styles.map}
+            region={[position, { latitudeDelta: 0.0922, longitudeDelta: 0.0421 }]}
+            provider={defaultProvider}
+            customMapStyle={mapstyle}
+            showsUserLocation
+            showsMyLocationButton
           >
-            Gioca!
-          </Text>
-        </TouchableOpacity>
+            <Marker
+              coordinate={position}
+              title="ADT CUP"
+              description="Go to this position to start the game"
+            ></Marker>
+            {renderPosition()}
+
+            <Circle
+              center={position}
+              radius={radius}
+              strokeWidth={3}
+              strokeColor={colors.secondary}
+              fillColor="rgba(244,244,244,0.2)"
+            />
+          </MapView>
+        ) : (
+          <TouchableOpacity>
+            <Text>Google maps link</Text>
+          </TouchableOpacity>
+        )}
+        {renderDistance()}
+        <View style={styles.buttonBox}>
+          <TouchableOpacity
+            onPress={() => {
+              handlePlayButton();
+            }}
+            style={styles.box}
+          >
+            <Text
+              style={{ fontSize: 35, fontWeight: "800", color: colors.secondary }}
+            >
+              Gioca!
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 

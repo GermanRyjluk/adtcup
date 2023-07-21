@@ -5,10 +5,12 @@ import { colors } from "../shared/colors";
 
 import Icon from "react-native-vector-icons/Octicons"; //Gear (gear) and Hamburger(three-bars)
 import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 
 import { font } from "../shared/fonts";
 
-export const Header = () => {
+export const Header = ({ screen }) => {
   const navigation = useNavigation();
   const openDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
@@ -23,6 +25,29 @@ export const Header = () => {
         {/* <TouchableOpacity>
           <Icon name="gear" size={25} color={colors.secondary} />
         </TouchableOpacity> */}
+        {screen == 'home' ? null :
+          screen == "OnGame" ?
+            <TouchableOpacity
+              style={{ position: 'absolute', left: 30 }}
+              onPress={() => navigation.navigate("HomeDrawer")}>
+
+              <Ionicons
+                name="home"
+                size={30}
+                color={colors.secondary}
+              />
+            </TouchableOpacity> :
+            <TouchableOpacity
+              style={{ position: 'absolute', left: 30 }}
+              onPress={() => navigation.goBack()}>
+
+              <Ionicons
+                name="arrow-back"
+                size={40}
+                color={colors.secondary}
+              />
+            </TouchableOpacity>
+        }
         <View
           style={{
             flexDirection: "row",

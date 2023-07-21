@@ -20,6 +20,10 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 import { font } from "../shared/fonts";
+import { useEffect, useState } from "react";
+import Loading from "../components/loading";
+
+import * as SplashScreen from 'expo-splash-screen';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -28,28 +32,27 @@ const Tab = createMaterialTopTabNavigator();
 const currentEvents = [
   {
     id: "1VgaAztg9yvbzRLuIjql",
-    name: "LANGIAN",
+    name: "LANCIANO / COSTA DEI TRABOCCHI",
     photo:
       "https://www.virtuquotidiane.it/wp-content/uploads/2017/07/lancianonotte.jpg",
     date: "23-8-2023",
-    price: "€15",
-    scoreboardPublic: true,
+    isLocked: false
   },
   {
     id: "1VgaAztg9yvbzRLuIjql",
-    name: "FOSSACESIA",
+    name: "D%$£FA/B=%§!Lo(ytA",
     photo:
-      "https://www.chietitoday.it/~media/horizontal-hi/67481805668942/fossacesia-marina-2.jpg",
+      "https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg",
     date: "25-8-2023",
-    price: "€10",
+    isLocked: true
   },
   {
     id: "1VgaAztg9yvbzRLuIjql",
-    name: "SANTVIT",
+    name: "D%$£FA/T=%§!oR(yto",
     photo:
-      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Porto_di_San_Vito_Chietino_02.JPG",
+      "https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg",
     date: "24-8-2023",
-    price: "€20",
+    isLocked: true
   },
 ];
 const pastEvents = [
@@ -57,11 +60,28 @@ const pastEvents = [
     name: "TORINO",
     photo: "../assets/torino(fake).jpeg",
     date: "09-05-2023",
-    price: "€15",
   },
 ];
 
 export default function Home({ navigation }) {
+
+  const preloadImages = () => {
+    fetch("https://www.virtuquotidiane.it/wp-content/uploads/2")
+    fetch("https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg")
+    fetch("https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg")
+  }
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    preloadImages();
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, [])
+
+
   const checkBookingStatus = async (eventID, scoreboardPublic) => {
     try {
       const snapshot = await getDoc(
@@ -69,8 +89,8 @@ export default function Home({ navigation }) {
       ).catch((e) => console.error(e));
 
       if (snapshot.exists()) {
-        if (snapshot.data().status == "pending") {
-          navigation.navigate("EventStatus", { status: "pending" });
+        if (snapshot.data().status == "pending" || snapshot.data().status == "pay" || snapshot.data().status == "waiting team") {
+          navigation.navigate("EventStatus", { status: snapshot.data().status });
         } else if (snapshot.data().status == "pay") {
           navigation.navigate("EventStatus", { status: "pay" });
         } else if (snapshot.data().status == "can play") {
@@ -97,29 +117,66 @@ export default function Home({ navigation }) {
       : navigation.navigate("EventInfo");
   };
 
+  const handleLocked = () => {
+    Alert.alert(
+      "Oh, cazzo tocchi?!",
+      "Non vedi che nzi puo gioca?",
+      [
+        {
+          text: "Chiudi",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   const HomeScrollView = () => {
+
     return (
-      <ScrollView style={{ flex: 1, padding: 30, backgroundColor: colors.bg }}>
+      <ScrollView style={{ flex: 1, padding: 15, backgroundColor: colors.bg }}>
         {currentEvents.map((data, i) => {
           return (
-            <TouchableOpacity
+            <View
               key={i}
-              onPress={() => handlePress(data.id, data.scoreboardPublic)}
-              style={styles.eventCard}
+              style={[styles.eventCard, {
+                backgroundColor: data.isLocked ? "#7a7a7a" : colors.primary
+              }]}
             >
-              <ImageBackground
-                source={{ uri: data.photo }}
-                imageStyle={{
-                  borderRadius: 15,
-                }}
-                style={{
-                  flex: 2,
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              />
+              {data.isLocked ?
+                <View style={{ flex: 2, height: "100%", width: "100%" }}>
+                  <ImageBackground
+                    source={{ uri: data.photo }}
+                    imageStyle={{
+                      borderRadius: 15,
+                    }}
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'gray', opacity: 0.7, borderTopRightRadius: 15, borderTopLeftRadius: 15 }} />
+                    <Icon1 name="lock" size={50} color="#474747" />
+                  </ImageBackground>
+
+                </View>
+                :
+                <View style={{ flex: 2, height: "100%", width: "100%" }}>
+                  <Image
+                    source={{ uri: data.photo }}
+                    style={{
+                      borderRadius: 15,
+                      flex: 2,
+                      height: "100%",
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  />
+                </ View>}
               <View
                 style={{
                   flex: 1,
@@ -135,10 +192,11 @@ export default function Home({ navigation }) {
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    marginBottom: 20
                   }}
                 >
                   <Text
-                    style={{ color: "white", fontSize: 25, fontWeight: "800" }}
+                    style={{ color: "white", fontSize: 17, fontWeight: "800", textAlign: 'center', width: "100%", }}
                   >
                     {data.name}
                   </Text>
@@ -148,20 +206,26 @@ export default function Home({ navigation }) {
                     {data.date}
                   </Text> */}
                 </View>
-                <View
-                  style={{
-                    width: "100%",
-                    height: 50,
-                    backgroundColor: colors.secondary,
-                    borderRadius: 15,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                <TouchableOpacity
+                  onPress={() => data.isLocked ? handleLocked() : handlePress(data.id)}
+                  style={{ width: "100%" }}
                 >
-                  <Text style={{ fontSize: 25, fontWeight: "800" }}>Gioca</Text>
-                </View>
+                  <View
+                    style={{
+                      width: "100%",
+                      height: 50,
+                      backgroundColor: data.isLocked ? '#474747' : colors.secondary,
+                      borderRadius: 15,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 25, fontWeight: "800", color: data.isLocked ? "#FFFFFF" : "#000000" }}>Gioca</Text>
+                  </View>
+                </TouchableOpacity>
+
               </View>
-            </TouchableOpacity>
+            </View>
           );
         })}
         <View style={{ width: "100%", height: 90 }} />
@@ -178,7 +242,7 @@ export default function Home({ navigation }) {
               onPress={() => {
                 Alert.alert("Spiacenti", "Funzionalità non ancora disponibile");
               }}
-              style={[styles.eventCard, { height: 400 }]}
+              style={styles.eventCard}
             >
               <ImageBackground
                 source={require("../assets/torino(fake).jpeg")}
@@ -238,56 +302,64 @@ export default function Home({ navigation }) {
       </ScrollView>
     );
   };
-  return (
-    <>
-      {/* <Header /> */}
+  if (loading) {
+    return (
+      <Loading />
+    );
+  } else {
+    return (
+      <>
+        <Header screen={"home"} />
 
-      <Tab.Navigator
-        initialRouteName="homeScrollView"
-        screenOptions={{
-          tabBarStyle: { backgroundColor: colors.primary },
-          tabBarLabelStyle: {
-            fontSize: 15,
-            letterSpacing: 1,
-            fontWeight: "800",
-            // fontFamily: font,
-            color: colors.secondary,
-          },
-          tabBarIndicatorStyle: { backgroundColor: colors.secondary },
-        }}
-      >
-        <Tab.Screen
-          name="homeScrollView"
-          component={HomeScrollView}
-          options={{
-            tabBarLabel: "Eventi attuali",
+        <Tab.Navigator
+          initialRouteName="homeScrollView"
+          screenOptions={{
+            tabBarStyle: { backgroundColor: colors.primary },
+            tabBarLabelStyle: {
+              fontSize: 15,
+              letterSpacing: 1,
+              fontWeight: "800",
+              // fontFamily: font,
+              color: colors.secondary,
+            },
+            tabBarPressOpacity: 1,
+            tabBarPressColor: 'trasparent',
+            tabBarIndicatorStyle: { backgroundColor: colors.secondary },
           }}
-        />
-        <Tab.Screen
-          name="historyScrollView"
-          component={HistoryScrollView}
-          options={{
-            tabBarLabel: "Eventi passati",
-          }}
-        />
-      </Tab.Navigator>
-      <TouchableOpacity
-        style={styles.infoBox}
-        onPress={() => navigation.navigate("Intro")}
-      >
-        <View style={styles.trophyBox}>
-          {/* <Icon1 name="trophy" size={50} color={colors.secondary} /> */}
-          <Image
-            source={require("../assets/trophyY.png")}
-            style={{ width: 63, height: 63 }}
+        >
+          <Tab.Screen
+            name="homeScrollView"
+            component={HomeScrollView}
+            options={{
+              tabBarLabel: "Eventi attuali",
+            }}
           />
-        </View>
-        <View style={styles.textBox}>
-          <Text style={styles.text}>Manuale ADT</Text>
-        </View>
-      </TouchableOpacity>
-    </>
-  );
+          <Tab.Screen
+            name="historyScrollView"
+            component={HistoryScrollView}
+            options={{
+              tabBarLabel: "Eventi passati",
+            }}
+          />
+        </Tab.Navigator>
+        <TouchableOpacity
+          style={styles.infoBox}
+          onPress={() => navigation.navigate("Intro")}
+        >
+          <View style={styles.trophyBox}>
+            {/* <Icon1 name="trophy" size={50} color={colors.secondary} /> */}
+            <Image
+              source={require("../assets/trophyY.png")}
+              style={{ width: 63, height: 63 }}
+            />
+          </View>
+          <View style={styles.textBox}>
+            <Text style={styles.text}>Manuale ADT</Text>
+          </View>
+        </TouchableOpacity>
+      </>
+    );
+  }
 }
 const styles = StyleSheet.create({
   infoBox: {
@@ -339,11 +411,11 @@ const styles = StyleSheet.create({
   eventCard: {
     width: "100%",
     height: 350,
-    backgroundColor: colors.primary,
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 15,
+    backgroundColor: colors.primary,
   },
   eventButton: {
     flex: 1,

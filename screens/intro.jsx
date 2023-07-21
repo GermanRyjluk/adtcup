@@ -12,6 +12,7 @@ import React, { useRef } from "react";
 import { colors } from "../shared/colors";
 import { auth } from "../firebase/firebase";
 import { PageIndicator } from "react-native-page-indicator";
+import { Header } from "../components/header";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
@@ -19,50 +20,52 @@ export default function EventInfo({ navigation, route }) {
   const { width, height } = Dimensions.get("window");
   const scrollX = useRef(new Animated.Value(0)).current;
   return (
-    <View style={styles.root}>
-      <Animated.ScrollView
-        horizontal={true}
-        pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          {
-            useNativeDriver: true,
-          }
-        )}
-        style={{ backgroundColor: colors.bg }}
-      >
-        <View
-          style={{
-            width,
-            alignItems: "center",
-          }}
+    <>
+      <Header />
+      <View style={styles.root}>
+        <Animated.ScrollView
+          horizontal={true}
+          pagingEnabled={true}
+          showsHorizontalScrollIndicator={false}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            {
+              useNativeDriver: true,
+            }
+          )}
+          style={{ backgroundColor: colors.bg }}
         >
           <View
             style={{
-              width: "100%",
-              height: "100%",
-              backgroundColor: colors.primary,
-              padding: 20,
+              width,
               alignItems: "center",
             }}
           >
-            <Text
-              style={[
-                styles.text,
-                { color: colors.secondary, marginBottom: 20 },
-              ]}
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: colors.primary,
+                padding: 20,
+                alignItems: "center",
+              }}
             >
-              Chi siamo?
-            </Text>
-            <Text style={[styles.text, { fontSize: 20 }]}>
-              Lei un po' mi ama un po' mi fa star dentro una bubbleOh baby,
-              lady, ciao ciao, bye bye, halo Yo, già ho consumato le suoleDietro
-              ho 'ste qui di cui non so neanche il nome, ioCerco me anche se non
-              dovevo ma me ne sto andandoCorro più veloce di Lambo, lascio le
-              scorie
-            </Text>
-            {/* <TouchableOpacity
+              <Text
+                style={[
+                  styles.text,
+                  { color: colors.secondary, marginBottom: 20 },
+                ]}
+              >
+                Chi siamo?
+              </Text>
+              <Text style={[styles.text, { fontSize: 20 }]}>
+                Lei un po' mi ama un po' mi fa star dentro una bubbleOh baby,
+                lady, ciao ciao, bye bye, halo Yo, già ho consumato le suoleDietro
+                ho 'ste qui di cui non so neanche il nome, ioCerco me anche se non
+                dovevo ma me ne sto andandoCorro più veloce di Lambo, lascio le
+                scorie
+              </Text>
+              {/* <TouchableOpacity
               title="Avanti"
               onPress={() => {
               }}
@@ -88,72 +91,73 @@ export default function EventInfo({ navigation, route }) {
                 Avanti
               </Text>
             </TouchableOpacity> */}
+            </View>
           </View>
-        </View>
-        <View
-          style={{
-            width,
-            alignItems: "center",
-          }}
-        >
           <View
             style={{
-              width: "100%",
-              height: "100%",
-              backgroundColor: colors.primary,
-              padding: 20,
+              width,
               alignItems: "center",
             }}
           >
-            <Text
-              style={[
-                styles.text,
-                { color: colors.secondary, marginBottom: 20 },
-              ]}
-            >
-              Regole
-            </Text>
-            <Text style={[styles.text, { fontSize: 20 }]}>
-              Stare coi fratelli mi rianima sempre in cornerHo dentro uno squalo
-              ma se lo ignoro è come non ci fosseFumo, fumo g fino alla
-              tosseVedo troppe cose che per me son non sense
-            </Text>
-            <TouchableOpacity
-              title="Gioca"
-              onPress={() => {
-                navigation.goBack();
-              }}
+            <View
               style={{
-                position: "absolute",
-                bottom: 50,
-                height: 80,
                 width: "100%",
-                backgroundColor: colors.secondary,
+                height: "100%",
+                backgroundColor: colors.primary,
+                padding: 20,
                 alignItems: "center",
-                justifyContent: "center",
-                marginTop: 100,
-                borderRadius: 40,
               }}
             >
               <Text
+                style={[
+                  styles.text,
+                  { color: colors.secondary, marginBottom: 20 },
+                ]}
+              >
+                Regole
+              </Text>
+              <Text style={[styles.text, { fontSize: 20 }]}>
+                Stare coi fratelli mi rianima sempre in cornerHo dentro uno squalo
+                ma se lo ignoro è come non ci fosseFumo, fumo g fino alla
+                tosseVedo troppe cose che per me son non sense
+              </Text>
+              <TouchableOpacity
+                title="Gioca"
+                onPress={() => {
+                  navigation.goBack();
+                }}
                 style={{
-                  color: colors.primary,
-                  fontSize: 40,
-                  fontWeight: "800",
+                  position: "absolute",
+                  bottom: 50,
+                  height: 80,
+                  width: "100%",
+                  backgroundColor: colors.secondary,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 100,
+                  borderRadius: 40,
                 }}
               >
-                Gioca
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: 40,
+                    fontWeight: "800",
+                  }}
+                >
+                  Gioca
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Animated.ScrollView>
-      <PageIndicator
-        style={styles.pageIndicator}
-        count={pages.length}
-        animatedCurrent={Animated.divide(scrollX, width)}
-      />
-    </View>
+        </Animated.ScrollView>
+        <PageIndicator
+          style={styles.pageIndicator}
+          count={pages.length}
+          animatedCurrent={Animated.divide(scrollX, width)}
+        />
+      </View>
+    </>
   );
 }
 

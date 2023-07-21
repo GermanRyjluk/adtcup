@@ -15,6 +15,7 @@ import QuizHome from "../screens/quizHome";
 import GeolocationCheck from "../screens/geolocationCheck";
 import Ticket from "../screens/ticket";
 import EventBooking from "../screens/eventBooking";
+import TermsAndConditions from "../screens/termsAndConditions";
 import Hints from "../screens/hints";
 import userScoreboard from "../screens/userScoreboard";
 import { doc, getDoc } from "firebase/firestore";
@@ -45,14 +46,14 @@ export function LoggedInStack() {
   }, []);
 
   if (userData) {
-    if (userData["420"]) {
+    if (userData["420"] != undefined) {
       console.log("Admin");
       return <Admin />;
-    } else if (userData["420"] == undefined) {
+    } else if (!userData["420"]) {
       console.log("User");
       return (
         <>
-          <Header />
+          {/* <Header /> */}
 
           <Stack.Navigator
             screenOptions={{ headerShown: false }}
@@ -62,6 +63,7 @@ export function LoggedInStack() {
             <Stack.Screen name="Intro" component={Intro} />
             <Stack.Screen name="EventInfo" component={EventInfo} />
             <Stack.Screen name="EventBooking" component={EventBooking} />
+            <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
             <Stack.Screen name="EventStatus" component={EventStatus} />
             <Stack.Screen name="Ticket" component={Ticket} />
             <Stack.Screen
@@ -84,12 +86,13 @@ export function NotLoggedInStack() {
   console.log("Not Logged In");
   return (
     <>
-      <Header />
+      {/* <Header /> */}
 
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="HomeDrawer" component={Home} />
         <Stack.Screen name="Intro" component={Intro} />
         <Stack.Screen name="EventInfo" component={EventInfo} />
+        <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
         {/* <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} /> */}
       </Stack.Navigator>

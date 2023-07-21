@@ -54,6 +54,15 @@ export default function Login({ navigation }) {
       <ScrollView style={styles.backGround}>
         <View style={styles.box}>
           <View style={styles.topZone}>
+            <TouchableOpacity
+              style={{ position: 'absolute', left: 0, top: 20 }} onPress={() => navigation.navigate("HomeDrawer")}>
+
+              <Ionicons
+                name="arrow-back"
+                size={40}
+                color={colors.secondary}
+              />
+            </TouchableOpacity>
             <View
               style={{
                 // flexDirection: 'row',
@@ -121,7 +130,7 @@ export default function Login({ navigation }) {
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
                 />
                 <TouchableOpacity
-                  style={{ position: "absolute", right: 10 }}
+                  style={{ position: "absolute", right: 20 }}
                   onPress={() => {
                     setIsPasswordVisible(!isPasswordVisible);
                   }}
@@ -129,14 +138,24 @@ export default function Login({ navigation }) {
                   {passwordIsVisible()}
                 </TouchableOpacity>
               </View>
+              <View style={{ flexDirection: "column", marginBottom: 2 }}>
+                <Text style={styles.loginSubText}>Password dimenticata?</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("RestorePWD");
+                  }}
+                >
+                  <Text style={styles.loginSubTextLink}>Recupera password</Text>
+                </TouchableOpacity>
+              </View>
             </View>
             <View style={styles.midTwo}>
               <TouchableOpacity style={styles.loginButton} onPress={UserLogIn}>
                 <Text style={styles.buttonText}>ACCEDI</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {}}>
+              {/* <TouchableOpacity onPress={() => { }}>
                 <Text style={styles.loginSubTextSkip}>Salta</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
           <View style={styles.bottomZone}>
@@ -176,7 +195,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    padding: "15%",
+    padding: "20%",
     paddingTop: "0%",
   },
   topZone: {
@@ -252,6 +271,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(210, 210, 210, 0.2)",
     marginBottom: 20,
     padding: 10,
+    paddingHorizontal: 20,
   },
   input: {
     width: "90%",

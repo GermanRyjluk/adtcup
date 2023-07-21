@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"array": "c",
+			"vector": "c",
+			"string.h": "c",
+			"stdio.h": "c",
+			"ctype.h": "c"
+		}
+	}
+}

@@ -16,6 +16,7 @@ import { PageIndicator } from "react-native-page-indicator";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { differenceInMinutes } from "date-fns";
 import Loading from "../components/loading";
+import { Header } from "../components/header";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
@@ -78,10 +79,10 @@ export default function EventInfo({ navigation, route }) {
             setQuizID(snapshot.data()["lastQuiz"]);
             setTimeToNext(
               5 -
-                differenceInMinutes(
-                  currentTime,
-                  new Date(snapshot.data()["timeOfScan"].toDate())
-                )
+              differenceInMinutes(
+                currentTime,
+                new Date(snapshot.data()["timeOfScan"].toDate())
+              )
             );
             getHints(
               snapshot.data()["lastQuiz"],
@@ -105,167 +106,172 @@ export default function EventInfo({ navigation, route }) {
     getTeamData();
   }, [render, maxHints]);
 
+  console.log(maxHints);
+
   return (
-    <View style={styles.root}>
-      {maxHints == null ? (
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: colors.bg,
-          }}
-        >
-          <Text>Non ci sono ancora indizi da mostrare, torna tra poco</Text>
-        </View>
-      ) : (
-        <Animated.ScrollView
-          horizontal={true}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            {
-              useNativeDriver: true,
-            }
-          )}
-          style={{ backgroundColor: colors.bg }}
-        >
-          {render.map((hint, i) => {
-            if (render) {
-              if (hint.type == "both") {
-                return (
-                  <View
-                    style={{
-                      width,
-                      alignItems: "center",
-                      padding: 20,
-                    }}
-                    key={i}
-                  >
-                    <View
-                      style={{
-                        width: "100%",
-                        height: "95%",
-                        backgroundColor: colors.primary,
-                        borderRadius: 20,
-                        alignItems: "center",
-                      }}
-                    >
-                      <Image
-                        source={{ uri: hint.photo }}
-                        style={{
-                          height: 200,
-                          width: "100%",
-                          borderTopLeftRadius: 20,
-                          borderTopRightRadius: 20,
-                        }}
-                      />
-                      <View style={{ width: "100%", padding: 20 }}>
-                        <Text
-                          style={[
-                            styles.text,
-                            { color: colors.secondary, marginBottom: 20 },
-                          ]}
-                        >
-                          Indizio {i + 1}
-                        </Text>
-                        <Text style={[styles.text, { fontSize: 20 }]}>
-                          {hint.message}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                );
-              } else if (hint.type == "message") {
-                return (
-                  <View
-                    style={{
-                      width,
-                      alignItems: "center",
-                      padding: 20,
-                    }}
-                    key={i}
-                  >
-                    <View
-                      style={{
-                        width: "100%",
-                        height: "95%",
-                        backgroundColor: colors.primary,
-                        borderRadius: 20,
-                        alignItems: "center",
-                      }}
-                    >
-                      <View style={{ width: "100%", padding: 20 }}>
-                        <Text
-                          style={[
-                            styles.text,
-                            { color: colors.secondary, marginBottom: 20 },
-                          ]}
-                        >
-                          Indizio {i + 1}
-                        </Text>
-                        <Text style={[styles.text, { fontSize: 20 }]}>
-                          {hint.message}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                );
-              } else if (hint.type == "photo") {
-                return (
-                  <View
-                    style={{
-                      width,
-                      alignItems: "center",
-                      padding: 20,
-                    }}
-                    key={i}
-                  >
-                    <View
-                      style={{
-                        width: "100%",
-                        height: "95%",
-                        backgroundColor: colors.primary,
-                        borderRadius: 20,
-                        alignItems: "center",
-                      }}
-                    >
-                      <Image
-                        source={{ uri: hint.photo }}
-                        style={{
-                          height: 200,
-                          width: "100%",
-                          borderTopLeftRadius: 20,
-                          borderTopRightRadius: 20,
-                        }}
-                      />
-                      <View style={{ width: "100%", padding: 20 }}>
-                        <Text
-                          style={[
-                            styles.text,
-                            { color: colors.secondary, marginBottom: 20 },
-                          ]}
-                        >
-                          Indizio {i + 1}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                );
+    <>
+      <Header />
+      <View style={styles.root}>
+        {maxHints == null ? (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: colors.bg,
+            }}
+          >
+            <Text>Non ci sono ancora indizi da mostrare, torna tra poco</Text>
+          </View>
+        ) : (
+          <Animated.ScrollView
+            horizontal={true}
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+              {
+                useNativeDriver: true,
               }
-            } else {
-              return null;
-            }
-          })}
-        </Animated.ScrollView>
-      )}
-      <PageIndicator
-        style={styles.pageIndicator}
-        count={render.length}
-        animatedCurrent={Animated.divide(scrollX, width)}
-      />
-    </View>
+            )}
+            style={{ backgroundColor: colors.bg }}
+          >
+            {render.map((hint, i) => {
+              if (render) {
+                if (hint.type == "both") {
+                  return (
+                    <View
+                      style={{
+                        width,
+                        alignItems: "center",
+                        padding: 20,
+                      }}
+                      key={i}
+                    >
+                      <View
+                        style={{
+                          width: "100%",
+                          height: "95%",
+                          backgroundColor: colors.primary,
+                          borderRadius: 20,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Image
+                          source={{ uri: hint.photo }}
+                          style={{
+                            height: 200,
+                            width: "100%",
+                            borderTopLeftRadius: 20,
+                            borderTopRightRadius: 20,
+                          }}
+                        />
+                        <View style={{ width: "100%", padding: 20 }}>
+                          <Text
+                            style={[
+                              styles.text,
+                              { color: colors.secondary, marginBottom: 20 },
+                            ]}
+                          >
+                            Indizio {i + 1}
+                          </Text>
+                          <Text style={[styles.text, { fontSize: 20 }]}>
+                            {hint.message}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                } else if (hint.type == "message") {
+                  return (
+                    <View
+                      style={{
+                        width,
+                        alignItems: "center",
+                        padding: 20,
+                      }}
+                      key={i}
+                    >
+                      <View
+                        style={{
+                          width: "100%",
+                          height: "95%",
+                          backgroundColor: colors.primary,
+                          borderRadius: 20,
+                          alignItems: "center",
+                        }}
+                      >
+                        <View style={{ width: "100%", padding: 20 }}>
+                          <Text
+                            style={[
+                              styles.text,
+                              { color: colors.secondary, marginBottom: 20 },
+                            ]}
+                          >
+                            Indizio {i + 1}
+                          </Text>
+                          <Text style={[styles.text, { fontSize: 20 }]}>
+                            {hint.message}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                } else if (hint.type == "photo") {
+                  return (
+                    <View
+                      style={{
+                        width,
+                        alignItems: "center",
+                        padding: 20,
+                      }}
+                      key={i}
+                    >
+                      <View
+                        style={{
+                          width: "100%",
+                          height: "95%",
+                          backgroundColor: colors.primary,
+                          borderRadius: 20,
+                          alignItems: "center",
+                        }}
+                      >
+                        <Image
+                          source={{ uri: hint.photo }}
+                          style={{
+                            height: 200,
+                            width: "100%",
+                            borderTopLeftRadius: 20,
+                            borderTopRightRadius: 20,
+                          }}
+                        />
+                        <View style={{ width: "100%", padding: 20 }}>
+                          <Text
+                            style={[
+                              styles.text,
+                              { color: colors.secondary, marginBottom: 20 },
+                            ]}
+                          >
+                            Indizio {i + 1}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }
+              } else {
+                return null;
+              }
+            })}
+          </Animated.ScrollView>
+        )}
+        <PageIndicator
+          style={styles.pageIndicator}
+          count={render.length}
+          animatedCurrent={Animated.divide(scrollX, width)}
+        />
+      </View>
+    </>
   );
 }
 

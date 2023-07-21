@@ -221,6 +221,7 @@ export default function QuizHome({ navigation, route }) {
   if (quizData.type == "both") {
     return (
       <>
+        <Header screen={"OnGame"} />
         <ScrollView
           style={{ padding: 20, flex: 1, backgroundColor: colors.bg }}
           refreshControl={
@@ -343,9 +344,9 @@ export default function QuizHome({ navigation, route }) {
                   scoreboardPublic
                     ? navigation.navigate("userScoreboard")
                     : Alert.alert(
-                        "Classifica non disponibile",
-                        "In questa fase della gara non è possibile vedere la classifica"
-                      )
+                      "Classifica non disponibile",
+                      "In questa fase della gara non è possibile vedere la classifica"
+                    )
                 }
               >
                 <Text
@@ -368,6 +369,7 @@ export default function QuizHome({ navigation, route }) {
   } else if (quizData.type == "message") {
     return (
       <>
+        <Header screen={"OnGame"} />
         <ScrollView
           style={{ padding: 20, flex: 1, backgroundColor: colors.bg }}
           refreshControl={
@@ -481,9 +483,9 @@ export default function QuizHome({ navigation, route }) {
                 scoreboardPublic
                   ? navigation.navigate("userScoreboard")
                   : Alert.alert(
-                      "Classifica non disponibile",
-                      "In questa fase della gara non è possibile vedere la classifica"
-                    )
+                    "Classifica non disponibile",
+                    "In questa fase della gara non è possibile vedere la classifica"
+                  )
               }
             >
               <Text
@@ -505,6 +507,7 @@ export default function QuizHome({ navigation, route }) {
   } else if (quizData.type == "photo") {
     return (
       <>
+        <Header screen={"OnGame"} />
         <ScrollView
           style={{ padding: 20, flex: 1, backgroundColor: colors.bg }}
           refreshControl={
@@ -601,9 +604,9 @@ export default function QuizHome({ navigation, route }) {
                   scoreboardPublic
                     ? navigation.navigate("userScoreboard")
                     : Alert.alert(
-                        "Classifica non disponibile",
-                        "In questa fase della gara non è possibile vedere la classifica"
-                      )
+                      "Classifica non disponibile",
+                      "In questa fase della gara non è possibile vedere la classifica"
+                    )
                 }
               >
                 <Text
@@ -618,7 +621,7 @@ export default function QuizHome({ navigation, route }) {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{ width: "100%", height: 150 }}></View>
+          <View style={{ width: "100%", height: 200 }}></View>
         </ScrollView>
         <Footer />
       </>

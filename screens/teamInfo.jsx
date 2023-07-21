@@ -55,11 +55,9 @@ export default function TeamInfo({ route }) {
   }, []);
 
   if (teamInfo && players) {
-    console.log("Team: ", teamInfo);
-    console.log("Players: ", players);
     return (
       <>
-        {/* <Header /> */}
+        <Header />
         <View
           style={{
             height: "100%",

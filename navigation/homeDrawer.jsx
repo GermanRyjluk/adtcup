@@ -9,6 +9,7 @@ import OnGameTabs from "./onGameTabs";
 import { colors } from "../shared/colors";
 import Login from "../screens/login";
 import Register from "../screens/register";
+import RestorePWD from "../screens/restorePassword";
 import { LoggedInStack, NotLoggedInStack } from "./mainStack";
 import { Image, Text } from "react-native";
 
@@ -105,6 +106,13 @@ export default function NotLoggedInDrawer() {
       <Drawer.Screen
         name="Register"
         component={Register}
+        options={{
+          drawerItemStyle: { height: 0 },
+        }}
+      />
+      <Drawer.Screen
+        name="RestorePWD"
+        component={RestorePWD}
         options={{
           drawerItemStyle: { height: 0 },
         }}

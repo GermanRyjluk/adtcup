@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   ImageBackground,
   Image,
   TouchableOpacity,
+  TextInput,
+  Alert,
 } from "react-native";
 import {
   DrawerContentScrollView,
@@ -17,9 +19,42 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import { colors } from "../shared/colors";
 import { auth } from "../firebase/firebase";
-import { signOut } from "firebase/auth";
+import { signOut, updateProfile } from "firebase/auth";
 
 const CustomDrawer = (props) => {
+  const [editing, setEditing] = useState(false);
+  const [newName, setNewName] = useState(auth.currentUser?.name);
+
+  const updateCurrentUserName = async (name) => {
+    if (auth.currentUser.displayName != name) {
+      console.log(name);
+      updateProfile(auth.currentUser, {
+        displayName: name,
+      });
+      setNewName(name);
+      setEditing(false);
+      Alert.alert("Nome cambiato con successo", "il nome " + newName + " verrà applicato al riavvio dell'app");
+    } else {
+      setEditing(false);
+      Alert.alert("Nome non cambiato", "il nome " + newName + " è uguale al precedente");
+    }
+  }
+
+  // useEffect(() => {
+  //   const updateCurrentUserName = async (name) => {
+  //     if (auth.currentUser.displayName != name) {
+  //       console.log(name);
+  //       updateProfile(auth.currentUser, {
+  //         displayName: name,
+  //       });
+  //       setNewName(name);
+  //       setEditing(false);
+  //       Alert.alert("Nome cambiato con successo", "il nuovo nome verrà applicato al riavvio dell'app");
+  //     }
+  //   }
+
+  // }, [newName, auth.currentUser.displayName]);
+
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView
@@ -31,11 +66,11 @@ const CustomDrawer = (props) => {
             source={
               auth.currentUser
                 ? {
-                    uri: auth.currentUser.photoURL,
-                  }
+                  uri: auth.currentUser.photoURL,
+                }
                 : {
-                    uri: "https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE=",
-                  }
+                  uri: "https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE=",
+                }
             }
             style={{
               height: 80,
@@ -52,20 +87,50 @@ const CustomDrawer = (props) => {
               alignItems: "center",
             }}
           >
-            <Text
+            {editing ? <TextInput
               style={{
+                flex: 1,
+                height: 40,
+                marginRight: 10,
+                borderRadius: 10,
+                backgroundColor: "rgba(210, 210, 210, 0.2)",
+                paddingHorizontal: 15,
+                paddingVertical: 10,
                 color: "#fff",
                 fontSize: 18,
                 //   fontFamily: 'Roboto-Medium',
                 marginBottom: 5,
               }}
+              onSubmitEditing={() => { updateCurrentUserName(newName); }}
+              onChangeText={(text) => setNewName(text)}
             >
-              {auth.currentUser ? auth.currentUser.displayName : "Anonimo"}
-            </Text>
+              {auth.currentUser.displayName}
+            </TextInput> :
+
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 18,
+                  //   fontFamily: 'Roboto-Medium',
+                  marginBottom: 5,
+                }}
+              >
+                {auth.currentUser ? auth.currentUser.displayName : "Anonimo"}
+              </Text>
+            }
             {auth.currentUser ? (
-              <TouchableOpacity>
-                <Ionicons name="construct-outline" size={22} color="white" />
-              </TouchableOpacity>
+              !editing ?
+                <TouchableOpacity onPress={() => setEditing(true)}>
+                  <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
+                </TouchableOpacity>
+                : <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
+                    <Ionicons name="checkmark-circle" size={25} color="white" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setEditing(false)}>
+                    <Ionicons name="close-circle" size={25} color="white" />
+                  </TouchableOpacity>
+                </ View>
             ) : null}
           </View>
         </View>
@@ -81,7 +146,7 @@ const CustomDrawer = (props) => {
           backgroundColor: colors.primary,
         }}
       >
-        <TouchableOpacity onPress={() => {}} style={{ paddingVertical: 15 }}>
+        <TouchableOpacity onPress={() => { }} style={{ paddingVertical: 15 }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Ionicons name="share-social-outline" size={22} color={"#fff"} />
             <Text

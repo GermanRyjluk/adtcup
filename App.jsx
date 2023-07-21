@@ -22,6 +22,8 @@ import AuthNavigator from "./navigation/authNavigator";
 import Admin from "./navigation/adminStack";
 
 import * as Font from "expo-font";
+import * as SplashScreen from 'expo-splash-screen';
+import Loading from "./components/loading";
 
 export default function App() {
   const getFonts = () => {
@@ -30,11 +32,11 @@ export default function App() {
     });
   };
 
+  // SplashScreen.preventAutoHideAsync();
   const [appIsReady, setAppIsReady] = useState(false);
   useEffect(() => {
     async function prepare() {
       try {
-        // SplashScreen.preventAutoHideAsync();
         await getFonts();
       } catch (e) {
         console.warn(e);
@@ -48,12 +50,12 @@ export default function App() {
   }, []);
 
   if (!appIsReady) {
-    return null;
+    return <Loading />;
   }
   return (
     <SafeAreaProvider>
+      <StatusBar backgroundColor={colors.primary} />
       <NavigationContainer>
-        <StatusBar backgroundColor={colors.primary} />
         <SafeAreaView
           style={{
             flex: 1,

@@ -2,7 +2,9 @@
   "expo": {
     "name": "ADTCUP",
     "slug": "ADTCUP",
+    "versionCode": 1,
     "version": "1.0.0",
+    "targetSDKVersion": "33",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
