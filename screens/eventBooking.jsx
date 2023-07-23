@@ -6,6 +6,7 @@ import { auth, db } from "../firebase/firebase";
 import { Header } from "../components/header";
 
 import CheckBox from "expo-checkbox";
+import { font } from "../shared/fonts";
 
 export default function EventBooking({ navigation, route }) {
 
@@ -80,7 +81,7 @@ export default function EventBooking({ navigation, route }) {
         }}
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: 25, fontWeight: '800', color: colors.secondary, textAlign: 'center' }}>FAI IL QUESTIONARIO E INVIA LA TUA RICHIESTA DI PARTECIPAZIONE</Text>
+          <Text style={{ fontSize: 25, fontFamily: font.bold, color: colors.secondary, textAlign: 'center' }}>FAI IL QUESTIONARIO E INVIA LA TUA RICHIESTA DI PARTECIPAZIONE</Text>
         </View>
         <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
           <TouchableOpacity
@@ -99,7 +100,7 @@ export default function EventBooking({ navigation, route }) {
             }}
           >
             <Image source={require('../assets/googledocs.png')} style={{ width: 25, height: 31 }} />
-            <Text style={{ color: "black", fontSize: 25, fontWeight: "800", color: colors.primary }}>
+            <Text style={{ color: "black", fontSize: 25, fontFamily: font.bold, color: colors.primary }}>
               Google Form
             </Text>
           </TouchableOpacity>
@@ -112,7 +113,7 @@ export default function EventBooking({ navigation, route }) {
               onValueChange={(state) => warningMessage(state)}
               color={colors.secondary}
             />
-            <Text style={{ fontSize: 15, fontWeight: '500', color: '#dadada' }}>Ho compilato il form</Text>
+            <Text style={{ fontSize: 15, fontFamily: font.medium, color: '#dadada' }}>Ho compilato il form</Text>
           </View><View style={{ width: 250, flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
             <CheckBox
               style={{ width: 30, height: 30, borderRadius: 15, marginRight: 10 }}
@@ -120,10 +121,10 @@ export default function EventBooking({ navigation, route }) {
               onValueChange={(state) => setCompletedPrivacyPolicy(state)}
               color={colors.secondary}
             />
-            <Text style={{ fontSize: 15, fontWeight: '500', color: '#dadada' }}>Accetto</Text>
+            <Text style={{ fontSize: 15, fontFamily: font.medium, color: '#dadada' }}>Accetto</Text>
             <TouchableOpacity onPress={() => navigation.navigate("TermsAndConditions")}>
 
-              <Text style={{ fontSize: 15, fontWeight: '500', color: colors.secondary }}> termini e condizioni</Text>
+              <Text style={{ fontSize: 15, fontFamily: font.bold, color: colors.secondary }}> termini e condizioni</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -142,7 +143,7 @@ export default function EventBooking({ navigation, route }) {
             }}
           >
             <Text
-              style={{ color: completed && completedPrivacyPolicy ? colors.primary : '#474747', fontSize: 25, fontWeight: "800" }}
+              style={{ color: completed && completedPrivacyPolicy ? colors.primary : '#474747', fontSize: 25, fontFamily: font.bold, }}
             >
               Invia richiesta
             </Text>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Linking } from "react-native";
 
 import { Camera } from "expo-camera";
 import Svg, { Path } from "react-native-svg";
@@ -12,6 +12,7 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 
 import { colors } from "../shared/colors.jsx";
 import { Header } from "../components/header.jsx";
+import { font } from "../shared/fonts.jsx";
 
 export default function App({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -62,35 +63,42 @@ export default function App({ navigation, route }) {
     return (
       <View style={styles.mainContainer}>
         <View>
-          <Text>Requesting Camera Permission</Text>
+          <Text style={{
+            fontFamily: font.bold
+          }}>Requesting Camera Permission</Text>
         </View>
       </View>
     );
   }
   if (hasPermission === false) {
     return (
-      <View style={styles.mainContainer}>
-        <View>
-          <Text style={styles.text}>Not permission to camera</Text>
-          <TouchableOpacity onPress={() => askForPermissionCamera()}>
-            <Text
-              style={[
-                styles.text,
-                {
-                  backgroundColor: "#00FFE4",
-                  borderRadius: 10,
-                  padding: 10,
-                  fontSize: 25,
-                  textAlign: "center",
-                  color: colors.primary,
-                },
-              ]}
-            >
-              Ask Again?
-            </Text>
-          </TouchableOpacity>
+      <>
+        <Header />
+        <View style={[styles.mainContainer, { backgroundColor: colors.primary, padding: 30 }]}>
+          <View>
+            <Text style={styles.text}>Abilita accesso alla fotocamera dalle impostazioni del tuo dispositivo</Text>
+            <TouchableOpacity onPress={() => Linking.openSettings()} style={{
+              backgroundColor: colors.secondary,
+              padding: 10,
+              borderRadius: 30,
+              marginTop: 50
+            }}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    fontSize: 25,
+                    textAlign: "center",
+                    color: colors.primary,
+                  },
+                ]}
+              >
+                Abilita
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </>
     );
   }
   return (
@@ -116,7 +124,7 @@ export default function App({ navigation, route }) {
         {scanned ? (
           <TouchableOpacity onPress={getQuiz} style={styles.quizBox}>
             <Text
-              style={{ fontSize: 30, fontWeight: "800", color: colors.secondary }}
+              style={{ fontSize: 25, fontFamily: font.bold, color: colors.secondary }}
             >
               Ottieni indovinello!
             </Text>
@@ -134,7 +142,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  text: { fontSize: 25, fontWeight: "800", color: colors.secondary },
+  text: { fontSize: 25, fontFamily: font.bold, color: colors.secondary, textAlign: 'center' },
   messageBox: {
     backgroundColor: colors.bg,
     position: "absolute",
@@ -148,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     padding: 30,
     position: "absolute",
-    bottom: "3%",
-    borderRadius: 10,
+    bottom: 50,
+    borderRadius: 100,
   },
 });

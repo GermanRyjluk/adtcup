@@ -152,7 +152,7 @@ export default function Scoreboard() {
               }}
               key={i}
             >
-              <View>
+              <View style={{ width: 250 }}>
                 <Text
                   style={{
                     fontSize: 20,

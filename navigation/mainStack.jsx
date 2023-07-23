@@ -23,6 +23,9 @@ import { auth, db } from "../firebase/firebase";
 import Admin from "./adminStack";
 import { Header } from "../components/header";
 import Home from "../screens/home";
+import EditTeamInfo from "../screens/editTeamInfo";
+import PastEvents from "../screens/pastEvent";
+
 
 const Stack = createStackNavigator();
 
@@ -48,7 +51,7 @@ export function LoggedInStack() {
   if (userData) {
     if (userData["420"] != undefined) {
       console.log("Admin");
-      return <Admin />;
+      return <><Header /><Admin /></>;
     } else if (!userData["420"]) {
       console.log("User");
       return (
@@ -61,6 +64,7 @@ export function LoggedInStack() {
           >
             <Stack.Screen name="HomeDrawer" component={Home} />
             <Stack.Screen name="Intro" component={Intro} />
+            <Stack.Screen name="PastEvents" component={PastEvents} />
             <Stack.Screen name="EventInfo" component={EventInfo} />
             <Stack.Screen name="EventBooking" component={EventBooking} />
             <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
@@ -75,6 +79,7 @@ export function LoggedInStack() {
             <Stack.Screen name="userScoreboard" component={userScoreboard} />
             <Stack.Screen name="GameRules" component={GameRules} />
             <Stack.Screen name="TeamInfo" component={TeamInfo} />
+            <Stack.Screen name="EditTeamInfo" component={EditTeamInfo} />
             <Stack.Screen name="Qr" component={QrReader} />
           </Stack.Navigator>
         </>
@@ -91,6 +96,7 @@ export function NotLoggedInStack() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="HomeDrawer" component={Home} />
         <Stack.Screen name="Intro" component={Intro} />
+        <Stack.Screen name="PastEvents" component={PastEvents} />
         <Stack.Screen name="EventInfo" component={EventInfo} />
         <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
         {/* <Stack.Screen name="Login" component={Login} />

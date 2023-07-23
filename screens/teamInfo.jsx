@@ -1,20 +1,29 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView, RefreshControl } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Header } from "../components/header";
 import { colors } from "../shared/colors";
 import { Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
 import { QrButton } from "../components/qrButton";
 import { Footer } from "../components/footer";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";
 import Loading from "../components/loading";
 
-export default function TeamInfo({ route }) {
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { auth, db, storage } from "../firebase/firebase";
+import { getDownloadURL, ref } from "firebase/storage";
+import { font } from "../shared/fonts";
+
+
+export default function TeamInfo({ navigation, route }) {
   const eventID = "1VgaAztg9yvbzRLuIjql";
 
   const [teamInfo, setTeamInfo] = useState([]);
   const [players, setPlayers] = useState([]);
+
+  const [imageURL, setImageURL] = useState([]);
+
+  const [refreshing, setRefreshing] = useState(false);
 
   const getTeamInfo = useCallback(async () => {
     try {
@@ -27,6 +36,7 @@ export default function TeamInfo({ route }) {
           ).then((snapshot) => {
             if (snapshot.exists()) {
               setTeamInfo(snapshot.data());
+              getDownloadURL(ref(storage, "flags/" + snapshot.data()["number"] + ".jpeg")).then((url) => setImageURL(url));
             }
           });
           await getDocs(
@@ -46,74 +56,103 @@ export default function TeamInfo({ route }) {
           // });
         }
       });
+
     } catch (e) {
       console.error("Error fetching team info: ", e);
     }
   }, []);
-  useEffect(() => {
+
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
     getTeamInfo();
+    setRefreshing(false);
   }, []);
 
+  useEffect(() => {
+    getTeamInfo();
+  }, [teamInfo.number]);
+
   if (teamInfo && players) {
+    console.log(imageURL)
     return (
       <>
         <Header />
-        <View
+
+        <ScrollView
           style={{
-            height: "100%",
+            flex: 1,
             backgroundColor: colors.bg,
+            padding: 20,
           }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
         >
-          <Image source={require("../assets/user.png")} />
-          <View style={{ padding: 20 }}>
-            <TouchableOpacity
-              style={{
-                height: 50,
-                width: 130,
-                backgroundColor: colors.primary,
-                borderRadius: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 20,
-              }}
-            >
-              <Text style={{ fontSize: 20, fontWeight: "800", color: "white" }}>
-                Modifica
-              </Text>
-            </TouchableOpacity>
-            <Text style={{ fontSize: 15, fontWeight: "500" }}>
-              Nome squadra:
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: "800", marginBottom: 20 }}>
-              {teamInfo.name}
-            </Text>
-            <Text style={{ fontSize: 15, fontWeight: "500" }}>
-              Partecipanti:
-            </Text>
-            {players.map((player, i) => {
-              return (
-                <Text style={{ fontSize: 20, fontWeight: "800" }} key={i}>
-                  {player.name}
+          <View>
+            <View style={{ alignItems: 'flex-end' }}>
+              <TouchableOpacity
+                style={{
+                  height: 50,
+                  width: 130,
+                  backgroundColor: colors.primary,
+                  borderRadius: 30,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 20,
+                }}
+                onPress={() => navigation.navigate("EditTeamInfo", { nome: teamInfo.name, number: teamInfo.number })}
+              >
+                <Text style={{
+                  fontSize: 20,
+                  fontFamily: font.bold, color: colors.secondary
+                }}>
+                  Modifica
                 </Text>
-              );
-            })}
-            {/* <Text style={{ fontSize: 20, fontWeight: "800" }}>
-              Giuseppe Bellisario
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: "800" }}>
-              Pietro Giancristofaro
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: "800" }}>
-              German Ryjluk
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: "800", marginBottom: 20 }}>
-              Federica Masciangelo
-            </Text> */}
+              </TouchableOpacity>
+            </View>
+            <View>
+            </View>
+            <View style={{ backgroundColor: colors.primary, borderRadius: 20 }}>
+              {/* <Image source={{ uri: imageURL ? imageURL : null }} style={{
+                borderTopRightRadius: 20, borderTopLeftRadius: 20, width: '100%', height: 250
+              }} /> */}
+              <View style={{ padding: 20 }}>
+                <Text style={{
+                  fontSize: 20,
+                  fontFamily: font.bold, marginBottom: 20, color: colors.secondary
+                }}>
+                  {teamInfo.name}
+                </Text>
+                <Text style={{
+                  fontSize: 25,
+                  fontFamily: font.light, color: colors.secondary, marginBottom: 10
+                }}>
+                  Partecipanti:
+                </Text>
+                {players.map((player, i) => {
+                  return (
+                    <Text style={{
+                      fontSize: 20,
+                      fontFamily: font.medium, color: 'white', marginBottom: 10
+                    }} key={i}>
+                      {player.name}
+                    </Text>
+                  );
+                })}
+                <Text style={{ fontSize: 25, fontFamily: font.light, color: colors.secondary, marginVertical: 10 }}>
+                  Punteggio:
+                </Text>
+                <Text style={{ fontSize: 20, fontFamily: font.medium, color: 'white', marginBottom: 5 }}>
+                  {teamInfo.points}K
+                </Text>
+              </View>
+            </View>
           </View>
+          <View style={{ height: 150 }} />
           {/* <View style={{ position: "absolute", bottom: 100, right: 15 }}>
             <QrButton />
           </View> */}
-        </View>
+        </ScrollView >
         <Footer />
       </>
     );

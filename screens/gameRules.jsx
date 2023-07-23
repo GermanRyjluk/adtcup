@@ -13,10 +13,11 @@ import { colors } from "../shared/colors";
 import { auth } from "../firebase/firebase";
 import { PageIndicator } from "react-native-page-indicator";
 import { Header } from "../components/header";
+import { font } from "../shared/fonts";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
-export default function EventInfo({ navigation }) {
+export default function EventInfo({ navigation, route }) {
   const { width, height } = Dimensions.get("window");
   const scrollX = useRef(new Animated.Value(0)).current;
   return (
@@ -97,7 +98,13 @@ export default function EventInfo({ navigation }) {
               </Text>
               <TouchableOpacity
                 title="Gioca"
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                  auth.currentUser
+                    ? navigation.navigate("EventBooking", {
+                      eventID: route.params.eventID,
+                    })
+                    : navigation.navigate("Login");
+                }}
                 style={{
                   position: "absolute",
                   bottom: 20,
@@ -113,8 +120,7 @@ export default function EventInfo({ navigation }) {
                 <Text
                   style={{
                     color: colors.primary,
-                    fontSize: 40,
-                    fontWeight: "800",
+                    fontSize: 40, fontFamily: font.bold,
                   }}
                 >
                   Gioca
@@ -140,9 +146,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 50,
-    color: "#ededed",
-    fontWeight: "800",
+    fontSize: 45,
+    color: "#ededed", fontFamily: font.bold,
   },
   root: {
     flex: 1,

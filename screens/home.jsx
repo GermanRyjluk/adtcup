@@ -32,7 +32,7 @@ const Tab = createMaterialTopTabNavigator();
 const currentEvents = [
   {
     id: "1VgaAztg9yvbzRLuIjql",
-    name: "LANCIANO / COSTA DEI TRABOCCHI",
+    name: "LANCIANO\nCOSTA DEI TRABOCCHI",
     photo:
       "https://www.virtuquotidiane.it/wp-content/uploads/2017/07/lancianonotte.jpg",
     date: "23-8-2023",
@@ -196,7 +196,10 @@ export default function Home({ navigation }) {
                   }}
                 >
                   <Text
-                    style={{ color: "white", fontSize: 17, fontWeight: "800", textAlign: 'center', width: "100%", }}
+                    style={{
+                      color: "white", fontSize: 17,
+                      fontFamily: font.bold, width: "70%",
+                    }}
                   >
                     {data.name}
                   </Text>
@@ -220,7 +223,7 @@ export default function Home({ navigation }) {
                       justifyContent: "center",
                     }}
                   >
-                    <Text style={{ fontSize: 25, fontWeight: "800", color: data.isLocked ? "#FFFFFF" : "#000000" }}>Gioca</Text>
+                    <Text style={{ fontSize: 25, color: data.isLocked ? "#FFFFFF" : "#000000", fontFamily: font.bold }}>Gioca</Text>
                   </View>
                 </TouchableOpacity>
 
@@ -234,13 +237,14 @@ export default function Home({ navigation }) {
   };
   const HistoryScrollView = () => {
     return (
-      <ScrollView style={{ flex: 1, padding: 30, backgroundColor: colors.bg }}>
+      <ScrollView style={{ flex: 1, padding: 15, backgroundColor: colors.bg }}>
         {pastEvents.map((data, i) => {
           return (
-            <TouchableOpacity
+            <View
               key={i}
               onPress={() => {
-                Alert.alert("Spiacenti", "Funzionalità non ancora disponibile");
+                navigation.navigate("PastEvents");
+                // Alert.alert("Spiacenti", "Funzionalità non ancora disponibile");
               }}
               style={styles.eventCard}
             >
@@ -275,12 +279,15 @@ export default function Home({ navigation }) {
                   }}
                 >
                   <Text
-                    style={{ color: "white", fontSize: 25, fontWeight: "800" }}
+                    style={{
+                      color: "white", fontSize: 25, fontFamily: font.bold,
+                      marginBottom: 10,
+                    }}
                   >
                     {data.name}
                   </Text>
                 </View>
-                <View
+                <TouchableOpacity
                   style={{
                     width: "100%",
                     height: 50,
@@ -289,13 +296,14 @@ export default function Home({ navigation }) {
                     alignItems: "center",
                     justifyContent: "center",
                   }}
+                  onPress={() => navigation.navigate("PastEvents")}
                 >
-                  <Text style={{ fontSize: 25, fontWeight: "800" }}>
+                  <Text style={{ fontSize: 25, fontFamily: font.bold }}>
                     Esplora
                   </Text>
-                </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
+            </View>
           );
         })}
         <View style={{ width: "100%", height: 90 }} />
@@ -317,9 +325,7 @@ export default function Home({ navigation }) {
             tabBarStyle: { backgroundColor: colors.primary },
             tabBarLabelStyle: {
               fontSize: 15,
-              letterSpacing: 1,
-              fontWeight: "800",
-              // fontFamily: font,
+              letterSpacing: 1, fontFamily: font.bold,
               color: colors.secondary,
             },
             tabBarPressOpacity: 1,
@@ -378,7 +384,7 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     fontSize: 30,
     marginHorizontal: 5,
-    fontWeight: "800",
+    fontFamily: font.bold,
     // fontFamily: font,
   },
   trophyBox: {
@@ -406,7 +412,7 @@ const styles = StyleSheet.create({
   },
   textBox: {
     position: "absolute",
-    left: 140,
+    left: 130,
   },
   eventCard: {
     width: "100%",

@@ -20,6 +20,7 @@ import {
 import { db } from "../firebase/firebase";
 import { RefreshControl } from "react-native";
 import { Header } from "../components/header";
+import { font } from "../shared/fonts";
 
 export default function Scoreboard({ route }) {
   const [isPublic, setIsPublic] = useState(false);
@@ -48,7 +49,7 @@ export default function Scoreboard({ route }) {
 
   useEffect(() => {
     getTeamsFromDB();
-    console.log(teams);
+    // console.log(teams);
   }, []);
 
   return (
@@ -63,7 +64,7 @@ export default function Scoreboard({ route }) {
         <Text
           style={{
             fontSize: 40,
-            fontWeight: "800",
+            fontFamily: font.bold,
             color: colors.secondary,
             marginBottom: 20,
           }}
@@ -100,7 +101,7 @@ export default function Scoreboard({ route }) {
                 <Text
                   style={{
                     fontSize: 20,
-                    fontWeight: "800",
+                    fontFamily: font.bold,
                     marginBottom: 3,
                     color: colors.primary,
                   }}
@@ -117,7 +118,7 @@ export default function Scoreboard({ route }) {
                 <Text
                   style={{
                     fontSize: 20,
-                    fontWeight: "800",
+                    fontFamily: font.medium,
                     marginBottom: 3,
                     color: colors.primary,
                   }}
@@ -138,7 +139,7 @@ export default function Scoreboard({ route }) {
                 <Text
                   style={{
                     fontSize: 30,
-                    fontWeight: "800",
+                    fontFamily: font.bold,
                     marginBottom: 3,
                     color: colors.primary,
                   }}

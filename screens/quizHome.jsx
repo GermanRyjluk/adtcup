@@ -11,6 +11,7 @@ import {
 import React, { useState, useEffect, useCallback } from "react";
 import { Header } from "../components/header";
 import { colors } from "../shared/colors";
+import { font } from "../shared/fonts";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { QrButton } from "../components/qrButton";
 import { db, auth } from "../firebase/firebase";
@@ -38,7 +39,7 @@ import {
 import { Footer } from "../components/footer";
 import Loading from "../components/loading";
 
-import { differenceInMilliseconds } from "date-fns";
+import { differenceInMilliseconds, set } from "date-fns";
 import { differenceInMinutes } from "date-fns";
 
 export default function QuizHome({ navigation, route }) {
@@ -74,7 +75,7 @@ export default function QuizHome({ navigation, route }) {
 
   //Get new quiz and update database
   const getNewQuiz = useCallback(async (quiz, team) => {
-    setRefreshing(true);
+    // setRefreshing(true);
     try {
       await getDoc(doc(db, "events", eventID, "quiz", quiz)).then(
         async (snapshot) => {
@@ -97,7 +98,7 @@ export default function QuizHome({ navigation, route }) {
     } catch (e) {
       console.error("Error getting new quiz: ", e);
     }
-    setRefreshing(false);
+    // setRefreshing(false);
   });
 
   //Get team information
@@ -159,7 +160,7 @@ export default function QuizHome({ navigation, route }) {
 
   //Get team number
   const getTeamAndData = async () => {
-    setRefreshing(true);
+    // setRefreshing(true);
     try {
       const docRef = await getDoc(
         doc(db, "/users", auth.currentUser.uid, "/bookings", eventID)
@@ -173,11 +174,12 @@ export default function QuizHome({ navigation, route }) {
     } catch (e) {
       console.error("Error fetching team number: ", e);
     }
-    setRefreshing(false);
+    // setRefreshing(false);
   };
 
   //On refresh
   const handleRefresh = () => {
+    setRefreshing(true);
     checkScoreboard();
     if (quizID === undefined) {
       console.log("Last Quiz");
@@ -186,6 +188,7 @@ export default function QuizHome({ navigation, route }) {
       console.log("New Quiz: ", quizID);
       getNewQuiz(quizID, userTeam);
     }
+    setRefreshing(false);
   };
 
   //handle countdown completed
@@ -256,7 +259,7 @@ export default function QuizHome({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 20,
-                  fontWeight: "800",
+                  fontFamily: font.bold,
                   color: colors.secondary,
                   marginBottom: 20,
                 }}
@@ -266,7 +269,7 @@ export default function QuizHome({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 20,
-                  fontWeight: "800",
+                  fontFamily: font.medium,
                   color: "white",
                   marginBottom: 10,
                 }}
@@ -285,7 +288,7 @@ export default function QuizHome({ navigation, route }) {
                 <Text
                   style={{
                     fontSize: 20,
-                    fontWeight: "800",
+                    fontFamily: font.medium,
                     color: "white",
                     marginBottom: 10,
                   }}
@@ -294,74 +297,75 @@ export default function QuizHome({ navigation, route }) {
                 </Text>
               </View>
             </View>
-            <View
-              style={{
-                width: "100%",
-                height: 80,
-                marginTop: 20,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  height: "100%",
-                  width: 150,
-                  backgroundColor: colors.primary,
-                  borderRadius: 30,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onPress={() =>
-                  navigation.navigate("Hint", {
-                    eventID: eventID,
-                    userTeam: userTeam,
-                  })
-                }
-              >
-                <Text
-                  style={{
-                    fontSize: 25,
-                    fontWeight: "800",
-                    color: colors.secondary,
-                  }}
-                >
-                  Indizi
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  height: "100%",
-                  width: 150,
-                  backgroundColor: colors.primary,
-                  borderRadius: 30,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onPress={() =>
-                  scoreboardPublic
-                    ? navigation.navigate("userScoreboard")
-                    : Alert.alert(
-                      "Classifica non disponibile",
-                      "In questa fase della gara non è possibile vedere la classifica"
-                    )
-                }
-              >
-                <Text
-                  style={{
-                    fontSize: 25,
-                    fontWeight: "800",
-                    color: colors.secondary,
-                  }}
-                >
-                  Classifica
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
-          <View style={{ width: "100%", height: 150 }}></View>
+          <View
+            style={{
+              width: "100%",
+              height: 80,
+              marginTop: 20,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                height: "100%",
+                width: 150,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() => {
+                navigation.navigate("Hint", {
+                  eventID: eventID,
+                  userTeam: userTeam,
+                })
+              }
+              }
+            >
+              <Text
+                style={{
+                  fontSize: 25,
+                  fontFamily: font.bold,
+                  color: colors.secondary,
+                }}
+              >
+                Indizi
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                height: "100%",
+                width: 150,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() =>
+                scoreboardPublic
+                  ? navigation.navigate("userScoreboard")
+                  : Alert.alert(
+                    "Classifica non disponibile",
+                    "In questa fase della gara non è possibile vedere la classifica"
+                  )
+              }
+            >
+              <Text
+                style={{
+                  fontSize: 25,
+                  fontFamily: font.bold,
+                  color: colors.secondary,
+                }}
+              >
+                Classifica
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: "100%", height: 200 }}></View>
         </ScrollView>
         <Footer />
       </>
@@ -395,7 +399,7 @@ export default function QuizHome({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 20,
-                  fontWeight: "800",
+                  fontFamily: font.bold,
                   color: colors.secondary,
                   marginBottom: 20,
                 }}
@@ -405,7 +409,7 @@ export default function QuizHome({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 20,
-                  fontWeight: "800",
+                  fontFamily: font.medium,
                   color: "white",
                   marginBottom: 10,
                 }}
@@ -424,7 +428,7 @@ export default function QuizHome({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 20,
-                  fontWeight: "800",
+                  fontFamily: font.medium,
                   color: "white",
                   marginBottom: 10,
                 }}
@@ -452,17 +456,18 @@ export default function QuizHome({ navigation, route }) {
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate("Hint", {
                   eventID: eventID,
                   userTeam: userTeam,
                 })
               }
+              }
             >
               <Text
                 style={{
                   fontSize: 25,
-                  fontWeight: "800",
+                  fontFamily: font.bold,
                   color: colors.secondary,
                 }}
               >
@@ -491,7 +496,7 @@ export default function QuizHome({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 25,
-                  fontWeight: "800",
+                  fontFamily: font.bold,
                   color: colors.secondary,
                 }}
               >
@@ -545,7 +550,7 @@ export default function QuizHome({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 25,
-                  fontWeight: "800",
+                  fontFamily: font.medium,
                   color: "white",
                   marginBottom: 10,
                 }}
@@ -553,73 +558,73 @@ export default function QuizHome({ navigation, route }) {
                 {quizData.number}/??
               </Text>
             </View>
+          </View>
 
-            <View
+          <View
+            style={{
+              width: "100%",
+              height: 80,
+              marginTop: 20,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity
               style={{
-                width: "100%",
-                height: 80,
-                marginTop: 20,
-                flexDirection: "row",
-                justifyContent: "space-between",
+                height: "100%",
+                width: 150,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
                 alignItems: "center",
+                justifyContent: "center",
               }}
+              onPress={() =>
+                navigation.navigate("Hint", {
+                  eventID: eventID,
+                  userTeam: userTeam,
+                })
+              }
             >
-              <TouchableOpacity
+              <Text
                 style={{
-                  height: "100%",
-                  width: 150,
-                  backgroundColor: colors.primary,
-                  borderRadius: 30,
-                  alignItems: "center",
-                  justifyContent: "center",
+                  fontSize: 25,
+                  fontFamily: font.bold,
+                  color: colors.secondary,
                 }}
-                onPress={() =>
-                  navigation.navigate("Hint", {
-                    eventID: eventID,
-                    userTeam: userTeam,
-                  })
-                }
               >
-                <Text
-                  style={{
-                    fontSize: 25,
-                    fontWeight: "800",
-                    color: colors.secondary,
-                  }}
-                >
-                  Indizi
-                </Text>
-              </TouchableOpacity>
+                Indizi
+              </Text>
+            </TouchableOpacity>
 
-              <TouchableOpacity
+            <TouchableOpacity
+              style={{
+                height: "100%",
+                width: 150,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() =>
+                scoreboardPublic
+                  ? navigation.navigate("userScoreboard")
+                  : Alert.alert(
+                    "Classifica non disponibile",
+                    "In questa fase della gara non è possibile vedere la classifica"
+                  )
+              }
+            >
+              <Text
                 style={{
-                  height: "100%",
-                  width: 150,
-                  backgroundColor: colors.primary,
-                  borderRadius: 30,
-                  alignItems: "center",
-                  justifyContent: "center",
+                  fontSize: 25,
+                  fontFamily: font.bold,
+                  color: colors.secondary,
                 }}
-                onPress={() =>
-                  scoreboardPublic
-                    ? navigation.navigate("userScoreboard")
-                    : Alert.alert(
-                      "Classifica non disponibile",
-                      "In questa fase della gara non è possibile vedere la classifica"
-                    )
-                }
               >
-                <Text
-                  style={{
-                    fontSize: 25,
-                    fontWeight: "800",
-                    color: colors.secondary,
-                  }}
-                >
-                  Classifica
-                </Text>
-              </TouchableOpacity>
-            </View>
+                Classifica
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={{ width: "100%", height: 200 }}></View>
         </ScrollView>
@@ -628,184 +633,4 @@ export default function QuizHome({ navigation, route }) {
     );
   }
 
-  // return (
-  //   <>
-  //     <ScrollView
-  //       style={{
-  //         backgroundColor: colors.bg,
-  //         padding: 20,
-  //         paddingTop: 20,
-  //       }}
-  //       refreshControl={
-  //         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-  //       }
-  //     >
-  //       <Text style={{ fontSize: 25, fontWeight: "800", marginBottom: 20 }}>
-  //         {quizData["number"]}/??
-  //       </Text>
-  //       <View>
-  //         {quizData["type"] == "both" || quizData["type"] == "photo" ? (
-  //           <Image
-  //             source={quizData["photo"] ? { uri: quizData["photo"] } : null}
-  //             style={{
-  //               width: "100%",
-  //               height: 250,
-  //               alignItems: "center",
-  //               justifyContent: "center",
-  //               padding: 20,
-  //               borderRadius: 10,
-  //               marginBottom: 20,
-  //             }}
-  //           />
-  //         ) : null}
-  //         {quizData["type"] == "both" || quizData["type"] == "message" ? (
-  //           <TouchableOpacity
-  //             style={{
-  //               backgroundColor: "#d9d9d9",
-  //               height: 100,
-  //               width: "100%",
-  //               alignItems: "center",
-  //               justifyContent: "center",
-  //               padding: 15,
-  //               borderRadius: 10,
-  //               borderWidth: 5,
-  //               borderColor: colors.primary,
-  //             }}
-  //           >
-  //             <Text style={{ fontSize: 20, fontWeight: "500" }}>
-  //               {quizData["message"]}
-  //             </Text>
-  //           </TouchableOpacity>
-  //         ) : null}
-  //         <TouchableOpacity
-  //           style={{
-  //             backgroundColor: colors.primary,
-  //             height: 100,
-  //             width: "100%",
-  //             alignItems: "center",
-  //             justifyContent: "center",
-  //             padding: 15,
-  //             borderRadius: 10,
-  //             marginTop: 20,
-  //           }}
-  //           onPress={() =>
-  //             navigation.navigate("Hint", {
-  //               eventID: eventID,
-  //               userTeam: userTeam,
-  //             })
-  //           }
-  //         >
-  //           <Text
-  //             style={{
-  //               fontSize: 30,
-  //               fontWeight: "800",
-  //               color: colors.secondary,
-  //             }}
-  //           >
-  //             INDIZI
-  //           </Text>
-  //         </TouchableOpacity>
-  //         {scoreboardPublic ? (
-  //           <TouchableOpacity
-  //             style={{
-  //               backgroundColor: "#D6D6D6",
-  //               height: 100,
-  //               width: "100%",
-  //               alignItems: "center",
-  //               justifyContent: "center",
-  //               padding: 15,
-  //               borderRadius: 10,
-  //               marginTop: 20,
-  //               borderWidth: 5,
-  //               borderColor: colors.primary,
-  //             }}
-  //             onPress={() =>
-  //               scoreboardPublic
-  //                 ? navigation.navigate("userScoreboard")
-  //                 : Alert.alert(
-  //                     "Classifica non disponibile",
-  //                     "In questa fase della gara non è possibile vedere la classifica"
-  //                   )
-  //             }
-  //           >
-  //             <Text
-  //               style={{
-  //                 fontSize: 30,
-  //                 fontWeight: "800",
-  //                 color: colors.primary,
-  //               }}
-  //             >
-  //               CLASSIFICA
-  //             </Text>
-  //           </TouchableOpacity>
-  //         ) : null}
-  //       </View>
-  //       <View style={{ width: "100%", height: 150 }}></View>
-  //     </ScrollView>
-  //     {/* <View style={{ position: "absolute", bottom: 100, right: 15 }}>
-  //       <QrButton />
-  //     </View> */}
-  //     <Footer />
-  //   </>
-  // );
-}
-
-const styles = StyleSheet.create({});
-
-{
-  /* {teamData && aboveZero ? (
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 20,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "800",
-            marginBottom: 20,
-          }}
-        >
-          Nuovo indizio tra:
-        </Text>
-        <CountdownCircleTimer
-          isPlaying
-          duration={
-            300 -
-            differenceInMilliseconds(
-              currentTime,
-              new Date(teamData["timeOfScan"])
-            ) /
-              1000
-          }
-          colors={[
-            colors.primary,
-            "#004777",
-            "#F7B801",
-            "#A30000",
-            "#A30000",
-          ]}
-          colorsTime={[200, 100, 25, 10, 5]}
-          onComplete={() => {
-            handleCompletedCountdown(
-              teamData["lastQuiz"],
-              teamData["currentHint"]
-            );
-          }}
-        >
-          {({ remainingTime }) => (
-            <Text
-              style={{
-                fontSize: 50,
-                fontWeight: "800",
-              }}
-            >
-              {remainingTime}
-            </Text>
-          )}
-        </CountdownCircleTimer>
-      </View>
-    ) : null} */
 }

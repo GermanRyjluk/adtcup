@@ -15,9 +15,10 @@ import { PageIndicator } from "react-native-page-indicator";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
 
+
 const pages = [{ text: "asd" }, { text: "123" }];
 
-export default function EventInfo({ navigation, route }) {
+export default function PastEvents({ navigation, route }) {
   const { width, height } = Dimensions.get("window");
   const scrollX = useRef(new Animated.Value(0)).current;
   return (
@@ -61,10 +62,6 @@ export default function EventInfo({ navigation, route }) {
               >
                 Event info 1
               </Text>
-              <Text style={[styles.text, { fontSize: 20 }]}>
-                La donzelletta vien dalla campagna, in sul calar del sole, col suo
-                fascio dell’erba; e reca in mano un mazzolin di rose e di viole.
-              </Text>
             </View>
           </View>
           <View
@@ -92,7 +89,10 @@ export default function EventInfo({ navigation, route }) {
               >
                 Event info 2
               </Text>
-              <Text style={[styles.text, { fontSize: 20 }]}>
+              <Text style={[styles.text, {
+                fontSize: 20,
+                fontFamily: font.medium
+              }]}>
                 onde, siccome suole, ornare ella si appresta dimani, al dì di
                 festa, il petto e il crine.
               </Text>
@@ -120,7 +120,8 @@ export default function EventInfo({ navigation, route }) {
                 <Text
                   style={{
                     color: colors.primary,
-                    fontSize: 40, fontFamily: font.bold,
+                    fontSize: 40,
+                    fontWeight: "800",
                   }}
                 >
                   Gioca
@@ -147,7 +148,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 45,
-    color: "#ededed", fontFamily: font.bold,
+    color: "#ededed",
+    fontFamily: font.bold
   },
   root: {
     flex: 1,

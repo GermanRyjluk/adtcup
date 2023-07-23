@@ -18,6 +18,7 @@ import { auth, db } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { colors } from "../shared/colors";
+import { font } from "../shared/fonts";
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
@@ -237,27 +238,20 @@ const styles = StyleSheet.create({
 
   loginText: {
     color: colors.secondary,
-    // fontFamily: font,
+    fontFamily: font.bold,
     fontSize: 30,
     marginLeft: 5,
     fontWeight: "800",
   },
   loginSubText: {
     color: "#CDCDCD",
-    // fontFamily: font,
+    fontFamily: font.medium,
     fontSize: 15,
     marginLeft: 5,
   },
-  loginSubTextSkip: {
-    color: "#CDCDCD",
-    // fontFamily: font,
-    fontSize: 13,
-    marginLeft: 5,
-    marginTop: 20,
-  },
   loginSubTextLink: {
     color: secondaryColor,
-    // fontFamily: font,
+    fontFamily: font.bold,
     fontSize: 15,
     marginLeft: 5,
   },
@@ -277,16 +271,15 @@ const styles = StyleSheet.create({
     width: "90%",
     height: 40,
     color: "white",
-    // fontFamily: font,
+    fontFamily: font.medium,
     fontSize: 15,
     marginLeft: 10,
   },
 
   logoText: {
-    // fontFamily: font,
     color: colors.secondary,
     fontSize: 40,
-    fontWeight: "800",
+    fontFamily: font.bold,
     marginHorizontal: 10,
   },
   loginButton: {
@@ -298,7 +291,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: {
-    // fontFamily: font,
+    fontFamily: font.bold,
     color: colors.primary,
     fontSize: 25,
     fontWeight: "800",

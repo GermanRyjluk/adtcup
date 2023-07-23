@@ -17,6 +17,7 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { differenceInMinutes } from "date-fns";
 import Loading from "../components/loading";
 import { Header } from "../components/header";
+import { font } from "../shared/fonts";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
@@ -84,6 +85,12 @@ export default function EventInfo({ navigation, route }) {
                 new Date(snapshot.data()["timeOfScan"].toDate())
               )
             );
+            setMaxHints(Math.floor(
+              differenceInMinutes(
+                currentTime,
+                new Date(snapshot.data()["timeOfScan"].toDate())
+              ) / 5
+            ));
             getHints(
               snapshot.data()["lastQuiz"],
               Math.floor(
@@ -104,15 +111,15 @@ export default function EventInfo({ navigation, route }) {
 
   useEffect(() => {
     getTeamData();
-  }, [render, maxHints]);
+  }, []);
 
-  console.log(maxHints);
+  // console.log(maxHints, render);
 
   return (
     <>
       <Header />
       <View style={styles.root}>
-        {maxHints == null ? (
+        {maxHints == 0 ? (
           <View
             style={{
               flex: 1,
@@ -121,9 +128,9 @@ export default function EventInfo({ navigation, route }) {
               backgroundColor: colors.bg,
             }}
           >
-            <Text>Non ci sono ancora indizi da mostrare, torna tra poco</Text>
+            <Text style={{ fontFamily: font.medium }}>Non ci sono ancora indizi da mostrare, torna tra poco</Text>
           </View>
-        ) : (
+        ) : (<>
           <Animated.ScrollView
             horizontal={true}
             pagingEnabled={true}
@@ -155,6 +162,7 @@ export default function EventInfo({ navigation, route }) {
                           backgroundColor: colors.primary,
                           borderRadius: 20,
                           alignItems: "center",
+                          overflow: 'hidden',
                         }}
                       >
                         <Image
@@ -175,9 +183,11 @@ export default function EventInfo({ navigation, route }) {
                           >
                             Indizio {i + 1}
                           </Text>
-                          <Text style={[styles.text, { fontSize: 20 }]}>
-                            {hint.message}
-                          </Text>
+                          <ScrollView>
+                            <Text style={[styles.text, { fontSize: 20 }]}>
+                              {hint.message}
+                            </Text>
+                          </ScrollView>
                         </View>
                       </View>
                     </View>
@@ -264,12 +274,13 @@ export default function EventInfo({ navigation, route }) {
               }
             })}
           </Animated.ScrollView>
+          <PageIndicator
+            style={styles.pageIndicator}
+            count={render.length}
+            animatedCurrent={Animated.divide(scrollX, width)}
+          />
+        </>
         )}
-        <PageIndicator
-          style={styles.pageIndicator}
-          count={render.length}
-          animatedCurrent={Animated.divide(scrollX, width)}
-        />
       </View>
     </>
   );
@@ -284,7 +295,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 25,
     color: "#ededed",
-    fontWeight: "800",
+    fontFamily: font.bold
   },
   root: {
     flex: 1,

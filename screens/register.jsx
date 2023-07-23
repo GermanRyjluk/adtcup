@@ -23,6 +23,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 // const font = fonts;
 
 import { colors } from "../shared/colors";
+import { font } from "../shared/fonts";
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
@@ -179,7 +180,7 @@ export default function Register({ navigation }) {
                     setUserConfirmPassword(tryUserPassword)
                   }
                   underlineColorAndroid="transparent"
-                  placeholder="Conferma Password"
+                  placeholder="Conferma"
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
                   onSubmitEditing={() => UserRegistration()}
                 />
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
     top: 30,
   },
   loginText: {
-    // fontFamily: font,
+    fontFamily: font.bold,
     fontSize: 30,
     marginLeft: 5,
     color: colors.secondary,
@@ -280,20 +281,13 @@ const styles = StyleSheet.create({
   },
   loginSubText: {
     color: "#CDCDCD",
-    // fontFamily: font,
+    fontFamily: font.medium,
     fontSize: 15,
     marginLeft: 5,
   },
-  loginSubTextSkip: {
-    color: "#CDCDCD",
-    // fontFamily: font,
-    fontSize: 13,
-    marginLeft: 5,
-    marginTop: 20,
-  },
   loginSubTextLink: {
     color: secondaryColor,
-    // fontFamily: font,
+    fontFamily: font.bold,
     fontSize: 15,
     marginLeft: 5,
   },
@@ -312,7 +306,7 @@ const styles = StyleSheet.create({
     width: "90%",
     height: 40,
     color: "white",
-    // fontFamily: font,
+    fontFamily: font.bold,
     fontSize: 15,
     marginLeft: 10,
   },
@@ -332,7 +326,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: {
-    // fontFamily: font,
+    fontFamily: font.bold,
     color: colors.primary,
     fontSize: 25,
     fontWeight: "800",

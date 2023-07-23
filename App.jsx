@@ -29,6 +29,9 @@ export default function App() {
   const getFonts = () => {
     return Font.loadAsync({
       "cherry-regular": require("./assets/fonts/CherryBomb.ttf"),
+      "m-3": require("./assets/fonts/Montserrat-Light.ttf"),
+      "m-5": require("./assets/fonts/Montserrat-Medium.ttf"),
+      "m-7": require("./assets/fonts/Montserrat-Bold.ttf"),
     });
   };
 

@@ -13,6 +13,7 @@ import { colors } from "../shared/colors";
 import { auth } from "../firebase/firebase";
 import { PageIndicator } from "react-native-page-indicator";
 import { Header } from "../components/header";
+import { font } from "../shared/fonts";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
@@ -58,7 +59,7 @@ export default function EventInfo({ navigation, route }) {
               >
                 Chi siamo?
               </Text>
-              <Text style={[styles.text, { fontSize: 20 }]}>
+              <Text style={[styles.text, { fontSize: 20, fontFamily: font.medium }]}>
                 Lei un po' mi ama un po' mi fa star dentro una bubbleOh baby,
                 lady, ciao ciao, bye bye, halo Yo, già ho consumato le suoleDietro
                 ho 'ste qui di cui non so neanche il nome, ioCerco me anche se non
@@ -116,7 +117,10 @@ export default function EventInfo({ navigation, route }) {
               >
                 Regole
               </Text>
-              <Text style={[styles.text, { fontSize: 20 }]}>
+              <Text style={[styles.text, {
+                fontSize: 20,
+                fontFamily: font.medium,
+              }]}>
                 Stare coi fratelli mi rianima sempre in cornerHo dentro uno squalo
                 ma se lo ignoro è come non ci fosseFumo, fumo g fino alla
                 tosseVedo troppe cose che per me son non sense
@@ -170,7 +174,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 50,
     color: "#ededed",
-    fontWeight: "800",
+    fontFamily: font.bold,
   },
   root: {
     flex: 1,

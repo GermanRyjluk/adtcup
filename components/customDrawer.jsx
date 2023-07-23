@@ -20,6 +20,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { colors } from "../shared/colors";
 import { auth } from "../firebase/firebase";
 import { signOut, updateProfile } from "firebase/auth";
+import { font } from "../shared/fonts";
 
 const CustomDrawer = (props) => {
   const [editing, setEditing] = useState(false);
@@ -56,7 +57,7 @@ const CustomDrawer = (props) => {
   // }, [newName, auth.currentUser.displayName]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <DrawerContentScrollView
         {...props}
         contentContainerStyle={{ backgroundColor: colors.primary }}
@@ -98,7 +99,7 @@ const CustomDrawer = (props) => {
                 paddingVertical: 10,
                 color: "#fff",
                 fontSize: 18,
-                //   fontFamily: 'Roboto-Medium',
+                fontFamily: font.medium,
                 marginBottom: 5,
               }}
               onSubmitEditing={() => { updateCurrentUserName(newName); }}
@@ -111,7 +112,7 @@ const CustomDrawer = (props) => {
                 style={{
                   color: "#fff",
                   fontSize: 18,
-                  //   fontFamily: 'Roboto-Medium',
+                  fontFamily: font.medium,
                   marginBottom: 5,
                 }}
               >
@@ -134,7 +135,7 @@ const CustomDrawer = (props) => {
             ) : null}
           </View>
         </View>
-        <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 10 }}>
+        <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: 10 }}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
@@ -152,10 +153,10 @@ const CustomDrawer = (props) => {
             <Text
               style={{
                 fontSize: 15,
-                // fontFamily: 'Roboto-Medium',
                 marginLeft: 5,
                 color: "white",
                 marginLeft: 20,
+                fontFamily: font.medium,
               }}
             >
               Tell a Friend
@@ -175,6 +176,7 @@ const CustomDrawer = (props) => {
                 marginLeft: 5,
                 color: "white",
                 marginLeft: 20,
+                fontFamily: font.medium,
               }}
             >
               Sign Out

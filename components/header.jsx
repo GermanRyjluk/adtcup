@@ -8,8 +8,6 @@ import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 
-import { font } from "../shared/fonts";
-
 export const Header = ({ screen }) => {
   const navigation = useNavigation();
   const openDrawer = () => {
@@ -88,6 +86,6 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     fontSize: 25,
     marginHorizontal: 5,
-    fontFamily: font,
+    fontFamily: 'cherry-regular',
   },
 });

@@ -3,6 +3,7 @@ import React from "react";
 import { colors } from "../shared/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Header } from "../components/header";
+import { font } from "../shared/fonts";
 
 export default function Ticket({ navigation, route }) {
   const eventID = route.params.eventID;
@@ -26,7 +27,9 @@ export default function Ticket({ navigation, route }) {
           alignItems: 'center',
           marginVertical: 30,
         }}>
-          <Text style={{ fontSize: 40, fontWeight: '800', color: colors.secondary, marginBottom: 20 }}>Ecco la tua prevendita!</Text>
+          <Text style={{
+            fontSize: 40, fontFamily: font.bold, color: colors.secondary, marginBottom: 20
+          }}>Ecco la tua prevendita!</Text>
           <Image source={require('../assets/ticket.png')} style={{ width: 200, height: 100 }} />
 
         </View>
@@ -35,7 +38,10 @@ export default function Ticket({ navigation, route }) {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <Text style={{ fontSize: 25, fontWeight: '500', color: 'white', marginTop: 50, textAlign: 'center' }}>Vai al punto di partenza e aspetta l'ora di inizio per iniziare a giocare
+          <Text style={{
+            fontSize: 25,
+            fontFamily: font.medium, color: 'white', marginTop: 50, textAlign: 'center'
+          }}>Vai al punto di partenza e aspetta l'ora di inizio per iniziare a giocare
 
           </Text>
         </View>
@@ -59,7 +65,10 @@ export default function Ticket({ navigation, route }) {
           >
 
             <Text
-              style={{ color: colors.primary, fontSize: 30, fontWeight: "800" }}
+              style={{
+                color: colors.primary, fontSize: 30,
+                fontFamily: font.bold,
+              }}
             >
               Mappa
             </Text>
