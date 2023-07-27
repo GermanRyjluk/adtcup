@@ -20,6 +20,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { colors } from "../../shared/colors";
+import { Header } from "../../components/header";
 
 const eventID = "1VgaAztg9yvbzRLuIjql";
 
@@ -55,9 +56,12 @@ export default function MapPlayers({ navigation, route }) {
   }, []);
 
   return (
-    <View>
-      <Text>AAAAAA</Text>
-    </View>
+    <>
+      <Header />
+      <View>
+        <Text>AAAAAA</Text>
+      </View>
+    </>
   );
 }
 

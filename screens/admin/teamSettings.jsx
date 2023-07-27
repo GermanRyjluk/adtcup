@@ -6,11 +6,9 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/firebase";
 import { Header } from "../../components/header";
 
-export default function PlayerSettings({ navigation, route }) {
+export default function TeamSettings({ navigation, route }) {
   const eventID = "1VgaAztg9yvbzRLuIjql";
-  const playerID = route.params.playerID;
-  const playerName = route.params.playerName;
-  const [teamNum, setTeamNum] = useState("");
+  teamNum = route.params.teamNum;
   const handlePress = async (team) => {
     if (team != "") {
       try {

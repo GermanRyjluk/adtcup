@@ -10,9 +10,11 @@ import {
 } from "react-native";
 import CheckBox from "expo-checkbox";
 import React, { useCallback, useEffect, useState } from "react";
-import { collection, doc, getDocs, or, updateDoc } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { colors } from "../../shared/colors";
+import { font } from "../../shared/fonts";
+import { Header } from "../../components/header";
 
 const eventID = "1VgaAztg9yvbzRLuIjql";
 
@@ -32,11 +34,10 @@ export default function Map({ navigation }) {
   const getTeamsFromDB = useCallback(async () => {
     setRefreshing(true);
     try {
-      const snapshot = getDocs(
-        collection(db, "/events", eventID, "/teams")
-      ).then((QuerySnapshot) => {
-        setPlayers(QuerySnapshot.docs.map((doc) => doc.data()));
-      });
+      const snapshot = getDocs(query(collection(db, "/events", eventID, "/teams"), orderBy("number", "asc")))
+        .then((QuerySnapshot) => {
+          setPlayers(QuerySnapshot.docs.map((doc) => doc.data()));
+        });
     } catch (e) {
       console.error(e);
     }
@@ -46,71 +47,6 @@ export default function Map({ navigation }) {
   useEffect(() => {
     getTeamsFromDB();
   }, []);
-
-  const boxColorStatus = (status) => {
-    if (status == "pending") return "#DF2A2A";
-    if (status == "pay") return colors.secondary;
-    if (status == "waiting team") return "#FF6033";
-    if (status == "can play") return "#3B9BE1";
-    if (status == "playing") return "#2ADF7D";
-  };
-
-  const handleUpgradeState = async (status, uid) => {
-    navigation.navigate("MapPlayers", { teamID: "1" });
-    if (status == "pending") {
-      try {
-        await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
-          status: "pay",
-        });
-        Alert.alert("Aggiornato!", "Ora puo pagare");
-      } catch (e) {
-        console.error(e);
-      }
-    } else if (status == "pay") {
-      try {
-        await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
-          status: "can play", //waiting team
-        });
-        Alert.alert("Aggiornato!", "Ora può giocare");
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    // else if (status == "waiting team") {
-    // try {
-    //   await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
-    //     status: "can play",
-    //   });
-    //   Alert.alert("Aggiornato!", "Ora può giocare");
-    // } catch (e) {
-    //   console.error(e);
-    // }
-    // }
-    else if (status == "can play") {
-      Alert.alert("Il giocatore ancora avvia il gioco");
-    } else if (status == "playing") {
-      Alert.alert(
-        "Giocatore in gioco",
-        "Vuoi squalificarlo?",
-        [
-          {
-            text: "Si",
-            onPress: () => Alert.alert("Squalificato"),
-            style: "cancel",
-          },
-          {
-            text: "Anulla",
-            onPress: () => null,
-            style: "cancel",
-          },
-        ],
-        {
-          cancelable: true,
-        }
-      );
-    }
-    // getTeamsFromDB();
-  };
 
   const render = (player, i) => {
     return (
@@ -128,162 +64,64 @@ export default function Map({ navigation }) {
         }}
         key={i}
       >
-        <Text style={{ fontSize: 20, fontWeight: "800" }}>{player.name}</Text>
+        <Text style={{ fontSize: 20, fontFamily: font.bold }}>{player.number} - {player.name}</Text>
         <View style={{ flexDirection: "row" }}>
-          {player.status == "waiting team" ? (
-            <TouchableOpacity
-              style={{
-                backgroundColor: "white",
-                padding: 10,
-                borderRadius: 10,
-                borderColor: "black",
-                borderWidth: 2,
-              }}
-              onPress={() => {
-                navigation.navigate("PlayerSettings", {
-                  playerID: player.uid,
-                });
-              }}
-            >
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: 15,
-                  fontWeight: "800",
-                }}
-              >
-                edit
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-          <TouchableOpacity
-            style={{
-              backgroundColor: "white",
-              padding: 10,
-              borderRadius: 10,
-              borderColor: "black",
-              borderWidth: 2,
-            }}
-            onPress={() => {
-              handleUpgradeState(player.status, player.uid);
-            }}
-          >
-            <Text
-              style={{
-                color: "black",
-                fontSize: 15,
-                fontWeight: "800",
-              }}
-            >
-              --{">"}
-            </Text>
-          </TouchableOpacity>
+          <Text style={{ fontSize: 20, fontFamily: font.bold }}>{player.lastQuizNum}</Text>
         </View>
       </View>
     );
   };
 
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-        backgroundColor: colors.primary,
-        padding: 10,
-      }}
-      contentContainerStyle={{
-        alignItems: "center",
-      }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={getTeamsFromDB} />
-      }
-    >
-      <View
+    <>
+      <Header />
+      <ScrollView
         style={{
-          width: "100%",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: 10,
+          flex: 1,
+          backgroundColor: colors.primary,
+          padding: 10,
         }}
+        contentContainerStyle={{
+          alignItems: "center",
+        }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={getTeamsFromDB} />
+        }
       >
-        <TextInput
-          style={[styles.input]}
-          onChangeText={(search) => setSearch(search)}
-          placeholder="Cerca per nome.."
-          placeholderTextColor="rgba(200, 200, 200,0.9)"
-        />
         <View
           style={{
             width: "100%",
-            flexDirection: "row",
-            marginVertical: 15,
-            justifyContent: "space-around",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: 10,
           }}
         >
-          <CheckBox
-            style={{ width: 30, height: 30, borderRadius: 5 }}
-            value={red}
-            onValueChange={(state) => setRed(state)}
-            color={"#DF2A2A"}
+          <TextInput
+            style={[styles.input]}
+            onChangeText={(search) => setSearch(search)}
+            placeholder="Cerca per nome.."
+            placeholderTextColor="rgba(200, 200, 200,0.9)"
           />
-          <CheckBox
-            style={{ width: 30, height: 30, borderRadius: 5 }}
-            value={yellow}
-            onValueChange={(state) => setYellow(state)}
-            color={colors.secondary}
-          />
-          <CheckBox
-            style={{ width: 30, height: 30, borderRadius: 5 }}
-            value={orange}
-            onValueChange={(state) => setOrange(state)}
-            color={"#FF6033"}
-          />
-          <CheckBox
-            style={{ width: 30, height: 30, borderRadius: 5 }}
-            value={blue}
-            onValueChange={(state) => setBlue(state)}
-            color={"#3B9BE1"}
-          />
-          <CheckBox
-            style={{ width: 30, height: 30, borderRadius: 5 }}
-            value={green}
-            onValueChange={(state) => setGreen(state)}
-            color={"#2ADF7D"}
-          />
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              // marginVertical: 15,
+              justifyContent: "space-around",
+            }}
+          >
+          </View>
         </View>
-      </View>
-      {players.map((player, i) => {
-        if (search == "") {
-          if (red && player.status == "pending") {
+        {players.map((player, i) => {
+          if (search == "") {
             return render(player, i);
-          } else if (yellow && player.status == "can pay") {
+          } else if (player.name.toLowerCase().includes(search.toLowerCase())) {
             return render(player, i);
-          } else if (orange && player.status == "waiting team") {
-            return render(player, i);
-          } else if (blue && player.status == "can play") {
-            return render(player, i);
-          } else if (green && player.status == "playing") {
-            return render(player, i);
-          } else if (!red && !yellow && !orange && !blue && !green) {
-            return render(player, i);
-          }
-        } else if (player.name.toLowerCase().includes(search.toLowerCase())) {
-          if (red && player.status == "pending") {
-            return render(player, i);
-          } else if (yellow && player.status == "can pay") {
-            return render(player, i);
-          } else if (orange && player.status == "waiting team") {
-            return render(player, i);
-          } else if (blue && player.status == "can play") {
-            return render(player, i);
-          } else if (green && player.status == "playing") {
-            return render(player, i);
-          } else if (!red && !yellow && !orange && !blue && !green) {
-            return render(player, i);
-          }
-        } else return null;
-      })}
-    </ScrollView>
+          } else return null;
+        })}
+      </ScrollView>
+    </>
   );
 }
 

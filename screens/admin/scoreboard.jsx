@@ -19,6 +19,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
+import { Header } from "../../components/header";
 
 export default function Scoreboard() {
   const [isPublic, setIsPublic] = useState(false);
@@ -97,7 +98,8 @@ export default function Scoreboard() {
       team.number === number ? { ...team, points: team.points + 1 } : team
     );
     setTeams(updatedData);
-    console.log(teams);
+    // console.log(teams);
+    console.log("Added");
     updateDB("add", number, points);
   };
   const handleDecrease = (number, points) => {
@@ -105,111 +107,115 @@ export default function Scoreboard() {
       team.number === number ? { ...team, points: team.points - 1 } : team
     );
     setTeams(updatedData);
-    console.log(teams);
+    // console.log(teams);
+    console.log("Decreased");
     updateDB("minus", number, points);
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.primary, padding: 20 }}>
-      <View
-        style={{
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexDirection: "row",
-          backgroundColor: colors.bg,
-          marginBottom: 20,
-          padding: 5,
-          borderRadius: 10,
-        }}
-      >
-        <Text
+    <>
+      <Header />
+      <View style={{ flex: 1, backgroundColor: colors.primary, padding: 20 }}>
+        <View
           style={{
-            fontSize: 20,
-            fontWeight: "800",
-            marginLeft: 10,
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexDirection: "row",
+            backgroundColor: colors.bg,
+            marginBottom: 20,
+            padding: 5,
+            borderRadius: 10,
           }}
         >
-          Classifica pubblica
-        </Text>
-        <Switch
-          trackColor={{ false: "#767577", true: colors.primary }}
-          thumbColor={isPublic ? colors.secondary : "#f4f3f4"}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={() => handleSwitch()}
-          value={isPublic}
-        />
-      </View>
-      <ScrollView>
-        {teams.map((team, i) => {
-          return (
-            <View
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                height: 70,
-                justifyContent: "space-between",
-              }}
-              key={i}
-            >
-              <View style={{ width: 250 }}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "800",
-                    marginBottom: 3,
-                    color: colors.bg,
-                  }}
-                >
-                  {team.name}: {team.points}
-                </Text>
-              </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "800",
+              marginLeft: 10,
+            }}
+          >
+            Classifica pubblica
+          </Text>
+          <Switch
+            trackColor={{ false: "#767577", true: colors.primary }}
+            thumbColor={isPublic ? colors.secondary : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={() => handleSwitch()}
+            value={isPublic}
+          />
+        </View>
+        <ScrollView>
+          {teams.map((team, i) => {
+            return (
               <View
                 style={{
                   flexDirection: "row",
+                  width: "100%",
+                  height: 70,
+                  justifyContent: "space-between",
                 }}
+                key={i}
               >
-                <TouchableOpacity
-                  style={{
-                    width: 30,
-                    height: 30,
-                    backgroundColor: colors.secondary,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 20,
-                    marginHorizontal: 10,
-                  }}
-                  onPress={() => handleIncrease(team.number, team.points)}
-                >
+                <View style={{ width: 250 }}>
                   <Text
-                    style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "800",
+                      marginBottom: 3,
+                      color: colors.bg,
+                    }}
                   >
-                    +
+                    {team.name}: {team.points}
                   </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                </View>
+                <View
                   style={{
-                    width: 30,
-                    height: 30,
-                    backgroundColor: colors.secondary,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 20,
+                    flexDirection: "row",
                   }}
-                  onPress={() => handleDecrease(team.number, team.points)}
                 >
-                  <Text
-                    style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
+                  <TouchableOpacity
+                    style={{
+                      width: 30,
+                      height: 30,
+                      backgroundColor: colors.secondary,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 20,
+                      marginHorizontal: 10,
+                    }}
+                    onPress={() => handleIncrease(team.number, team.points)}
                   >
-                    -
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
+                    >
+                      +
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      width: 30,
+                      height: 30,
+                      backgroundColor: colors.secondary,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: 20,
+                    }}
+                    onPress={() => handleDecrease(team.number, team.points)}
+                  >
+                    <Text
+                      style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
+                    >
+                      -
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          );
-        })}
-      </ScrollView>
-    </View>
+            );
+          })}
+        </ScrollView>
+      </View>
+    </>
   );
 }
 

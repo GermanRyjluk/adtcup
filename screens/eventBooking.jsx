@@ -99,7 +99,7 @@ export default function EventBooking({ navigation, route }) {
               Linking.openURL("https://forms.gle/F9Asw7LQCaxHvnug6");
             }}
           >
-            <Image source={require('../assets/googledocs.png')} style={{ width: 25, height: 31 }} />
+            <Image source={require('../assets/googledocs.png')} style={{ width: 25, height: 31, marginRight: 10 }} />
             <Text style={{ color: "black", fontSize: 25, fontFamily: font.bold, color: colors.primary }}>
               Google Form
             </Text>

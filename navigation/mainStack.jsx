@@ -51,8 +51,8 @@ export function LoggedInStack() {
   if (userData) {
     if (userData["420"] != undefined) {
       console.log("Admin");
-      return <><Header /><Admin /></>;
-    } else if (!userData["420"]) {
+      return <Admin />;
+    } else {
       console.log("User");
       return (
         <>

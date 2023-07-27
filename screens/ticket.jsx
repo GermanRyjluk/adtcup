@@ -63,7 +63,6 @@ export default function Ticket({ navigation, route }) {
               navigation.navigate("GeolocationCheck", { eventID: eventID });
             }}
           >
-
             <Text
               style={{
                 color: colors.primary, fontSize: 30,

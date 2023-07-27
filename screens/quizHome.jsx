@@ -83,6 +83,7 @@ export default function QuizHome({ navigation, route }) {
             setQuizData(snapshot.data());
             await updateDoc(doc(db, "events", eventID, "teams", team), {
               lastQuiz: quizID,
+              lastQuizNum: snapshot.data()["number"],
               timeOfScan: currentTime,
             });
             await setDoc(
@@ -632,5 +633,4 @@ export default function QuizHome({ navigation, route }) {
       </>
     );
   }
-
 }

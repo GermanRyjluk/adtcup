@@ -12,7 +12,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Header } from '../components/header'
 
 import { auth, db } from "../firebase/firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -60,7 +60,6 @@ export default function Register({ navigation }) {
                     email: newUserEmail,
                     photoURL:
                       "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg",
-                    currentQuiz: "1",
                   }
                 );
                 console.log(docRef.name); //undefined :(
@@ -71,10 +70,16 @@ export default function Register({ navigation }) {
               .catch((e) => console.log(e));
             await updateProfile(auth.currentUser, {
               displayName: newUserName,
-              // phoneNumber : 'asdasdasd',
               photoURL:
                 "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg",
             }).catch((err) => console.log(err));
+
+            await signInWithEmailAndPassword(auth, newUserEmail, newUserPassword).then(async () => {
+              await sendEmailVerification(auth.currentUser).catch((e) => console.error("Verification error: " + e))
+
+            }).catch((e) => console.error("Signin error: " + e))
+            Alert.alert("Email di verificazione inviata", "Verifica il tuo account per poter accedere ai servizi ADT CUP!");
+
           } catch (e) {
             if (e.code == "auth/email-already-in-use") {
               Alert.alert("Email già in uso");
@@ -91,7 +96,7 @@ export default function Register({ navigation }) {
         Alert.alert("Inserire credenziali");
       }
     } else {
-      Alert.alert("Password troppo corta");
+      Alert.alert("Password troppo debole", "Lunghezza minima 6 caratteri, alemeno una lettera e un numero");
     }
   };
 

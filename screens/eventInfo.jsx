@@ -7,6 +7,7 @@ import {
   Button,
   TouchableOpacity,
   Animated,
+  Alert,
 } from "react-native";
 import React, { useRef } from "react";
 import { colors } from "../shared/colors";
@@ -14,10 +15,45 @@ import { auth } from "../firebase/firebase";
 import { PageIndicator } from "react-native-page-indicator";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
+import { sendEmailVerification } from "firebase/auth";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
 export default function EventInfo({ navigation, route }) {
+
+  const handleButton = () => {
+    if (auth.currentUser) {
+      if (auth.currentUser.emailVerified) {
+        navigation.navigate("EventBooking", {
+          eventID: route.params.eventID,
+        })
+      } else {
+        Alert.alert("Verifica la tua mail", "Per procedere devi verificare che l'email sia tua, se il problema persiste esci e rientra dal tuo account", [
+          {
+            text: "Ricevi email",
+            onPress: () => { sendEmailVerification(auth.currentUser); Alert.alert("Email inviata", "Controlla la tua casella e riprova") },
+
+          },
+          {
+            text: "Esci",
+            onPress: () => null,
+            style: "cancel",
+          },
+        ],
+          {
+            cancelable: true,
+          },
+          [],
+          {
+            cancelable: true,
+            onDismiss: () => setCompleted(false),
+          })
+      }
+    } else {
+      navigation.navigate("Login");
+    }
+  }
+
   const { width, height } = Dimensions.get("window");
   const scrollX = useRef(new Animated.Value(0)).current;
   return (
@@ -98,13 +134,7 @@ export default function EventInfo({ navigation, route }) {
               </Text>
               <TouchableOpacity
                 title="Gioca"
-                onPress={() => {
-                  auth.currentUser
-                    ? navigation.navigate("EventBooking", {
-                      eventID: route.params.eventID,
-                    })
-                    : navigation.navigate("Login");
-                }}
+                onPress={() => { handleButton() }}
                 style={{
                   position: "absolute",
                   bottom: 20,

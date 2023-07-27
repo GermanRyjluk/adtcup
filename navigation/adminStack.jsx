@@ -5,6 +5,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Dashboard from "../screens/admin/dashboard";
 import Stats from "../screens/admin/stats";
 import Teams from "../screens/admin/teams";
+import TeamSettings from "../screens/admin/teamSettings";
+import Bookings from "../screens/admin/bookings";
 import Map from "../screens/admin/map";
 import Scoreboard from "../screens/admin/scoreboard";
 import Settings from "../screens/admin/settings";
@@ -19,6 +21,8 @@ export default function Admin() {
       <Stack.Screen name="Dashboard" component={Dashboard} />
       <Stack.Screen name="Stats" component={Stats} />
       <Stack.Screen name="Teams" component={Teams} />
+      <Stack.Screen name="TeamSettings" component={TeamSettings} />
+      <Stack.Screen name="Bookings" component={Bookings} />
       <Stack.Screen name="PlayerSettings" component={PlayerSettings} />
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="MapPlayers" component={MapPlayers} />
