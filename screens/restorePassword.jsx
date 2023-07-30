@@ -9,14 +9,11 @@ import {
   TextInput,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Header } from '../components/header'
 
 import { auth, db } from "../firebase/firebase";
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
-import Icon2 from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // import { fonts } from '../../shared/fonts.js';

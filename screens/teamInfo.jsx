@@ -17,11 +17,12 @@ import { font } from "../shared/fonts";
 
 export default function TeamInfo({ navigation, route }) {
   const eventID = "1VgaAztg9yvbzRLuIjql";
+  const footer = route.params?.footer;
 
   const [teamInfo, setTeamInfo] = useState([]);
   const [players, setPlayers] = useState([]);
 
-  const [imageURL, setImageURL] = useState([]);
+  const [imageURL, setImageURL] = useState('');
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -72,8 +73,7 @@ export default function TeamInfo({ navigation, route }) {
     getTeamInfo();
   }, [teamInfo.number]);
 
-  if (teamInfo && players) {
-    console.log(imageURL)
+  if (teamInfo && players && imageURL) {
     return (
       <>
         <Header />
@@ -113,9 +113,9 @@ export default function TeamInfo({ navigation, route }) {
             <View>
             </View>
             <View style={{ backgroundColor: colors.primary, borderRadius: 20 }}>
-              {/* <Image source={{ uri: imageURL ? imageURL : null }} style={{
+              {imageURL != [] ? <Image source={{ uri: imageURL }} style={{
                 borderTopRightRadius: 20, borderTopLeftRadius: 20, width: '100%', height: 250
-              }} /> */}
+              }} /> : null}
               <View style={{ padding: 20 }}>
                 <Text style={{
                   fontSize: 20,
@@ -149,11 +149,9 @@ export default function TeamInfo({ navigation, route }) {
             </View>
           </View>
           <View style={{ height: 150 }} />
-          {/* <View style={{ position: "absolute", bottom: 100, right: 15 }}>
-            <QrButton />
-          </View> */}
         </ScrollView >
-        <Footer />
+        {footer ? null : <Footer />}
+
       </>
     );
   } else {

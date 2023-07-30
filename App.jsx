@@ -1,13 +1,9 @@
 import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
 import {
-  Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  Text,
-  View,
-  Image,
 } from "react-native";
 
 import { colors } from "./shared/colors";
@@ -16,13 +12,9 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import Onboarding from "react-native-onboarding-swiper";
-import { Header } from "./components/header";
 import AuthNavigator from "./navigation/authNavigator";
-import Admin from "./navigation/adminStack";
 
 import * as Font from "expo-font";
-import * as SplashScreen from 'expo-splash-screen';
 import Loading from "./components/loading";
 
 export default function App() {

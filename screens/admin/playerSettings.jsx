@@ -35,6 +35,8 @@ export default function PlayerSettings({ navigation, route }) {
           number: teamNum,
           points: 0,
           timeOfScan: new Date(),
+          startingPoint: "https://goo.gl/maps/MqjWxfvu7nMN6Pjk6",
+          startingPointCoords: { latitude: '42.22799298389713', longitude: '14.396967792527494' }
         });
         Alert.alert("Aggiornato!");
         navigation.goBack();

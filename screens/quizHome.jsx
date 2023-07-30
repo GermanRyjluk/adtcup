@@ -16,39 +16,21 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { QrButton } from "../components/qrButton";
 import { db, auth } from "../firebase/firebase";
 
-import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-
 import {
-  useFocusEffect,
-  useRoute,
-  useIsFocused,
-} from "@react-navigation/native";
-
-import {
-  collection,
   doc,
   getDoc,
-  getDocs,
-  increment,
-  query,
   setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 
 import { Footer } from "../components/footer";
 import Loading from "../components/loading";
-
-import { differenceInMilliseconds, set } from "date-fns";
-import { differenceInMinutes } from "date-fns";
 
 export default function QuizHome({ navigation, route }) {
   const [userTeam, setUserTeam] = useState("");
   const [quizData, setQuizData] = useState([null]);
 
   const [refreshing, setRefreshing] = useState(false);
-
-  const [aboveZero, setAboveZero] = useState(true);
 
   const [teamData, setTeamData] = useState([]); //lastQuiz, currentHint, timeOfScan, name, number
 

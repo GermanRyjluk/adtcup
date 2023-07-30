@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, TouchableOpacity, Linking } from "react-native"
 
 import { Camera } from "expo-camera";
 import Svg, { Path } from "react-native-svg";
-import { BlurView } from "expo-blur";
 
 import { BarCodeScanner } from "expo-barcode-scanner";
 

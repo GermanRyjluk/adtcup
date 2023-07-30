@@ -2,11 +2,12 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import React from "react";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
-import { sendEmailVerification } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+import { deleteUser, sendEmailVerification } from "firebase/auth";
+import { auth, db } from "../firebase/firebase";
 import { colors } from "../shared/colors";
+import { deleteDoc, doc } from "firebase/firestore";
 
-export default function Settings() {
+export default function Settings({ navigation }) {
 
   return (
     <>
@@ -17,11 +18,13 @@ export default function Settings() {
           marginBottom: 20,
           color: colors.secondary
         }]}>Impostazioni</Text>
-        {auth.currentUser.emailVerified ? null :
+        {auth.currentUser ? auth.currentUser?.emailVerified ? null :
           <TouchableOpacity style={styles.box} onPress={() => { sendEmailVerification(auth.currentUser); Alert.alert("Email di verificazione inviata", "Verifica il tuo account per poter accedere ai servizi ADT CUP!") }}>
             <Text style={[styles.text, { fontFamily: font.medium }]}>Richiedi email di verifica</Text>
-          </TouchableOpacity>
-        }
+          </TouchableOpacity> : null}
+        {auth.currentUser ? <TouchableOpacity style={styles.box} onPress={() => { deleteUser(auth.currentUser); deleteDoc(doc(db, "users", auth.currentUser.uid)); navigation.navigate("Home"); Alert.alert("Account eliminato", "Tutti i dati relativi al tuo account sono stati eliminati") }}>
+          <Text style={[styles.text, { fontFamily: font.medium }]}>Cancella dati</Text>
+        </TouchableOpacity> : null}
       </View>
     </>
   );
@@ -36,8 +39,9 @@ const styles = StyleSheet.create({
   box: {
     backgroundColor: colors.bg,
     justifyContent: 'center',
-    borderRadius: 15,
+    borderRadius: 10,
     padding: 15,
+    marginVertical: 5
   },
   text: {
     fontFamily: font.bold,

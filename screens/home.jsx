@@ -385,7 +385,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginHorizontal: 5,
     fontFamily: font.bold,
-    // fontFamily: font,
   },
   trophyBox: {
     position: "absolute",
