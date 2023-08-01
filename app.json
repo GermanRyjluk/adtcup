@@ -4,7 +4,6 @@
     "slug": "ADTCUP",
     "versionCode": 1,
     "version": "1.0.0",
-    "targetSDKVersion": "33",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,12 +19,13 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow ADT CUP to use your location."
-      }
+      },
+      "bundleIdentifier": "com.ryyuuk.ADTCUP"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1B4D98"
       },
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",

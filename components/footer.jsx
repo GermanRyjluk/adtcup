@@ -31,7 +31,7 @@ export const Footer = () => {
         >
           <View>
             <Image
-              source={require("../assets/yellow_trophy.png")}
+              source={require("../assets/trophyY.png")}
               resizeMode="contain"
               style={{
                 width: 30,

@@ -223,6 +223,16 @@ export default function Ticket({ navigation, route }) {
             <Ionicons name="people" size={50} color={colors.primary} />
           </TouchableOpacity>
         </View>
+        {/* <View style={{ width: '100%' }}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.bg }]}
+            onPress={() => {
+              navigation.navigate("TeamInfo", { footer: true });
+            }}
+          >
+            <Text style={styles.text}>Simulazione di gioco</Text>
+          </TouchableOpacity>
+        </View> */}
       </View >
     </>
   );
@@ -236,5 +246,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 50,
     marginHorizontal: 10
+  },
+  text: {
+    color: colors.primary,
+    fontFamily: font.bold,
+    fontSize: 20
   },
 })

@@ -62,17 +62,17 @@ export default function PastEvents({ navigation, route }) {
               <Image source={require("../assets/videoTorino.gif")} style={{ width: '100%', height: '75%', borderRadius: 20 }} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: "100%", marginVertical: 15 }}>
 
-                <TouchableOpacity style={{ width: 60, height: 60, backgroundColor: colors.secondary, justifyContent: 'center', alignItems: 'center', borderRadius: 20 }} onPress={() => Linking.openURL("https://tiktok.com")}>
+                <TouchableOpacity style={{ width: 60, height: 60, backgroundColor: colors.secondary, justifyContent: 'center', alignItems: 'center', borderRadius: 20 }} onPress={() => Linking.openURL("https://www.tiktok.com/@adt_cup")}>
                   <Image source={require("../assets/tiktok-blue.png")} style={{ width: 45, height: 51 }} />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ width: 60, height: 60, backgroundColor: colors.secondary, justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
+                <TouchableOpacity style={{ width: 60, height: 60, backgroundColor: colors.secondary, justifyContent: 'center', alignItems: 'center', borderRadius: 20 }} onPress={() => Linking.openURL("https://www.instagram.com/adt_cup")}>
                   <Ionicons name="logo-instagram" size={50} color={colors.primary} />
                 </TouchableOpacity>
               </View>
               <Text style={{ fontFamily: font.bold, color: colors.secondary, fontSize: 23 }}>Premi per vedere di più!</Text>
             </View>
           </View>
-          <View
+          {/* <View
             style={{
               width,
               alignItems: "center",
@@ -136,13 +136,13 @@ export default function PastEvents({ navigation, route }) {
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
         </Animated.ScrollView>
-        <PageIndicator
+        {/* <PageIndicator
           style={styles.pageIndicator}
           count={pages.length}
           animatedCurrent={Animated.divide(scrollX, width)}
-        />
+        /> */}
       </View>
     </>
   );

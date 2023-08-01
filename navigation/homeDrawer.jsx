@@ -4,7 +4,6 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import Home from "../screens/home";
 import Settings from "../screens/settings";
 import CustomDrawer from "../components/customDrawer";
-import OnGameTabs from "./onGameTabs";
 
 import { colors } from "../shared/colors";
 import Login from "../screens/login";

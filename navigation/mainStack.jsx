@@ -9,7 +9,7 @@ import Register from "../screens/register";
 import EventInfo from "../screens/eventInfo";
 import EventStatus from "../screens/eventStatus";
 import QrReader from "../screens/qrReader";
-import GameRules from "../screens/gameRules";
+import GameRules from "../screens/eventInfo";
 import TeamInfo from "../screens/teamInfo";
 import QuizHome from "../screens/quizHome";
 import GeolocationCheck from "../screens/geolocationCheck";
