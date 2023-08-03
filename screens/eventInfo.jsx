@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 45,
+    fontSize: 40,
     color: "#ededed", fontFamily: font.bold,
   },
   root: {

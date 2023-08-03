@@ -22,9 +22,13 @@ import { auth } from "../firebase/firebase";
 import { signOut, updateProfile } from "firebase/auth";
 import { font } from "../shared/fonts";
 
+import { useNavigation } from '@react-navigation/native';
+
 const CustomDrawer = (props) => {
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState(auth.currentUser?.name);
+
+  const navigation = useNavigation();
 
   const updateCurrentUserName = async (name) => {
     if (auth.currentUser.displayName != name) {
@@ -40,21 +44,6 @@ const CustomDrawer = (props) => {
       Alert.alert("Nome non cambiato", "il nome " + newName + " è uguale al precedente");
     }
   }
-
-  // useEffect(() => {
-  //   const updateCurrentUserName = async (name) => {
-  //     if (auth.currentUser.displayName != name) {
-  //       console.log(name);
-  //       updateProfile(auth.currentUser, {
-  //         displayName: name,
-  //       });
-  //       setNewName(name);
-  //       setEditing(false);
-  //       Alert.alert("Nome cambiato con successo", "il nuovo nome verrà applicato al riavvio dell'app");
-  //     }
-  //   }
-
-  // }, [newName, auth.currentUser.displayName]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
@@ -107,17 +96,19 @@ const CustomDrawer = (props) => {
             >
               {auth.currentUser.displayName}
             </TextInput> :
-
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 18,
-                  fontFamily: font.medium,
-                  marginBottom: 5,
-                }}
-              >
-                {auth.currentUser ? auth.currentUser.displayName : "Anonimo"}
-              </Text>
+              (auth.currentUser ?
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontSize: 18,
+                    fontFamily: font.medium,
+                    marginBottom: 5,
+                  }}
+                >
+                  {auth.currentUser.displayName}
+                </Text> : <TouchableOpacity style={{ backgroundColor: colors.secondary, paddingVertical: 10, paddingHorizontal: 15, width: 100, borderRadius: 10, alignItems: 'center' }} onPress={() => navigation.navigate("Login")}>
+                  <Text style={{ fontSize: 15, fontFamily: font.bold, color: colors.primary }}>Accedi</Text>
+                </TouchableOpacity>)
             }
             {auth.currentUser ? (
               !editing ?

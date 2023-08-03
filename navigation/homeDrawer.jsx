@@ -57,7 +57,7 @@ export function LoggedInDrawer() {
         }}
       />
       <Drawer.Screen
-        name="Termini e condizioni"
+        name="Norme sulla privacy"
         component={TermsAndConditions}
         options={{
           drawerIcon: ({ color }) => (
@@ -107,20 +107,21 @@ export default function NotLoggedInDrawer() {
         }}
       />
       <Drawer.Screen
-        name="Login"
-        component={Login}
-        options={{
-          drawerIcon: ({ color }) => (
-            <Ionicons name="person-outline" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Termini e condizioni"
+        name="Norme sulla privacy"
         component={TermsAndConditions}
         options={{
           drawerIcon: ({ color }) => (
             <Ionicons name="information-circle-outline" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Login"
+        component={Login}
+        options={{
+          drawerItemStyle: { height: 0 },
+          drawerIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={22} color={color} />
           ),
         }}
       />

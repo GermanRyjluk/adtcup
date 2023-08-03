@@ -52,7 +52,7 @@ export default function EventInfo({ navigation, route }) {
                   alignItems: "center",
                 }}
               >
-                <ScrollView style={{ marginBottom: 20, width: '100%' }}>
+                <ScrollView style={{ marginBottom: 20, width: '100%' }} showsVerticalScrollIndicator={false}>
 
                   <Text
                     style={[
@@ -125,7 +125,7 @@ export default function EventInfo({ navigation, route }) {
                 alignItems: "center",
               }}
             >
-              <ScrollView style={{ marginBottom: 20 }}>
+              <ScrollView style={{ marginBottom: 20 }} showsVerticalScrollIndicator={false}>
 
                 <Text
                   style={[
@@ -136,13 +136,13 @@ export default function EventInfo({ navigation, route }) {
                   LA NOSTRA STORIA
                 </Text>
                 <Text style={[styles.text, { fontSize: 20, fontFamily: font.medium }]}>
-                  Siamo due ragazzi che amano divertirsi e scoprire il modno con i loro amici.
-                  Abbiamo sempre cercato di render unica ogni nostra esperienza e nell’organizzare
+                  Siamo due ragazzi che amano divertirsi e scoprire il mondo con i loro amici.
+                  Abbiamo sempre cercato di rendere unica ogni nostra esperienza e nell’organizzare
                   una di queste ci è venuta un’idea. Volevamo festeggiare al meglio il compleanno
                   di un amico speciale, ADT: abbiamo pensato di regalargli un weekend che gli
                   permettesse di vivere Torino a 360, tra la sua storia e i suoi bar. Ma le tappe
                   erano tante e il tempo a nostra disposizione era poco, così abbiamo deciso di rendere
-                  tutto il toiur un gioco. Ma che gioco? Abbiamo creato una competizione a squadra
+                  tutto il tour un gioco. Ma che gioco? Abbiamo creato una competizione a squadra
                   suddivisa in 3 parti. Una caccia al tesoro per i bar della città che ha
                   determinato le prime tre finaliste.
                   Un’altra cacia al tesoro, questa volta tra le gemme nascoste della città,
@@ -172,7 +172,7 @@ export default function EventInfo({ navigation, route }) {
                 alignItems: "center",
               }}
             >
-              <ScrollView style={{ marginBottom: 20 }}>
+              <ScrollView style={{ marginBottom: 20 }} showsVerticalScrollIndicator={false}>
                 <Text
                   style={[
                     styles.text,
@@ -211,7 +211,6 @@ export default function EventInfo({ navigation, route }) {
                   Hai voglia di vivere un weekend completamente diverso dal solito?
                   Se cerchi un’alternativa ai soliti sabato tra discoteca e aperitivi, nasce un nuovo modo di vivere il weekend: l’ADT CUP, una caccia al tesoro urbana che vi farà fare festa per tutta la città con dei perfetti sconosciuti. Potrete scoprire il luogo, conoscere persone nuove e divertirvi ad affrontare le sfide nelle quali voi e il vostro team collaborerete per vincere il premio finale.
                   Il vero premio di questa competizione è però, il suo svolgimento. E’ un’esperienza unica, che vi permetterà di vivere un posto nuovo in un modo del tutto innovativo.
-                  tosseVedo troppe cose che per me son non sense
                 </Text>
               </ScrollView>
             </View>
