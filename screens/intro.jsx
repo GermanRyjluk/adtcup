@@ -34,7 +34,7 @@ export default function EventInfo({ navigation, route }) {
               useNativeDriver: true,
             }
           )}
-          style={{ backgroundColor: colors.bg }}
+          style={{ backgroundColor: colors.primary }}
         >
           <View>
             <View

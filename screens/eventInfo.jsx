@@ -35,6 +35,13 @@ export default function EventInfo({ navigation, route }) {
 
           },
           {
+            text: "Già fatto",
+            onPress: () => {
+              auth.currentUser.reload();
+            },
+
+          },
+          {
             text: "Esci",
             onPress: () => null,
             style: "cancel",
@@ -46,7 +53,6 @@ export default function EventInfo({ navigation, route }) {
           [],
           {
             cancelable: true,
-            onDismiss: () => setCompleted(false),
           })
       }
     } else {
@@ -86,7 +92,7 @@ export default function EventInfo({ navigation, route }) {
                 backgroundColor: colors.primary,
                 borderRadius: 20,
                 padding: 30,
-                marginBottom: 25
+                marginBottom: 25,
               }}
               contentContainerStyle={{ alignItems: 'center' }}
             >
@@ -126,6 +132,7 @@ export default function EventInfo({ navigation, route }) {
                 marginBottom: 50
               }]}>I concorrenti competeranno sempre in un'avvincente caccia al tesoro, ma questa volta per i bar della città. Per ogni tappa, le squadre dovranno bere shottini per ricevere il prossimo indovinello e andare avanti nella competizione. Anche in questo caso le prime 3 squadre si qualificheranno alla finale.
               </Text>
+
             </ScrollView>
           </View>
           <View
@@ -229,31 +236,29 @@ export default function EventInfo({ navigation, route }) {
                 marginBottom: 20
               }]}>I finalisti si scontreranno per vincere l'ambito premio in una serie di sfide d'abilità. La finale però non è solo questo: parallelamente ci sarà una vera e propria festa, con musica e vari mini eventi al suo interno. Il party e' aperto a tutti, anche a chi non ha partecipato alla CUP fino ad ora. Una sola parola d'ordine per accedere all'evento: DIVERTIRSI!
               </Text>
-            </ScrollView>
-            <TouchableOpacity
-              title="Gioca"
-              onPress={() => { handleButton() }}
-              style={{
-                position: 'absolute',
-                bottom: 50,
-                height: 70,
-                width: "60%",
-                backgroundColor: colors.secondary,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 40,
-                marginBottom: 20
-              }}
-            >
-              <Text
+              <TouchableOpacity
+                title="Gioca"
+                onPress={() => { handleButton() }}
                 style={{
-                  color: colors.primary,
-                  fontSize: 35, fontFamily: font.bold,
+                  width: "70%",
+                  paddingVertical: 15,
+                  backgroundColor: colors.secondary,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 40,
+                  marginBottom: 70
                 }}
               >
-                Gioca
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: 35, fontFamily: font.bold,
+                  }}
+                >
+                  Gioca
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
         </Animated.ScrollView>
         <PageIndicator
@@ -273,7 +278,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 40,
+    fontSize: 35,
     color: "#ededed", fontFamily: font.bold,
   },
   root: {

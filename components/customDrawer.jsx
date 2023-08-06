@@ -32,7 +32,6 @@ const CustomDrawer = (props) => {
 
   const updateCurrentUserName = async (name) => {
     if (auth.currentUser.displayName != name) {
-      console.log(name);
       updateProfile(auth.currentUser, {
         displayName: name,
       });
@@ -44,6 +43,7 @@ const CustomDrawer = (props) => {
       Alert.alert("Nome non cambiato", "il nome " + newName + " è uguale al precedente");
     }
   }
+
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>

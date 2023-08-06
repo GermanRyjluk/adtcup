@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import CheckBox from "expo-checkbox";
 import React, { useCallback, useEffect, useState } from "react";
-import { collection, doc, getDocs, or, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, or, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { colors } from "../../shared/colors";
 import { Header } from "../../components/header";
@@ -58,6 +58,35 @@ export default function Bookings({ navigation }) {
     if (status == "playing") return "#2ADF7D";
   };
 
+  const handleDelete = async (uid) => {
+    Alert.alert(
+      "Elimina giocatore",
+      "Attenzione, quest'azione è irreversibile!",
+      [
+        {
+          text: "Conferma",
+          onPress: async () => {
+            try {
+              await deleteDoc(doc(db, "/events", eventID, "/bookings", uid));
+              Alert.alert("Eliminato!", "Giocatore eliminato permanentemente");
+            } catch (e) {
+              console.error(e);
+            }
+          },
+          style: "cancel",
+        },
+        {
+          text: "Anulla",
+          onPress: () => null,
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  }
+
   const handleUpgradeState = async (status, uid) => {
     if (status == "pending") {
       try {
@@ -87,7 +116,34 @@ export default function Bookings({ navigation }) {
         console.error(e);
       }
     } else if (status == "can play") {
-      Alert.alert("Il giocatore ancora avvia il gioco");
+      Alert.alert(
+        "Aspettando partenza",
+        "Il giocatore ancora avvia il gioco, avviare manualmente?",
+        [
+          {
+            text: "Si",
+            onPress: async () => {
+              try {
+                await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
+                  status: "playing",
+                });
+                Alert.alert("Aggiornato!", "Ora sta giocando");
+              } catch (e) {
+                console.error(e);
+              }
+            },
+            style: "cancel",
+          },
+          {
+            text: "Anulla",
+            onPress: () => null,
+            style: "cancel",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
     } else if (status == "playing") {
       Alert.alert(
         "Giocatore in gioco",
@@ -130,6 +186,17 @@ export default function Bookings({ navigation }) {
       >
         <Text style={{ fontSize: 20, fontWeight: "800" }}>{player.name}</Text>
         <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 10,
+            }}
+            onPress={() => handleDelete(player.uid)}
+          >
+
+            <Ionicons name="trash" size={30} />
+          </TouchableOpacity>
           {player.status == "waiting team" ? (
             <TouchableOpacity
               style={{
@@ -145,7 +212,7 @@ export default function Bookings({ navigation }) {
               <Ionicons name="build" size={35} />
             </TouchableOpacity>
           ) : null}
-          <TouchableOpacity
+          {player.status != 'waiting team' && player.status != 'playing' ? <TouchableOpacity
             style={{
               padding: 10,
             }}
@@ -155,7 +222,8 @@ export default function Bookings({ navigation }) {
           >
 
             <Ionicons name="arrow-forward" size={40} />
-          </TouchableOpacity>
+          </TouchableOpacity> : null}
+
         </View>
       </View>
     );

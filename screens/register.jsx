@@ -38,7 +38,10 @@ export default function Register({ navigation }) {
   const [newUserConfirmPassword, setUserConfirmPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  const [loading, setLoading] = useState(false)
+
   const UserRegistration = async () => {
+    setLoading(true)
     if (newUserPassword.length >= 6) {
       if (
         newUserPassword.length != 0 &&
@@ -52,7 +55,7 @@ export default function Register({ navigation }) {
               newUserEmail,
               newUserPassword
             )
-              .then((userCredential) => {
+              .then(async (userCredential) => {
                 const docRef = setDoc(
                   doc(db, "users/" + userCredential.user.uid),
                   {
@@ -66,28 +69,29 @@ export default function Register({ navigation }) {
                 // navigation.navigate('Home', {
                 //   userData: userCredential.user.email,
                 // });
+                await updateProfile(auth.currentUser, {
+                  displayName: newUserName,
+                  photoURL:
+                    "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg",
+                }).catch((err) => console.log(err));
+
+                await signInWithEmailAndPassword(auth, newUserEmail, newUserPassword).then(async () => {
+                  await sendEmailVerification(auth.currentUser).catch((e) => console.error("Verification error: " + e))
+
+                }).catch((e) => console.error("Signin error: " + e))
+                Alert.alert("Email di verificazione inviata", "Verifica il tuo account per poter accedere ai servizi ADT CUP!");
+
               })
               .catch((e) => console.log(e));
-            await updateProfile(auth.currentUser, {
-              displayName: newUserName,
-              photoURL:
-                "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg",
-            }).catch((err) => console.log(err));
-
-            await signInWithEmailAndPassword(auth, newUserEmail, newUserPassword).then(async () => {
-              await sendEmailVerification(auth.currentUser).catch((e) => console.error("Verification error: " + e))
-
-            }).catch((e) => console.error("Signin error: " + e))
-            Alert.alert("Email di verificazione inviata", "Verifica il tuo account per poter accedere ai servizi ADT CUP!");
 
           } catch (e) {
+            console.log(e.code);
             if (e.code == "auth/email-already-in-use") {
-              Alert.alert("Email già in uso");
+              Alert.alert("Email già utilizzato", "Torna alla schermata di login per recuperare la tua password o scegli una nuova mail");
             }
             if (e.code == "auth/invalid-email") {
               Alert.alert("Formato email errato (esempio@mail.com)");
             }
-            console.log(e.code);
           }
         } else {
           Alert.alert("Le password non coincidono");
@@ -98,6 +102,7 @@ export default function Register({ navigation }) {
     } else {
       Alert.alert("Password troppo debole", "Lunghezza minima 6 caratteri, alemeno una lettera e un numero");
     }
+    setLoading(false)
   };
 
   const passwordIsVisible = () => {
@@ -190,7 +195,7 @@ export default function Register({ navigation }) {
                   onSubmitEditing={() => UserRegistration()}
                 />
                 <TouchableOpacity
-                  style={{ position: "absolute", right: 10 }}
+                  style={{ position: "absolute", right: 20 }}
                   onPress={() => {
                     setIsPasswordVisible(!isPasswordVisible);
                   }}
@@ -201,10 +206,11 @@ export default function Register({ navigation }) {
             </View>
             <View style={styles.midTwo}>
               <TouchableOpacity
-                style={styles.loginButton}
+                style={[styles.loginButton, { backgroundColor: loading ? 'gray' : colors.secondary }]}
                 onPress={UserRegistration}
+                disabled={loading}
               >
-                <Text style={styles.buttonText}>REGISTRATI</Text>
+                <Text style={[styles.buttonText, { color: loading ? '#474747' : colors.primary }]}>REGISTRATI</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -334,6 +340,5 @@ const styles = StyleSheet.create({
     fontFamily: font.bold,
     color: colors.primary,
     fontSize: 25,
-    fontWeight: "800",
   },
 });

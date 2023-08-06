@@ -27,6 +27,8 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  const [loading, setLoading] = useState(false)
+
   const passwordIsVisible = () => {
     if (!isPasswordVisible) {
       return <Icon2 name="eye" size={20} color="white" />;
@@ -36,6 +38,7 @@ export default function Login({ navigation }) {
   };
 
   const UserLogIn = () => {
+    setLoading(true)
     if (email.length != 0 && password.length != 0) {
       signInWithEmailAndPassword(auth, email, password).catch((e) => {
         if (e.code == "auth/user-not-found") {
@@ -44,10 +47,12 @@ export default function Login({ navigation }) {
         if (e.code == "auth/wrong-password") {
           Alert.alert("Password errata");
         }
+        console.log(e.code)
       });
     } else {
       Alert.alert("Inserire credenziali");
     }
+    setLoading(false)
   };
 
   return (
@@ -151,8 +156,8 @@ export default function Login({ navigation }) {
               </View>
             </View>
             <View style={styles.midTwo}>
-              <TouchableOpacity style={styles.loginButton} onPress={UserLogIn}>
-                <Text style={styles.buttonText}>ACCEDI</Text>
+              <TouchableOpacity style={[styles.loginButton, { backgroundColor: loading ? 'gray' : colors.secondary }]} onPress={UserLogIn} disabled={loading}>
+                <Text style={[styles.buttonText, { color: loading ? '#474747' : colors.primary }]}>ACCEDI</Text>
               </TouchableOpacity>
               {/* <TouchableOpacity onPress={() => { }}>
                 <Text style={styles.loginSubTextSkip}>Salta</Text>

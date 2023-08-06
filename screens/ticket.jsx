@@ -1,4 +1,4 @@
-import { View, Text, Image, Linking, StyleSheet, Alert } from "react-native";
+import { View, Text, Image, Linking, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors } from "../shared/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -21,52 +21,63 @@ export default function Ticket({ navigation, route }) {
   const [position, setPosition] = useState({});
   const [permission, setPermission] = useState()
   const [startTime, setStartTime] = useState()
+  const [distance, setDistance] = useState(null)
+
+  const [loading, setLoading] = useState(true)
 
   const radius = 1000;
 
-  const searchCurrentUserLocation = () => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setPermission(false);
-        console.log("Permission to access location was denied");
-        return;
-      } else {
-        setPermission(true)
-      }
-      setInterval(async () => {
-        let location = await Location.getCurrentPositionAsync({});
-        setUserLocation(location);
-      }, 3000);
-      //{"coords": {"accuracy": 12.697999954223633, "altitude": 307.1999816894531,
-      //"altitudeAccuracy": 2.838839292526245, "heading": 0, "latitude": 45.0614778, "longitude": 7.6448868,
-      //"speed": 0}, "mocked": false, "timestamp": 1683844215281}
-    })();
+  const getPosition = async () => {
+    setDistance(null)
+    let location = await Location.getCurrentPositionAsync({})
+    setDistance(getDistance(position, {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    }));
+  }
+
+  const searchCurrentUserLocation = async (pos) => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setPermission(false);
+      console.log("Permission to access location was denied");
+      return;
+    } else {
+      setPermission(true)
+    }
+
+    let location = await Location.getCurrentPositionAsync({})
+    // console.log(location, pos)
+    setDistance(getDistance(position, {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    }));
+
   };
 
-  const renderDistance = () => {
-    if (userLocation) {
-      const distance = getDistance(position, {
-        latitude: userLocation.coords.latitude,
-        longitude: userLocation.coords.longitude,
-      });
-      return (
-        <View
-          style={{
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={{ fontSize: 25, fontFamily: font.medium, color: colors.secondary }}
-          >
-            Sei a {distance} metri
-          </Text>
-        </View>
-      );
-    }
-  };
+  // const renderDistance = () => {
+  //   if (userLocation) {
+  //     setDistance(getDistance(position, {
+  //       latitude: userLocation.coords.latitude,
+  //       longitude: userLocation.coords.longitude,
+  //     }));
+  //     return (
+  //       <View
+  //         style={{
+  //           borderRadius: 10,
+  //           justifyContent: "center",
+  //           alignItems: "center",
+  //         }}
+  //       >
+  //         <Text
+  //           style={{ fontSize: 25, fontFamily: font.medium, color: colors.secondary }}
+  //         >
+  //           Sei a {distance} metri
+  //         </Text>
+  //       </View>
+  //     );
+  //   }
+  // };
 
   const fetchStartingPoint = async () => {
     try {
@@ -74,6 +85,8 @@ export default function Ticket({ navigation, route }) {
         await getDoc(doc(db, "events", eventID, "teams", snapshot.data()["team"])).then((snapshot) => {
           setStartingPoint(snapshot.data()["startingPoint"])
           setPosition(snapshot.data()["startingPointCoords"])
+
+          searchCurrentUserLocation(snapshot.data()["startingPointCoords"])
         })
       })
       await getDoc(doc(db, "events", eventID)).then((snapshot) => {
@@ -140,9 +153,10 @@ export default function Ticket({ navigation, route }) {
   };
 
   useEffect(() => {
+    setLoading(true)
     fetchStartingPoint()
-    searchCurrentUserLocation()
-  }, [startingPoint])
+    setLoading(false);
+  }, [startingPoint, distance])
 
   return (
     <>
@@ -182,7 +196,31 @@ export default function Ticket({ navigation, route }) {
 
           </Text>
         </View>
-        {renderDistance()}
+        {/* {renderDistance()} */}
+        <View style={{
+          flex: 1,
+          alignItems: 'center',
+          flexDirection: 'row'
+        }}>
+          {!distance ?
+            <View>
+              <Text style={[styles.text, { color: colors.secondary, marginBottom: 15 }]}>Calcolando distanza</Text>
+              <ActivityIndicator size={"small"} />
+            </View>
+            :
+            <>
+              <Text style={[styles.text, { color: colors.secondary }]}>Sei a {distance} mt.</Text>
+              <TouchableOpacity
+                style={[styles.button, { flexDirection: 'row' }]}
+                onPress={() => {
+                  getPosition();
+                }}
+              >
+                <Ionicons name="repeat" size={30} color={colors.primary} />
+              </TouchableOpacity>
+            </>
+          }
+        </View>
         <View style={{
           flex: 1,
           alignItems: 'center',
@@ -205,10 +243,7 @@ export default function Ticket({ navigation, route }) {
             }}
           >
             <Text
-              style={{
-                color: colors.primary, fontSize: 30,
-                fontFamily: font.bold,
-              }}
+              style={[styles.text, { fontSize: 35 }]}
             >
               Gioca
             </Text>

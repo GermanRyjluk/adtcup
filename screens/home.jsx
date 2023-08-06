@@ -72,6 +72,7 @@ export default function Home({ navigation }) {
   }
 
   const [loading, setLoading] = useState(true);
+  const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
     preloadImages();
@@ -112,14 +113,16 @@ export default function Home({ navigation }) {
   };
 
   const handlePress = (eventID, scoreboardPublic) => {
+    setPressed(true)
     auth.currentUser
       ? checkBookingStatus(eventID, scoreboardPublic)
       : navigation.navigate("EventInfo");
+    setPressed(false)
   };
 
   const handleLocked = () => {
     Alert.alert(
-      "Oh, cazzo tocchi?!",
+      "Oh, che ti tocchi?!",
       "Non vedi che nzi puo gioca?",
       [
         {
@@ -197,7 +200,7 @@ export default function Home({ navigation }) {
                 >
                   <Text
                     style={{
-                      color: "white", fontSize: 17,
+                      color: "white", fontSize: 15,
                       fontFamily: font.bold, width: "70%",
                     }}
                   >
@@ -212,6 +215,7 @@ export default function Home({ navigation }) {
                 <TouchableOpacity
                   onPress={() => data.isLocked ? handleLocked() : handlePress(data.id)}
                   style={{ width: "100%" }}
+                  disabled={pressed}
                 >
                   <View
                     style={{

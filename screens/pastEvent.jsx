@@ -30,16 +30,16 @@ export default function PastEvents({ navigation, route }) {
     <>
       <Header />
       <View style={styles.root}>
-        <Animated.ScrollView
-          horizontal={true}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            {
-              useNativeDriver: true,
-            }
-          )}
+        <View
+          // horizontal={true}
+          // pagingEnabled={true}
+          // showsHorizontalScrollIndicator={false}
+          // onScroll={Animated.event(
+          //   [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          //   {
+          //     useNativeDriver: true,
+          //   }
+          // )}
           style={{ backgroundColor: colors.bg }}
         >
           <View
@@ -52,7 +52,7 @@ export default function PastEvents({ navigation, route }) {
             <View
               style={{
                 width: "100%",
-                height: "96%",
+                height: "100%",
                 backgroundColor: colors.primary,
                 borderRadius: 20,
                 padding: 20,
@@ -137,7 +137,7 @@ export default function PastEvents({ navigation, route }) {
               </TouchableOpacity>
             </View>
           </View> */}
-        </Animated.ScrollView>
+        </View>
         {/* <PageIndicator
           style={styles.pageIndicator}
           count={pages.length}
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
+    backgroundColor: colors.bg
   },
   page: {
     alignItems: "center",
