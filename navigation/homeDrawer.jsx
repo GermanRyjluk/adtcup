@@ -16,6 +16,7 @@ import { Image, Text } from "react-native";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { font } from "../shared/fonts";
+import AdtTeam from "../screens/adtTeam";
 
 const Drawer = createDrawerNavigator();
 
@@ -135,6 +136,13 @@ export default function NotLoggedInDrawer() {
       <Drawer.Screen
         name="RestorePWD"
         component={RestorePWD}
+        options={{
+          drawerItemStyle: { height: 0 },
+        }}
+      />
+      <Drawer.Screen
+        name="AdtTeam"
+        component={AdtTeam}
         options={{
           drawerItemStyle: { height: 0 },
         }}

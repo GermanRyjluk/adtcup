@@ -36,80 +36,6 @@ export default function EventInfo({ navigation, route }) {
           )}
           style={{ backgroundColor: colors.primary }}
         >
-          <View>
-            <View
-              style={{
-                width,
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: colors.primary,
-                  padding: 20,
-                  alignItems: "center",
-                }}
-              >
-                <ScrollView style={{ marginBottom: 20, width: '100%' }} showsVerticalScrollIndicator={false}>
-
-                  <Text
-                    style={[
-                      styles.text,
-                      { color: colors.secondary, marginBottom: 20 },
-                    ]}
-                  >
-                    REGOLE
-                  </Text>
-                  <View>
-                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
-                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>1)</Text>
-                      <Text style={[styles.text, {
-                        fontSize: 20,
-                        fontFamily: font.medium,
-                      }]}>Le squadre saranno composte da 4 partecipanti;</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
-                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>2)</Text>
-                      <Text style={[styles.text, {
-                        fontSize: 20,
-                        fontFamily: font.medium,
-                      }]}>I vincitori di una sfida non parteciperanno alle altre, ma potranno assistere i presentatori nelle loro avventure;</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
-                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>3)</Text>
-                      <Text style={[styles.text, {
-                        fontSize: 20,
-                        fontFamily: font.medium,
-                      }]}>4 shot a squadra per ogni bar (nelle sfide serali);</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
-                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>4)</Text>
-                      <Text style={[styles.text, {
-                        fontSize: 20,
-                        fontFamily: font.medium,
-                      }]}>Sarà possibile prendere parte sia ad una sola sfida che a tutte, inoltre servirà la disponibilità dei partecipanti a giocare, in caso di qualificazione, la finale;</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
-                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>5)</Text>
-                      <Text style={[styles.text, {
-                        fontSize: 20,
-                        fontFamily: font.medium,
-                      }]}>Le alleanze tra 2 squadre sono consentite, a patto che esse si scambino le rispettive bandiere per tuta la durata dell'accordo;</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
-                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>6)</Text>
-                      <Text style={[styles.text, {
-                        fontSize: 20,
-                        fontFamily: font.medium,
-                      }]}>In caso di parità al traguardo di più di 2 squadre, causa alleanza, nessuna tra queste sarà premiata come vincitrice della sfida;</Text>
-                    </View>
-                  </View>
-                </ScrollView>
-              </View>
-            </View>
-          </View>
           <View
             style={{
               width,
@@ -213,6 +139,80 @@ export default function EventInfo({ navigation, route }) {
                   Il vero premio di questa competizione è però, il suo svolgimento. E’ un’esperienza unica, che vi permetterà di vivere un posto nuovo in un modo del tutto innovativo.
                 </Text>
               </ScrollView>
+            </View>
+          </View>
+          <View>
+            <View
+              style={{
+                width,
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: colors.primary,
+                  padding: 20,
+                  alignItems: "center",
+                }}
+              >
+                <ScrollView style={{ marginBottom: 20, width: '100%' }} showsVerticalScrollIndicator={false}>
+
+                  <Text
+                    style={[
+                      styles.text,
+                      { color: colors.secondary, marginBottom: 20 },
+                    ]}
+                  >
+                    REGOLE
+                  </Text>
+                  <View>
+                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
+                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>1)</Text>
+                      <Text style={[styles.text, {
+                        fontSize: 20,
+                        fontFamily: font.medium,
+                      }]}>Le squadre saranno composte da 4 partecipanti;</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
+                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>2)</Text>
+                      <Text style={[styles.text, {
+                        fontSize: 20,
+                        fontFamily: font.medium,
+                      }]}>I vincitori di una sfida non parteciperanno alle altre, ma potranno assistere i presentatori nelle loro avventure;</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
+                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>3)</Text>
+                      <Text style={[styles.text, {
+                        fontSize: 20,
+                        fontFamily: font.medium,
+                      }]}>4 shot a squadra per ogni bar (nelle sfide serali);</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
+                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>4)</Text>
+                      <Text style={[styles.text, {
+                        fontSize: 20,
+                        fontFamily: font.medium,
+                      }]}>Sarà possibile prendere parte sia ad una sola sfida che a tutte, inoltre servirà la disponibilità dei partecipanti a giocare, in caso di qualificazione, la finale;</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
+                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>5)</Text>
+                      <Text style={[styles.text, {
+                        fontSize: 20,
+                        fontFamily: font.medium,
+                      }]}>Le alleanze tra 2 squadre sono consentite, a patto che esse si scambino le rispettive bandiere per tuta la durata dell'accordo;</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
+                      <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>6)</Text>
+                      <Text style={[styles.text, {
+                        fontSize: 20,
+                        fontFamily: font.medium,
+                      }]}>In caso di parità al traguardo di più di 2 squadre, causa alleanza, nessuna tra queste sarà premiata come vincitrice della sfida;</Text>
+                    </View>
+                  </View>
+                </ScrollView>
+              </View>
             </View>
           </View>
           {/* <View>

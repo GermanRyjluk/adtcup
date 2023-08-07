@@ -24,6 +24,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { colors } from "../shared/colors";
 import { font } from "../shared/fonts";
+import CheckBox from "@react-native-community/checkbox";
+import Checkbox from "expo-checkbox";
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
@@ -40,13 +42,17 @@ export default function Register({ navigation }) {
 
   const [loading, setLoading] = useState(false)
 
+  const [checked, setChecked] = useState(false);
+  const [gender, setGender] = useState(null);
+
   const UserRegistration = async () => {
     setLoading(true)
     if (newUserPassword.length >= 6) {
       if (
         newUserPassword.length != 0 &&
         newUserName.length != 0 &&
-        newUserEmail.length != 0
+        newUserEmail.length != 0 &&
+        checked
       ) {
         if (newUserConfirmPassword === newUserPassword) {
           try {
@@ -61,8 +67,7 @@ export default function Register({ navigation }) {
                   {
                     name: newUserName,
                     email: newUserEmail,
-                    photoURL:
-                      "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg",
+                    photoURL: gender == 'm' ? "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg" : gender == 'f' ? 'https://static.vecteezy.com/system/resources/previews/009/749/643/non_2x/woman-profile-mascot-illustration-female-avatar-character-icon-cartoon-girl-head-face-business-user-logo-free-vector.jpg' : gender == 'n' ? 'https://media.istockphoto.com/id/1326784239/vector/gender-neutral-profile-avatar-front-view-of-an-anonymous-person-face.jpg?s=612x612&w=0&k=20&c=_uqGw8h0Zhd3m4ImdedpdXZ8-UPxejbc2lGP5J5iTRs=' : null,
                   }
                 );
                 console.log(docRef.name); //undefined :(
@@ -71,8 +76,7 @@ export default function Register({ navigation }) {
                 // });
                 await updateProfile(auth.currentUser, {
                   displayName: newUserName,
-                  photoURL:
-                    "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg",
+                  photoURL: gender == 'm' ? "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg" : gender == 'f' ? 'https://static.vecteezy.com/system/resources/previews/009/749/643/non_2x/woman-profile-mascot-illustration-female-avatar-character-icon-cartoon-girl-head-face-business-user-logo-free-vector.jpg' : gender == 'n' ? 'https://media.istockphoto.com/id/1326784239/vector/gender-neutral-profile-avatar-front-view-of-an-anonymous-person-face.jpg?s=612x612&w=0&k=20&c=_uqGw8h0Zhd3m4ImdedpdXZ8-UPxejbc2lGP5J5iTRs=' : null,
                 }).catch((err) => console.log(err));
 
                 await signInWithEmailAndPassword(auth, newUserEmail, newUserPassword).then(async () => {
@@ -142,7 +146,7 @@ export default function Register({ navigation }) {
                   style={styles.input}
                   onChangeText={(tryName) => setUserName(tryName)}
                   underlineColorAndroid="transparent"
-                  placeholder="Nome"
+                  placeholder="Nome e Cognome"
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
                   returnKeyType={"next"}
                 />
@@ -173,7 +177,7 @@ export default function Register({ navigation }) {
                   returnKeyType={"next"}
                 />
                 <TouchableOpacity
-                  style={{ position: "absolute", right: 20 }}
+                  style={{ position: "absolute", right: 10, padding: 10 }}
                   onPress={() => {
                     setIsPasswordVisible(!isPasswordVisible);
                   }}
@@ -195,13 +199,30 @@ export default function Register({ navigation }) {
                   onSubmitEditing={() => UserRegistration()}
                 />
                 <TouchableOpacity
-                  style={{ position: "absolute", right: 20 }}
+                  style={{ position: "absolute", right: 10, padding: 10 }}
                   onPress={() => {
                     setIsPasswordVisible(!isPasswordVisible);
                   }}
                 >
                   {passwordIsVisible()}
                 </TouchableOpacity>
+              </View>
+              <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-evenly' }}>
+                <Text style={styles.checkBoxText}>Uomo</Text>
+                <Checkbox style={{ borderRadius: 50 }}
+                  value={checked && gender == 'm'}
+                  onValueChange={(state) => { setChecked(state); if (state) setGender("m") }}
+                  color={colors.secondary} />
+                <Text style={styles.checkBoxText}>Donna</Text>
+                <Checkbox style={{ borderRadius: 50 }}
+                  value={checked && gender == 'f'}
+                  onValueChange={(state) => { setChecked(state); if (state) setGender("f") }}
+                  color={colors.secondary} />
+                <Text style={styles.checkBoxText}>Altro</Text>
+                <Checkbox style={{ borderRadius: 50 }}
+                  value={checked && gender == 'n'}
+                  onValueChange={(state) => { setChecked(state); if (state) setGender("n") }}
+                  color={colors.secondary} />
               </View>
             </View>
             <View style={styles.midTwo}>
@@ -239,7 +260,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    padding: "20%",
+    padding: "15%",
     paddingTop: "0%",
   },
   topZone: {
@@ -340,5 +361,9 @@ const styles = StyleSheet.create({
     fontFamily: font.bold,
     color: colors.primary,
     fontSize: 25,
+  },
+  checkBoxText: {
+    fontFamily: font.medium,
+    color: colors.bg
   },
 });

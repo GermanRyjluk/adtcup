@@ -125,7 +125,7 @@ export default function Ticket({ navigation, route }) {
         [
           {
             text: "Impostazioni",
-            onPress: () => Linking.openSettings(),
+            onPress: () => { navigation.goBack(); Linking.openSettings() },
             style: "cancel",
           },
           {

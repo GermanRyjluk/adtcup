@@ -75,7 +75,8 @@ export default function App({ navigation, route }) {
         <Header />
         <View style={[styles.mainContainer, { backgroundColor: colors.primary, padding: 30 }]}>
           <View>
-            <Text style={styles.text}>Abilita accesso alla fotocamera dalle impostazioni del tuo dispositivo</Text>
+            <Text style={[styles.text, { marginBottom: 15 }]}>Abilita accesso alla fotocamera</Text>
+            <Text style={[styles.text, { fontFamily: font.medium, color: colors.bg, fontSize: 20 }]}>Così potrai scannerizzare i QR code che ti permettono di ottenere nuovi quiz con cui giocare!</Text>
             <TouchableOpacity onPress={() => Linking.openSettings()} style={{
               backgroundColor: colors.secondary,
               padding: 10,
@@ -96,7 +97,7 @@ export default function App({ navigation, route }) {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View >
       </>
     );
   }

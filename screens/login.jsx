@@ -136,7 +136,7 @@ export default function Login({ navigation }) {
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
                 />
                 <TouchableOpacity
-                  style={{ position: "absolute", right: 20 }}
+                  style={{ position: "absolute", right: 10, padding: 10 }}
                   onPress={() => {
                     setIsPasswordVisible(!isPasswordVisible);
                   }}
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    padding: "20%",
+    padding: "15%",
     paddingTop: "0%",
   },
   topZone: {

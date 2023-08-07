@@ -47,86 +47,89 @@ const CustomDrawer = (props) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <View style={{
+        padding: 20, backgroundColor: colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <Image
+          source={
+            auth.currentUser
+              ? {
+                uri: auth.currentUser.photoURL,
+              }
+              : {
+                uri: "https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE=",
+              }
+          }
+          style={{
+            height: 80,
+            width: 80,
+            borderRadius: 40,
+            marginBottom: 10,
+          }}
+        />
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: auth.currentUser ? "space-evenly" : "center",
+            alignItems: "center",
+          }}
+        >
+          {editing ? <TextInput
+            style={{
+              flex: 1,
+              height: 40,
+              marginRight: 10,
+              borderRadius: 10,
+              backgroundColor: "rgba(210, 210, 210, 0.2)",
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              color: "#fff",
+              fontSize: 18,
+              fontFamily: font.medium,
+              marginBottom: 5,
+            }}
+            onSubmitEditing={() => { updateCurrentUserName(newName); }}
+            onChangeText={(text) => setNewName(text)}
+          >
+            {auth.currentUser.displayName}
+          </TextInput> :
+            (auth.currentUser ?
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 18,
+                  fontFamily: font.medium,
+                }}
+              >
+                {auth.currentUser.displayName}
+              </Text> : <TouchableOpacity style={{ backgroundColor: colors.secondary, paddingVertical: 10, paddingHorizontal: 15, width: 100, borderRadius: 10, alignItems: 'center' }} onPress={() => navigation.navigate("Login")}>
+                <Text style={{ fontSize: 15, fontFamily: font.bold, color: colors.primary }}>Accedi</Text>
+              </TouchableOpacity>)
+          }
+          {auth.currentUser ? (
+            !editing ?
+              <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
+                <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
+              </TouchableOpacity>
+              : <View style={{ flexDirection: 'row' }}>
+                <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
+                  <Ionicons name="checkmark-circle" size={25} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setEditing(false)}>
+                  <Ionicons name="close-circle" size={25} color="white" />
+                </TouchableOpacity>
+              </ View>
+          ) : null}
+        </View>
+      </View>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ backgroundColor: colors.primary }}
+        contentContainerStyle={{ marginTop: -50 }}
       >
-        <View style={{ padding: 20, backgroundColor: colors.primary }}>
-          <Image
-            source={
-              auth.currentUser
-                ? {
-                  uri: auth.currentUser.photoURL,
-                }
-                : {
-                  uri: "https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE=",
-                }
-            }
-            style={{
-              height: 80,
-              width: 80,
-              borderRadius: 40,
-              marginBottom: 10,
-            }}
-          />
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            {editing ? <TextInput
-              style={{
-                flex: 1,
-                height: 40,
-                marginRight: 10,
-                borderRadius: 10,
-                backgroundColor: "rgba(210, 210, 210, 0.2)",
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                color: "#fff",
-                fontSize: 18,
-                fontFamily: font.medium,
-                marginBottom: 5,
-              }}
-              onSubmitEditing={() => { updateCurrentUserName(newName); }}
-              onChangeText={(text) => setNewName(text)}
-            >
-              {auth.currentUser.displayName}
-            </TextInput> :
-              (auth.currentUser ?
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontSize: 18,
-                    fontFamily: font.medium,
-                    marginBottom: 5,
-                  }}
-                >
-                  {auth.currentUser.displayName}
-                </Text> : <TouchableOpacity style={{ backgroundColor: colors.secondary, paddingVertical: 10, paddingHorizontal: 15, width: 100, borderRadius: 10, alignItems: 'center' }} onPress={() => navigation.navigate("Login")}>
-                  <Text style={{ fontSize: 15, fontFamily: font.bold, color: colors.primary }}>Accedi</Text>
-                </TouchableOpacity>)
-            }
-            {auth.currentUser ? (
-              !editing ?
-                <TouchableOpacity onPress={() => setEditing(true)}>
-                  <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
-                </TouchableOpacity>
-                : <View style={{ flexDirection: 'row' }}>
-                  <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
-                    <Ionicons name="checkmark-circle" size={25} color="white" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setEditing(false)}>
-                    <Ionicons name="close-circle" size={25} color="white" />
-                  </TouchableOpacity>
-                </ View>
-            ) : null}
-          </View>
-        </View>
-        <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: 10 }}>
+        <View style={{ flex: 1, backgroundColor: colors.bg }}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
@@ -138,9 +141,9 @@ const CustomDrawer = (props) => {
           backgroundColor: colors.primary,
         }}
       >
-        <TouchableOpacity onPress={() => { }} style={{ paddingVertical: 15 }}>
+        {/* <TouchableOpacity onPress={() => { navigation.navigate("AdtTeam") }} style={{ paddingVertical: 15 }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons name="share-social-outline" size={22} color={"#fff"} />
+            <Ionicons name="people" size={22} color={"#fff"} />
             <Text
               style={{
                 fontSize: 15,
@@ -150,10 +153,10 @@ const CustomDrawer = (props) => {
                 fontFamily: font.medium,
               }}
             >
-              Tell a Friend
+              Team ADT
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => auth.signOut()}
           style={{ paddingVertical: 15 }}

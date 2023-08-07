@@ -107,10 +107,10 @@ export default function EventInfo({ navigation, route }) {
               <Text
                 style={[
                   styles.text,
-                  { color: colors.bg, marginBottom: 50, fontSize: 18 },
+                  { color: colors.bg, marginBottom: 30, fontSize: 18 },
                 ]}
               >
-                19/08/2023, Lanciano
+                21/08/2023, Lanciano
               </Text>
               <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary }}>SFIDA 1</Text>
               <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>Alla ricerca delle gemme nascoste della città</Text>
@@ -164,10 +164,10 @@ export default function EventInfo({ navigation, route }) {
               <Text
                 style={[
                   styles.text,
-                  { color: colors.bg, marginBottom: 50, fontSize: 18, textAlign: 'center' },
+                  { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
                 ]}
               >
-                21/08/2023, Le morge/Fossacesia
+                23/08/2023, Le morge/Fossacesia
               </Text>
               <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary }}>SFIDA 1</Text>
               <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>Tutti al mare!</Text>
@@ -224,10 +224,10 @@ export default function EventInfo({ navigation, route }) {
               <Text
                 style={[
                   styles.text,
-                  { color: colors.bg, marginBottom: 50, fontSize: 18, textAlign: 'center' },
+                  { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
                 ]}
               >
-                22/08/2023 Luogo da comunicare
+                24/08/2023 Castello di Perano
               </Text>
               <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary, marginBottom: 10 }}>FINALE</Text>
               <Text style={[styles.text, {
