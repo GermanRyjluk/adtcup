@@ -134,9 +134,16 @@ export default function EventInfo({ navigation, route }) {
               <Text style={[styles.text, {
                 fontSize: 20,
                 fontFamily: font.medium,
-                marginBottom: 50
+                marginBottom: 30
               }]}>I concorrenti competeranno sempre in un'avvincente caccia al tesoro, ma questa volta per i bar della città. Per ogni tappa, le squadre dovranno bere shottini per ricevere il prossimo indovinello e andare avanti nella competizione. Anche in questo caso le prime 3 squadre si qualificheranno alla finale.
               </Text>
+              <View style={{
+                width: '100%',
+                marginBottom: 50
+              }}>
+                <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10 }}>Premio</Text>
+                <Text style={[styles.text, { fontFamily: font.medium, fontSize: 20 }]}>Abbonamento di un mese per la palestra Mythos di Lanciano</Text>
+              </View>
 
             </ScrollView>
           </View>
@@ -183,12 +190,20 @@ export default function EventInfo({ navigation, route }) {
                 marginBottom: 20
               }]}> Le squadre questa volta avranno la possibilità di partecipare a diversi giochi sulla spiaggia e in acqua. Questa volta ci sarà una classifica a punti che decreterà le altre squadre che approderanno in finale, quests volta saranno 2;
               </Text>
+
               <Text style={[styles.text, {
                 fontSize: 20,
                 fontFamily: font.medium,
                 marginBottom: 20
               }]}> Tra una sfida e l'altra ci sarà la possibilità di usufruire di un rinfresco per rifocillarsi dopo le fatiche della prima metà di giornata;
               </Text>
+              <View style={{
+                width: '100%',
+                marginBottom: 50
+              }}>
+                <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10 }}>Premio</Text>
+                <Text style={[styles.text, { fontFamily: font.medium, fontSize: 20 }]}>Abbonamento di un mese per la palestra Mythos di Lanciano</Text>
+              </View>
               <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary }}>SFIDA 2</Text>
               <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center', marginBottom: 10 }}>Fossaceca, non LA</Text>
               <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Fossacesia alle 17:00</Text>
@@ -198,9 +213,8 @@ export default function EventInfo({ navigation, route }) {
                 marginBottom: 50
               }]}>I partecipanti partecipanno ad una caccia al tesoro per i bar di fossacesia marina, nel corso della quale ci saranno anche sfide per progredire nel gioco. Le prime 2 squadre otterranno l'accesso alla finalissima.
               </Text>
+
             </ScrollView>
-            {/* <LinearGradient colors={['transparent', colors.primary]}
-              style={{ width: '100%', height: 10, position: 'absolute', bottom: 50, borderRadius: 50 }} /> */}
           </View>
           <View
             style={{
@@ -254,7 +268,7 @@ export default function EventInfo({ navigation, route }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 40,
-                marginBottom: 50
+                marginBottom: 50,
               }}
             >
               <Text

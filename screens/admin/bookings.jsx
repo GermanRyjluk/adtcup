@@ -197,7 +197,7 @@ export default function Bookings({ navigation }) {
 
             <Ionicons name="trash" size={30} />
           </TouchableOpacity>
-          {player.status == "waiting team" ? (
+          {player.status == "waiting team" || player.status == "can play" || player.status == "playing" ? (
             <TouchableOpacity
               style={{
                 padding: 10,
@@ -206,6 +206,7 @@ export default function Bookings({ navigation }) {
                 navigation.navigate("PlayerSettings", {
                   playerID: player.uid,
                   playerName: player.name,
+                  playerStatus: player.status
                 });
               }}
             >

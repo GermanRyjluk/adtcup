@@ -31,7 +31,7 @@ export default function TermsAndConditions({ navigation }) {
 
             Titolare del Trattamento dei Dati
 
-            Pietro Giancristofaro - via Giovanni da Verazzano 29, 10129 Torino, Italia
+            German Federico Ryjluk - Corso Racconigi 152, 10141 Torino, Italia
 
             Indirizzo email del Titolare: adtcup07@gmail.com
 
