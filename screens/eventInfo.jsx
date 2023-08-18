@@ -17,12 +17,17 @@ import { Header } from "../components/header";
 import { font } from "../shared/fonts";
 import { sendEmailVerification } from "firebase/auth";
 
+import { LinearGradient } from 'expo-linear-gradient';
+
 const pages = [{ text: "1" }, { text: "2" }, { text: "3" }];
 
 export default function EventInfo({ navigation, route }) {
+  const screen = route.params?.screen;
 
   const handleButton = () => {
-    if (auth.currentUser) {
+    if (screen == 'inside') {
+      navigation.goBack()
+    } else if (auth.currentUser) {
       if (auth.currentUser.emailVerified) {
         navigation.navigate("EventBooking", {
           eventID: route.params.eventID,
@@ -122,7 +127,7 @@ export default function EventInfo({ navigation, route }) {
               }]}>Le squadre si sfideranno in una vera e propria caccia al tesoro costituita da un susseguirsi di indovinelli(che visualizzerete grazie a dei Qr Code). Nel mezzo ci saranno anche delle sfide finchè non si arriverà ad un checkpoint, dove solo un numero chiuso di squadre riuscirà a qualificarsi per la seconda parte della sfida.
                 Successivamente, le squadre rimaste continueranno a risolvere indovinelli e, alla fine, le prime 3 squadre arrivate al traguardo si qualificheranno per la finale.
               </Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary }}>SFIDA 2</Text>
+
               <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center' }}>Caccia al tesoro tra i bar</Text>
               <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>(sfida alcolica)</Text>
               <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Parco di Lanciano "Central Park" alle 22.30</Text>
@@ -194,6 +199,8 @@ export default function EventInfo({ navigation, route }) {
               }]}>I partecipanti partecipanno ad una caccia al tesoro per i bar di fossacesia marina, nel corso della quale ci saranno anche sfide per progredire nel gioco. Le prime 2 squadre otterranno l'accesso alla finalissima.
               </Text>
             </ScrollView>
+            {/* <LinearGradient colors={['transparent', colors.primary]}
+              style={{ width: '100%', height: 10, position: 'absolute', bottom: 50, borderRadius: 50 }} /> */}
           </View>
           <View
             style={{
@@ -227,7 +234,7 @@ export default function EventInfo({ navigation, route }) {
                   { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
                 ]}
               >
-                24/08/2023 Castello di Perano
+                25/08/2023 Castello di Perano
               </Text>
               <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary, marginBottom: 10 }}>FINALE</Text>
               <Text style={[styles.text, {
@@ -236,29 +243,29 @@ export default function EventInfo({ navigation, route }) {
                 marginBottom: 20
               }]}>I finalisti si scontreranno per vincere l'ambito premio in una serie di sfide d'abilità. La finale però non è solo questo: parallelamente ci sarà una vera e propria festa, con musica e vari mini eventi al suo interno. Il party e' aperto a tutti, anche a chi non ha partecipato alla CUP fino ad ora. Una sola parola d'ordine per accedere all'evento: DIVERTIRSI!
               </Text>
-              <TouchableOpacity
-                title="Gioca"
-                onPress={() => { handleButton() }}
+            </ScrollView>
+            <TouchableOpacity
+              title="Gioca"
+              onPress={() => { handleButton() }}
+              style={{
+                width: "100%",
+                paddingVertical: 15,
+                backgroundColor: colors.primary,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 40,
+                marginBottom: 50
+              }}
+            >
+              <Text
                 style={{
-                  width: "70%",
-                  paddingVertical: 15,
-                  backgroundColor: colors.secondary,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 40,
-                  marginBottom: 70
+                  color: colors.secondary,
+                  fontSize: 35, fontFamily: font.bold,
                 }}
               >
-                <Text
-                  style={{
-                    color: colors.primary,
-                    fontSize: 35, fontFamily: font.bold,
-                  }}
-                >
-                  Gioca
-                </Text>
-              </TouchableOpacity>
-            </ScrollView>
+                Gioca
+              </Text>
+            </TouchableOpacity>
           </View>
         </Animated.ScrollView>
         <PageIndicator

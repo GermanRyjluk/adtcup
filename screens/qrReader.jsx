@@ -50,11 +50,19 @@ export default function App({ navigation, route }) {
 
   //Handle pressed button to get quiz
   const getQuiz = () => {
-    navigation.navigate({
-      name: "Quiz",
-      params: { quizID: code },
-      merge: true,
-    });
+    let admin = route.params?.admin;
+    if (!admin) {
+      navigation.navigate({
+        name: "Quiz",
+        params: { quizID: code },
+        merge: true,
+      });
+    } else {
+      navigation.navigate({
+        name: "BookingStatus",
+        params: { userID: code },
+      });
+    }
   };
 
   //Check permissions
@@ -126,7 +134,7 @@ export default function App({ navigation, route }) {
             <Text
               style={{ fontSize: 25, fontFamily: font.bold, color: colors.secondary }}
             >
-              Ottieni indovinello!
+              {route.params?.admin ? 'Ottieni stato' : 'Ottieni indovinello!'}
             </Text>
           </TouchableOpacity>
         ) : null}

@@ -21,7 +21,7 @@ import { font } from "../shared/fonts";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
-export default function EventInfo({ navigation, route }) {
+export default function Hints({ navigation, route }) {
   const { width, height } = Dimensions.get("window");
   const scrollX = useRef(new Animated.Value(0)).current;
 
@@ -126,9 +126,13 @@ export default function EventInfo({ navigation, route }) {
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: colors.bg,
+              padding: 50
             }}
           >
-            <Text style={{ fontFamily: font.medium }}>Non ci sono ancora indizi da mostrare, torna tra poco</Text>
+            <View style={{ width: '80%', backgroundColor: colors.primary, borderRadius: 15, padding: 20 }}>
+              <Text style={{ fontFamily: font.bold, fontSize: 20, textAlign: 'center', color: colors.secondary, marginBottom: 20 }}>Non ci sono ancora indizi da mostrare</Text>
+              <Text style={{ fontFamily: font.medium, fontSize: 20, textAlign: 'center', color: colors.secondary }}>Torna tra poco, ogni 5 minuti otterrai un nuovo indizio</Text>
+            </View>
           </View>
         ) : (<>
           <Animated.ScrollView

@@ -17,6 +17,7 @@ import { Image, Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { font } from "../shared/fonts";
 import AdtTeam from "../screens/adtTeam";
+import QrCodeUser from "../screens/qrCodeUser";
 
 const Drawer = createDrawerNavigator();
 
@@ -64,6 +65,13 @@ export function LoggedInDrawer() {
           drawerIcon: ({ color }) => (
             <Ionicons name="information-circle-outline" size={22} color={color} />
           ),
+        }}
+      />
+      <Drawer.Screen
+        name="QrCodeUser"
+        component={QrCodeUser}
+        options={{
+          drawerItemStyle: { height: 0 },
         }}
       />
     </Drawer.Navigator>

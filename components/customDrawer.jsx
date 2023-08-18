@@ -111,9 +111,14 @@ const CustomDrawer = (props) => {
           }
           {auth.currentUser ? (
             !editing ?
-              <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
-                <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
-              </TouchableOpacity>
+              <>
+                <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
+                  <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("QrCodeUser")} style={{ position: 'absolute', left: 10 }}>
+                  <Ionicons name="qr-code" size={25} color="white" />
+                </TouchableOpacity>
+              </>
               : <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
                   <Ionicons name="checkmark-circle" size={25} color="white" />

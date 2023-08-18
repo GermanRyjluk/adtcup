@@ -5,8 +5,13 @@ import { font } from "../../shared/fonts";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Header } from "../../components/header";
+import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
 
 export default function Dashboard({ navigation }) {
+
+  const number = 3;
+  let i = 1;
 
   const handleRestart = () => {
     Alert.alert(
@@ -22,7 +27,9 @@ export default function Dashboard({ navigation }) {
               [
                 {
                   text: "Si",
-                  onPress: () => Alert.alert("Gioco riavviato"),
+                  onPress: async () => {
+                    Alert.alert("Gioco riavviato")
+                  },
                   style: "cancel",
                 },
                 {
@@ -100,6 +107,16 @@ export default function Dashboard({ navigation }) {
           >
             <Text style={styles.text}>Prenotazioni</Text>
             <Ionicons name="list" size={50} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.box, {
+              backgroundColor: 'orange',
+              marginBottom: 15,
+            }]}
+            onPress={() => navigation.navigate("QrReader", { admin: true })}
+          >
+            <Text style={styles.text}>Lettore Qr</Text>
+            <Ionicons name="qr-code" size={50} />
           </TouchableOpacity>
           {/* <TouchableOpacity
             style={[

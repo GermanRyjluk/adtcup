@@ -126,6 +126,7 @@ export default function Scoreboard() {
             marginBottom: 20,
             padding: 5,
             borderRadius: 10,
+            padding: 20
           }}
         >
           <Text

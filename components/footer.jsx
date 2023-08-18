@@ -15,7 +15,7 @@ export const Footer = () => {
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("GameRules");
+            navigation.navigate("GameRules", { screen: 'inside' });
           }}
           style={{
             top: -15,

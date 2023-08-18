@@ -80,10 +80,10 @@ export default function EventBooking({ navigation, route }) {
           padding: 30,
         }}
       >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ fontSize: 25, fontFamily: font.bold, color: colors.secondary, textAlign: 'center' }}>FAI IL QUESTIONARIO E INVIA LA TUA RICHIESTA DI PARTECIPAZIONE</Text>
         </View>
-        <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
+        <View style={{ flex: 0.75, justifyContent: 'space-evenly', alignItems: 'center' }}>
           <TouchableOpacity
             style={{
               padding: 20,
@@ -100,9 +100,20 @@ export default function EventBooking({ navigation, route }) {
             }}
           >
             <Image source={require('../assets/googledocs.png')} style={{ width: 25, height: 31, marginRight: 10 }} />
-            <Text style={{ color: "black", fontSize: 25, fontFamily: font.bold, color: colors.primary }}>
+            <Text style={{ fontSize: 25, fontFamily: font.bold, color: colors.primary }}>
               Google Form
             </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Text style={{ color: colors.bg, fontSize: 15, fontFamily: font.bold, textAlign: 'center' }}>Se hai qualche dubbio, contatta gli amministratori</Text>
+          <TouchableOpacity style={{ height: 50, width: 150, backgroundColor: colors.secondary, borderRadius: 30, alignItems: 'center', flexDirection: 'row', marginTop: 20 }} onPress={() => Linking.openURL('https://wa.me/+393894960846')}>
+            <Image source={require('../assets/whatsapp.png')} style={{ width: 25, height: 25, left: 30 }}></Image>
+            <Text style={{ left: 50, color: 'black', textAlign: 'center', fontSize: 20, fontFamily: font.bold }}>Gius</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{ height: 50, width: 150, backgroundColor: colors.secondary, borderRadius: 30, alignItems: 'center', flexDirection: 'row', marginVertical: 20 }} onPress={() => Linking.openURL('https://wa.me/+393208970258')}>
+            <Image source={require('../assets/whatsapp.png')} style={{ width: 25, height: 25, left: 30 }}></Image>
+            <Text style={{ left: 50, color: 'black', textAlign: 'center', fontSize: 20, fontFamily: font.bold }}>Pie</Text>
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center' }}>
@@ -114,7 +125,8 @@ export default function EventBooking({ navigation, route }) {
               color={colors.secondary}
             />
             <Text style={{ fontSize: 15, fontFamily: font.medium, color: '#dadada' }}>Ho compilato il form</Text>
-          </View><View style={{ width: 250, flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+          </View>
+          <View style={{ width: 250, flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
             <CheckBox
               style={{ width: 30, height: 30, borderRadius: 15, marginRight: 10 }}
               value={completedPrivacyPolicy}
@@ -149,7 +161,7 @@ export default function EventBooking({ navigation, route }) {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </View >
     </>
   );
 }

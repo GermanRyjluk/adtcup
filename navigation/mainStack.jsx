@@ -25,6 +25,7 @@ import { Header } from "../components/header";
 import Home from "../screens/home";
 import EditTeamInfo from "../screens/editTeamInfo";
 import PastEvents from "../screens/pastEvent";
+import BonusMalus from "../screens/bonusMalus";
 
 
 const Stack = createStackNavigator();
@@ -70,12 +71,13 @@ export function LoggedInStack() {
             <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
             <Stack.Screen name="EventStatus" component={EventStatus} />
             <Stack.Screen name="Ticket" component={Ticket} />
-            <Stack.Screen
+            {/* <Stack.Screen
               name="GeolocationCheck"
               component={GeolocationCheck}
-            />
+            /> */}
             <Stack.Screen name="Quiz" component={QuizHome} />
             <Stack.Screen name="Hint" component={Hints} />
+            <Stack.Screen name="BonusMalus" component={BonusMalus} />
             <Stack.Screen name="userScoreboard" component={userScoreboard} />
             <Stack.Screen name="GameRules" component={GameRules} />
             <Stack.Screen name="TeamInfo" component={TeamInfo} />

@@ -12,6 +12,8 @@ import Scoreboard from "../screens/admin/scoreboard";
 import Settings from "../screens/admin/settings";
 import PlayerSettings from "../screens/admin/playerSettings";
 import MapPlayers from "../screens/admin/mapPlayers";
+import QrReader from "../screens/qrReader";
+import BookingStatus from "../screens/admin/bookingStatus";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,8 @@ export default function Admin() {
       <Stack.Screen name="Map" component={Map} />
       <Stack.Screen name="MapPlayers" component={MapPlayers} />
       <Stack.Screen name="Scoreboard" component={Scoreboard} />
+      <Stack.Screen name="QrReader" component={QrReader} />
+      <Stack.Screen name="BookingStatus" component={BookingStatus} />
       <Stack.Screen name="Settings" component={Settings} />
     </Stack.Navigator>
   );
