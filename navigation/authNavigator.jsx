@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { auth } from "../firebase/firebase";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoggedIn, NotLoggedIn } from "./mainStack";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -15,13 +16,35 @@ export default function AuthNavigator() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const checkUser = () => {
-      auth.onAuthStateChanged((user) => {
-        setUser(user);
-      });
+    const checkUser = async () => {
+      try {
+        // Check if a user is already logged in
+        auth.onAuthStateChanged((user) => {
+          setUser(user);
+        });
+        // const storedUser = await AsyncStorage.getItem('user');
+        // if (storedUser) {
+        //   const parsedUser = JSON.parse(storedUser);
+        //   console.log(parsedUser)
+        //   // setUser(parsedUser);
+        // } else { setUser(null) }
+      } catch (error) {
+        console.error('Error retrieving user from AsyncStorage', error);
+      }
     };
-    return checkUser();
+
+    checkUser();
   }, []);
+
+
+  // useEffect(() => {
+  //   const checkUser = () => {
+  //     auth.onAuthStateChanged((user) => {
+  //       setUser(user);
+  //     });
+  //   };
+  //   return checkUser();
+  // }, []);
 
   return <>{user ? <LoggedInDrawer /> : <NotLoggedInDrawer />}</>;
 }

@@ -112,38 +112,29 @@ export default function EventInfo({ navigation, route }) {
               <Text
                 style={[
                   styles.text,
-                  { color: colors.bg, marginBottom: 30, fontSize: 18 },
+                  { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
                 ]}
               >
-                21/08/2023, Lanciano
+                {"08/12/2023\nParco del Valentino"}
               </Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary }}>SFIDA 1</Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>Alla ricerca delle gemme nascoste della città</Text>
-              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Piazza Plebiscito a Lanciano alle 18:00</Text>
+              <Text style={{ fontFamily: font.bold, fontSize: 30, marginTop: 5, color: colors.secondary, marginBottom: 5, textAlign: 'center' }}>Christus Pakus</Text>
+              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Fontana dei dodici mesi alle 14:30</Text>
               <Text style={[styles.text, {
                 fontSize: 20,
                 fontFamily: font.medium,
-                marginBottom: 20
-              }]}>Le squadre si sfideranno in una vera e propria caccia al tesoro costituita da un susseguirsi di indovinelli(che visualizzerete grazie a dei Qr Code). Nel mezzo ci saranno anche delle sfide finchè non si arriverà ad un checkpoint, dove solo un numero chiuso di squadre riuscirà a qualificarsi per la seconda parte della sfida.
-                Successivamente, le squadre rimaste continueranno a risolvere indovinelli e, alla fine, le prime 3 squadre arrivate al traguardo si qualificheranno per la finale.
+                marginBottom: 50
+              }]}>Immergiti nell’epica storia di Christus Pakus, un ambizioso leader che si è elevato al potere grazie a cuore, testa e gambe. In questo gioco di ruolo avventuroso, dovrai seguire i passi del protagonista mentre naviga attraverso intricati intrighi politici, affronta nemici spietati e prende decisioni cruciali che plasmeranno il suo destino e il destino del suo regno.
               </Text>
 
-              <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center' }}>Caccia al tesoro tra i bar</Text>
+              {/* <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center' }}>Caccia al tesoro tra i bar</Text>
               <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>(sfida alcolica)</Text>
               <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Parco di Lanciano "Central Park" alle 22.30</Text>
               <Text style={[styles.text, {
                 fontSize: 20,
                 fontFamily: font.medium,
-                marginBottom: 30
-              }]}>I concorrenti competeranno sempre in un'avvincente caccia al tesoro, ma questa volta per i bar della città. Per ogni tappa, le squadre dovranno bere shottini per ricevere il prossimo indovinello e andare avanti nella competizione. Anche in questo caso le prime 3 squadre si qualificheranno alla finale.
-              </Text>
-              <View style={{
-                width: '100%',
                 marginBottom: 50
-              }}>
-                <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10 }}>Premio</Text>
-                <Text style={[styles.text, { fontFamily: font.medium, fontSize: 20 }]}>Abbonamento di un mese per la palestra Mythos di Lanciano</Text>
-              </View>
+              }]}>I concorrenti competeranno sempre in un'avvincente caccia al tesoro, ma questa volta per i bar della città. Per ogni tappa, le squadre dovranno bere shottini per ricevere il prossimo indovinello e andare avanti nella competizione. Anche in questo caso le prime 3 squadre si qualificheranno alla finale.
+              </Text> */}
 
             </ScrollView>
           </View>
@@ -179,40 +170,31 @@ export default function EventInfo({ navigation, route }) {
                   { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
                 ]}
               >
-                23/08/2023, Le morge/Fossacesia
+                {"09/12/2023\nParco Pellerina"}
               </Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary }}>SFIDA 1</Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>Tutti al mare!</Text>
-              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Le Morge alle 11:00</Text>
+              <Text style={{ fontFamily: font.bold, fontSize: 30, color: colors.secondary, marginVertical: 5, textAlign: 'center' }}>Pako al mare!</Text>
+              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Fontana dõ sBurracaõ alle 14:30</Text>
               <Text style={[styles.text, {
                 fontSize: 20,
                 fontFamily: font.medium,
                 marginBottom: 20
-              }]}> Le squadre questa volta avranno la possibilità di partecipare a diversi giochi sulla spiaggia e in acqua. Questa volta ci sarà una classifica a punti che decreterà le altre squadre che approderanno in finale, quests volta saranno 2;
+              }]}>Immergiti nelle profondità marine e vivi l'emozionante avventura di Pako, un coraggioso pesce in cerca di suo padre. Attraversa gli intricati labirinti oceanici, affronta pericoli sconosciuti e incontra personaggi marini unici mentre sveli i misteri del vasto oceano. Portate occhialini, braccioli e slippini rossi per aiutare Pako
               </Text>
 
-              <Text style={[styles.text, {
+              {/* <Text style={[styles.text, {
                 fontSize: 20,
                 fontFamily: font.medium,
-                marginBottom: 20
-              }]}> Tra una sfida e l'altra ci sarà la possibilità di usufruire di un rinfresco per rifocillarsi dopo le fatiche della prima metà di giornata;
-              </Text>
-              <View style={{
-                width: '100%',
                 marginBottom: 50
-              }}>
-                <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10 }}>Premio</Text>
-                <Text style={[styles.text, { fontFamily: font.medium, fontSize: 20 }]}>Abbonamento di un mese per la palestra Mythos di Lanciano</Text>
-              </View>
-              <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary }}>SFIDA 2</Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center', marginBottom: 10 }}>Fossaceca, non LA</Text>
+              }]}> Tra una sfida e l'altra ci sarà la possibilità di usufruire di un rinfresco per rifocillarsi dopo le fatiche della prima metà di giornata;
+              </Text> */}
+              {/* <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center', marginBottom: 10 }}>Fossaceca, non LA</Text>
               <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Fossacesia alle 17:00</Text>
               <Text style={[styles.text, {
                 fontSize: 20,
                 fontFamily: font.medium,
                 marginBottom: 50
               }]}>I partecipanti partecipanno ad una caccia al tesoro per i bar di fossacesia marina, nel corso della quale ci saranno anche sfide per progredire nel gioco. Le prime 2 squadre otterranno l'accesso alla finalissima.
-              </Text>
+              </Text> */}
 
             </ScrollView>
           </View>
@@ -237,10 +219,10 @@ export default function EventInfo({ navigation, route }) {
               <Text
                 style={[
                   styles.text,
-                  { color: colors.secondary },
+                  { color: colors.secondary, textAlign: 'center', marginBottom: 5 },
                 ]}
               >
-                GIORNATA 3
+                FINALE
               </Text>
               <Text
                 style={[
@@ -248,14 +230,15 @@ export default function EventInfo({ navigation, route }) {
                   { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
                 ]}
               >
-                25/08/2023 Castello di Perano
+                09/12/23, Comala
               </Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary, marginBottom: 10 }}>FINALE</Text>
+              <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary, marginBottom: 10 }}>Pako Rabanne</Text>
+              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Comala verso le 21:00</Text>
               <Text style={[styles.text, {
                 fontSize: 20,
                 fontFamily: font.medium,
-                marginBottom: 20
-              }]}>I finalisti si scontreranno per vincere l'ambito premio in una serie di sfide d'abilità. La finale però non è solo questo: parallelamente ci sarà una vera e propria festa, con musica e vari mini eventi al suo interno. Il party e' aperto a tutti, anche a chi non ha partecipato alla CUP fino ad ora. Una sola parola d'ordine per accedere all'evento: DIVERTIRSI!
+                marginBottom: 50
+              }]}>Sperimenta il magnetismo avvolgente di “BOCCIA SENSORIALE”, la straordinaria fragranza di Pako Rabanne, attraverso questo coinvolgente gioco. Ogni mossa svela strati di eleganza senza tempo, trasportandoti in un mondo di lusso e raffinatezza sensoriale.
               </Text>
             </ScrollView>
             <TouchableOpacity

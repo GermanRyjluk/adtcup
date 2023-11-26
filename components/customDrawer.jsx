@@ -43,6 +43,12 @@ const CustomDrawer = (props) => {
       Alert.alert("Nome non cambiato", "il nome " + newName + " è uguale al precedente");
     }
   }
+  const logoutUser = async () => {
+    // Clear user data from AsyncStorage
+    // await AsyncStorage.removeItem('user');
+    // Sign out from Firebase
+    await signOut(auth);
+  };
 
 
   return (
@@ -163,7 +169,7 @@ const CustomDrawer = (props) => {
           </View>
         </TouchableOpacity> */}
         <TouchableOpacity
-          onPress={() => auth.signOut()}
+          onPress={() => logoutUser()}
           style={{ paddingVertical: 15 }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>

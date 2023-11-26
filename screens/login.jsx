@@ -16,6 +16,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { auth, db } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { colors } from "../shared/colors";
 import { font } from "../shared/fonts";
@@ -37,23 +38,49 @@ export default function Login({ navigation }) {
     }
   };
 
-  const UserLogIn = () => {
-    setLoading(true)
-    if (email.length != 0 && password.length != 0) {
-      signInWithEmailAndPassword(auth, email, password).catch((e) => {
-        if (e.code == "auth/user-not-found") {
-          Alert.alert("Email incorretto o inesistente");
+  const UserLogIn = async () => {
+    setLoading(true);
+    if (email.length !== 0 && password.length !== 0) {
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        // Fetch the user after successful login
+        const user = auth.currentUser;
+        console.log(user)
+        if (user) {
+          // Store user data in AsyncStorage
+          await AsyncStorage.setItem('user', JSON.stringify(user));
         }
-        if (e.code == "auth/wrong-password") {
-          Alert.alert("Password errata");
+      } catch (e) {
+        if (e.code === 'auth/user-not-found') {
+          Alert.alert('Email incorretto o inesistente');
+        } else if (e.code === 'auth/wrong-password') {
+          Alert.alert('Password errata');
         }
-        console.log(e.code)
-      });
+        console.error("Errore AsyncStorage: ", e.code);
+      }
     } else {
-      Alert.alert("Inserire credenziali");
+      Alert.alert('Inserire credenziali');
     }
-    setLoading(false)
+    setLoading(false);
   };
+
+  // const UserLogIn = () => {
+  //   setLoading(true)
+  //   if (email.length != 0 && password.length != 0) {
+  //     signInWithEmailAndPassword(auth, email, password).catch((e) => {
+  //       if (e.code == "auth/user-not-found") {
+  //         Alert.alert("Email incorretto o inesistente");
+  //       }
+  //       if (e.code == "auth/wrong-password") {
+  //         Alert.alert("Password errata");
+  //       }
+  //       console.log(e.code)
+  //     });
+  //   } else {
+  //     Alert.alert("Inserire credenziali");
+  //   }
+  //   setLoading(false)
+  // };
 
   return (
     <KeyboardAwareScrollView style={styles.backGround}>
@@ -122,6 +149,8 @@ export default function Login({ navigation }) {
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
                   keyboardType="email-address"
                   returnKeyType={"next"}
+                  textContentType="emailAddress"
+                  autoCapitalize="none"
                 />
               </View>
               <View style={styles.inputBox}>
@@ -134,6 +163,8 @@ export default function Login({ navigation }) {
                   underlineColorAndroid="transparent"
                   placeholder="Password"
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
+                  textContentType="password"
+                  autoCapitalize="none"
                 />
                 <TouchableOpacity
                   style={{ position: "absolute", right: 10, padding: 10 }}

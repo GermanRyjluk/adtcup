@@ -71,7 +71,7 @@ export default function EventInfo({ navigation, route }) {
                   tutto il tour un gioco. Ma che gioco? Abbiamo creato una competizione a squadra
                   suddivisa in 3 parti. Una caccia al tesoro per i bar della città che ha
                   determinato le prime tre finaliste.
-                  Un’altra cacia al tesoro, questa volta tra le gemme nascoste della città,
+                  Un’altra caccia al tesoro, questa volta tra le gemme nascoste della città,
                   che ha visto vincitrici tre coppie. una finale, durante la quale i partecipanti
                   si sono cimentati in varie sfide per vincere l’ambito premio. Il tutto con il
                   convolgimento del pubblico, formato sia dai non finalisti che dagli spettatori

@@ -233,7 +233,7 @@ export default function TermsAndConditions({ navigation }) {
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', bottom: 10 }}>
           <TouchableOpacity disabled={!accepted} onPress={() => { navigation.goBack() }} style={accepted ? styles.button : styles.buttonDisabled}><Text style={styles.buttonLabel}>Accetta</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => { Linking.openURL('https://adtcupdeleteaccount.web.app') }} style={styles.button}><Text style={styles.buttonLabel}>Leggi formattato</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => { Linking.openURL('https://adtcupdeleteaccount.web.app/privacyPolicy.html') }} style={styles.button}><Text style={styles.buttonLabel}>Leggi formattato</Text></TouchableOpacity>
         </View>
       </View>
     </>
