@@ -26,10 +26,15 @@ import { colors } from "../shared/colors";
 import { font } from "../shared/fonts";
 import CheckBox from "@react-native-community/checkbox";
 import Checkbox from "expo-checkbox";
+
+import { registerAccount } from '../store/authSlice'
+import { useDispatch, useSelector } from "react-redux";
+
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
 export default function Register({ navigation }) {
+
   const pressHandler = () => {
     navigation.navigate("Login");
   };
@@ -45,8 +50,12 @@ export default function Register({ navigation }) {
   const [checked, setChecked] = useState(false);
   const [gender, setGender] = useState(null);
 
-  const UserRegistration = async () => {
+  //Redux
+  const dispatch = useDispatch();
+  const authData = useSelector(state => state.authReducer)
+  const UserRegistration = async (values) => {
     setLoading(true)
+    // console.log(values)
     if (newUserPassword.length >= 6) {
       if (
         newUserPassword.length != 0 &&
@@ -55,48 +64,49 @@ export default function Register({ navigation }) {
         checked
       ) {
         if (newUserConfirmPassword === newUserPassword) {
-          try {
-            await createUserWithEmailAndPassword(
-              auth,
-              newUserEmail,
-              newUserPassword
-            )
-              .then(async (userCredential) => {
-                const docRef = setDoc(
-                  doc(db, "users/" + userCredential.user.uid),
-                  {
-                    name: newUserName,
-                    email: newUserEmail,
-                    photoURL: gender == 'm' ? "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg" : gender == 'f' ? 'https://static.vecteezy.com/system/resources/previews/009/749/643/non_2x/woman-profile-mascot-illustration-female-avatar-character-icon-cartoon-girl-head-face-business-user-logo-free-vector.jpg' : gender == 'n' ? 'https://media.istockphoto.com/id/1326784239/vector/gender-neutral-profile-avatar-front-view-of-an-anonymous-person-face.jpg?s=612x612&w=0&k=20&c=_uqGw8h0Zhd3m4ImdedpdXZ8-UPxejbc2lGP5J5iTRs=' : null,
-                  }
-                );
-                console.log(docRef.name); //undefined :(
-                // navigation.navigate('Home', {
-                //   userData: userCredential.user.email,
-                // });
-                await updateProfile(auth.currentUser, {
-                  displayName: newUserName,
-                  photoURL: gender == 'm' ? "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg" : gender == 'f' ? 'https://static.vecteezy.com/system/resources/previews/009/749/643/non_2x/woman-profile-mascot-illustration-female-avatar-character-icon-cartoon-girl-head-face-business-user-logo-free-vector.jpg' : gender == 'n' ? 'https://media.istockphoto.com/id/1326784239/vector/gender-neutral-profile-avatar-front-view-of-an-anonymous-person-face.jpg?s=612x612&w=0&k=20&c=_uqGw8h0Zhd3m4ImdedpdXZ8-UPxejbc2lGP5J5iTRs=' : null,
-                }).catch((err) => console.log(err));
+          dispatch(registerAccount(values));
+          // try {
+          //   await createUserWithEmailAndPassword(
+          //     auth,
+          //     newUserEmail,
+          //     newUserPassword
+          //   )
+          //     .then(async (userCredential) => {
+          //       const docRef = setDoc(
+          //         doc(db, "users/" + userCredential.user.uid),
+          //         {
+          //           name: newUserName,
+          //           email: newUserEmail,
+          //           photoURL: gender == 'm' ? "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg" : gender == 'f' ? 'https://static.vecteezy.com/system/resources/previews/009/749/643/non_2x/woman-profile-mascot-illustration-female-avatar-character-icon-cartoon-girl-head-face-business-user-logo-free-vector.jpg' : gender == 'n' ? 'https://media.istockphoto.com/id/1326784239/vector/gender-neutral-profile-avatar-front-view-of-an-anonymous-person-face.jpg?s=612x612&w=0&k=20&c=_uqGw8h0Zhd3m4ImdedpdXZ8-UPxejbc2lGP5J5iTRs=' : null,
+          //         }
+          //       );
+          //       console.log(docRef.name); //undefined :(
+          //       // navigation.navigate('Home', {
+          //       //   userData: userCredential.user.email,
+          //       // });
+          //       await updateProfile(auth.currentUser, {
+          //         displayName: newUserName,
+          //         photoURL: gender == 'm' ? "https://static.vecteezy.com/system/resources/previews/009/749/751/original/avatar-man-icon-cartoon-male-profile-mascot-illustration-head-face-business-user-logo-free-vector.jpg" : gender == 'f' ? 'https://static.vecteezy.com/system/resources/previews/009/749/643/non_2x/woman-profile-mascot-illustration-female-avatar-character-icon-cartoon-girl-head-face-business-user-logo-free-vector.jpg' : gender == 'n' ? 'https://media.istockphoto.com/id/1326784239/vector/gender-neutral-profile-avatar-front-view-of-an-anonymous-person-face.jpg?s=612x612&w=0&k=20&c=_uqGw8h0Zhd3m4ImdedpdXZ8-UPxejbc2lGP5J5iTRs=' : null,
+          //       }).catch((err) => console.log(err));
 
-                await signInWithEmailAndPassword(auth, newUserEmail, newUserPassword).then(async () => {
-                  await sendEmailVerification(auth.currentUser).catch((e) => console.error("Verification error: " + e))
+          //       await signInWithEmailAndPassword(auth, newUserEmail, newUserPassword).then(async () => {
+          //         await sendEmailVerification(auth.currentUser).catch((e) => console.error("Verification error: " + e))
 
-                }).catch((e) => console.error("Signin error: " + e))
-                Alert.alert("Email di verificazione inviata", "Verifica il tuo account per poter accedere ai servizi ADT CUP!");
+          //       }).catch((e) => console.error("Signin error: " + e))
+          //       Alert.alert("Email di verificazione inviata", "Verifica il tuo account per poter accedere ai servizi ADT CUP!");
 
-              })
-              .catch((e) => console.log(e));
+          //     })
+          //     .catch((e) => console.log(e));
 
-          } catch (e) {
-            console.log(e.code);
-            if (e.code == "auth/email-already-in-use") {
-              Alert.alert("Email già utilizzato", "Torna alla schermata di login per recuperare la tua password o scegli una nuova mail");
-            }
-            if (e.code == "auth/invalid-email") {
-              Alert.alert("Formato email errato (esempio@mail.com)");
-            }
-          }
+          // } catch (e) {
+          //   console.log(e.code);
+          //   if (e.code == "auth/email-already-in-use") {
+          //     Alert.alert("Email già utilizzato", "Torna alla schermata di login per recuperare la tua password o scegli una nuova mail");
+          //   }
+          //   if (e.code == "auth/invalid-email") {
+          //     Alert.alert("Formato email errato (esempio@mail.com)");
+          //   }
+          // }
         } else {
           Alert.alert("Le password non coincidono");
         }
@@ -196,7 +206,7 @@ export default function Register({ navigation }) {
                   underlineColorAndroid="transparent"
                   placeholder="Conferma"
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
-                  onSubmitEditing={() => UserRegistration()}
+                  onSubmitEditing={() => UserRegistration({ newUserEmail, newUserPassword, newUserName, gender })}
                 />
                 <TouchableOpacity
                   style={{ position: "absolute", right: 10, padding: 10 }}
@@ -228,8 +238,8 @@ export default function Register({ navigation }) {
             <View style={styles.midTwo}>
               <TouchableOpacity
                 style={[styles.loginButton, { backgroundColor: loading ? 'gray' : colors.secondary }]}
-                onPress={UserRegistration}
-                disabled={loading}
+                onPress={() => UserRegistration({ newUserEmail, newUserPassword, newUserName, gender })}
+                disabled={authData?.loading == true || loading}
               >
                 <Text style={[styles.buttonText, { color: loading ? '#474747' : colors.primary }]}>REGISTRATI</Text>
               </TouchableOpacity>

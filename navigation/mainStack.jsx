@@ -27,6 +27,9 @@ import EditTeamInfo from "../screens/editTeamInfo";
 import PastEvents from "../screens/pastEvent";
 import BonusMalus from "../screens/bonusMalus";
 
+import { useDispatch, useSelector } from "react-redux";
+import { logoutAccount } from "../store/authSlice";
+
 
 const Stack = createStackNavigator();
 
@@ -34,9 +37,13 @@ export function LoggedInStack() {
   const [userData, setUserData] = useState(null);
   console.log("Logged In");
 
+  const authUid = useSelector(state => state.auth.uid)
+
+  const dispatch = useDispatch();
   const getUser = useCallback(async () => {
+    // dispatch(logoutAccount());
     try {
-      await getDoc(doc(db, "users", auth.currentUser?.uid)).then((snapshot) => {
+      await getDoc(doc(db, "users", authUid)).then((snapshot) => {
         if (snapshot.exists()) {
           setUserData(snapshot.data());
         }

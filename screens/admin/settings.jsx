@@ -4,7 +4,11 @@ import { colors } from "../../shared/colors";
 import { auth } from "../../firebase/firebase";
 import { Header } from "../../components/header";
 
+import { logoutAccount } from "../../store/authSlice";
+import { useDispatch } from "react-redux";
+
 export default function Settings() {
+  const dispatch = useDispatch();
   return (
     <>
       <Header />
@@ -19,7 +23,7 @@ export default function Settings() {
             borderRadius: 15,
           }}
           onPress={() => {
-            auth.signOut();
+            dispatch(logoutAccount());
           }}
         >
           <Text style={{ fontSize: 25, fontWeight: "800" }}>Log out</Text>
