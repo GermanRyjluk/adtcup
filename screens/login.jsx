@@ -16,7 +16,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { auth, db } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+//Redux
+// import { useDispatch } from 'react-redux';
+import { loginAccount } from '../store/authSlice';
+import { useDispatch } from 'react-redux'
 
 import { colors } from "../shared/colors";
 import { font } from "../shared/fonts";
@@ -30,6 +34,8 @@ export default function Login({ navigation }) {
 
   const [loading, setLoading] = useState(false)
 
+  const dispatch = useDispatch();
+
   const passwordIsVisible = () => {
     if (!isPasswordVisible) {
       return <Icon2 name="eye" size={20} color="white" />;
@@ -38,26 +44,27 @@ export default function Login({ navigation }) {
     }
   };
 
-  const UserLogIn = async () => {
+  // const dispatch = useDispatch();
+  const UserLogIn = async values => {
     setLoading(true);
     if (email.length !== 0 && password.length !== 0) {
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        // Fetch the user after successful login
-        const user = auth.currentUser;
-        console.log(user)
-        if (user) {
-          // Store user data in AsyncStorage
-          await AsyncStorage.setItem('user', JSON.stringify(user));
-        }
-      } catch (e) {
-        if (e.code === 'auth/user-not-found') {
-          Alert.alert('Email incorretto o inesistente');
-        } else if (e.code === 'auth/wrong-password') {
-          Alert.alert('Password errata');
-        }
-        console.error("Errore AsyncStorage: ", e.code);
-      }
+      dispatch(loginAccount(values));
+      // try {
+      //   await signInWithEmailAndPassword(auth, email, password);
+      //   // Fetch the user after successful login
+      //   // const user = auth.currentUser;
+      //   // console.log(user);
+      //   // if (user) {
+      //   // dispatch(setUser(user));
+      //   // }
+      // } catch (e) {
+      //   if (e.code === 'auth/user-not-found') {
+      //     Alert.alert('Email incorretto o inesistente');
+      //   } else if (e.code === 'auth/wrong-password') {
+      //     Alert.alert('Password errata');
+      //   }
+      //   console.error("Errore AsyncStorage: ", e.code);
+      // }
     } else {
       Alert.alert('Inserire credenziali');
     }
@@ -159,7 +166,7 @@ export default function Login({ navigation }) {
                   style={styles.input}
                   secureTextEntry={!isPasswordVisible}
                   onChangeText={(password) => setPassword(password)}
-                  onSubmitEditing={() => UserLogIn()}
+                  onSubmitEditing={() => UserLogIn({ email, password })}
                   underlineColorAndroid="transparent"
                   placeholder="Password"
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
@@ -187,7 +194,7 @@ export default function Login({ navigation }) {
               </View>
             </View>
             <View style={styles.midTwo}>
-              <TouchableOpacity style={[styles.loginButton, { backgroundColor: loading ? 'gray' : colors.secondary }]} onPress={UserLogIn} disabled={loading}>
+              <TouchableOpacity style={[styles.loginButton, { backgroundColor: loading ? 'gray' : colors.secondary }]} onPress={() => UserLogIn({ email, password })} disabled={loading}>
                 <Text style={[styles.buttonText, { color: loading ? '#474747' : colors.primary }]}>ACCEDI</Text>
               </TouchableOpacity>
               {/* <TouchableOpacity onPress={() => { }}>

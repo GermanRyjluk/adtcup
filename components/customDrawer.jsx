@@ -22,6 +22,9 @@ import { auth } from "../firebase/firebase";
 import { signOut, updateProfile } from "firebase/auth";
 import { font } from "../shared/fonts";
 
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutAccount } from '../store/authSlice';
+
 import { useNavigation } from '@react-navigation/native';
 
 const CustomDrawer = (props) => {
@@ -43,11 +46,11 @@ const CustomDrawer = (props) => {
       Alert.alert("Nome non cambiato", "il nome " + newName + " è uguale al precedente");
     }
   }
+
+  const dispatch = useDispatch();
   const logoutUser = async () => {
-    // Clear user data from AsyncStorage
-    // await AsyncStorage.removeItem('user');
-    // Sign out from Firebase
-    await signOut(auth);
+    // dispatch to the store with the logoutAccount action
+    dispatch(logoutAccount());
   };
 
 

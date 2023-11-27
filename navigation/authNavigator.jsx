@@ -10,78 +10,61 @@ import { colors } from "../shared/colors";
 import { Header } from "../components/header";
 import NotLoggedInDrawer, { LoggedInDrawer } from "./homeDrawer";
 
+import { useSelector } from 'react-redux';
+
 const Drawer = createDrawerNavigator();
 
 export default function AuthNavigator() {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null)
 
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        // Check if a user is already logged in
-        auth.onAuthStateChanged((user) => {
-          setUser(user);
-        });
-        // const storedUser = await AsyncStorage.getItem('user');
-        // if (storedUser) {
-        //   const parsedUser = JSON.parse(storedUser);
-        //   console.log(parsedUser)
-        //   // setUser(parsedUser);
-        // } else { setUser(null) }
-      } catch (error) {
-        console.error('Error retrieving user from AsyncStorage', error);
-      }
-    };
-
-    checkUser();
-  }, []);
-
+  // const user = useSelector(selectUser);d
+  // const dispatch = useDispatch();
 
   // useEffect(() => {
+  //   const checkUser = async () => {
+  //     try {
+  //       auth.onAuthStateChanged(auth, (userAuth) => {
+  //         if (userAuth) {
+  //           // user is logged in, send the user's details to redux, store the current user in the state
+  //           dispatch(
+  //             login({
+  //               email: userAuth.email,
+  //               uid: userAuth.uid,
+  //               displayName: userAuth.displayName,
+  //               photoUrl: userAuth.photoURL,
+  //             })
+  //           );
+  //         } else {
+  //           dispatch(logout());
+  //         }
+  //       });
+  //     } catch (error) {
+  //       console.error('Error retrieving user', error);
+  //     }
+  //   };
+
+  //   checkUser();
+  // }, [dispatch]);
+
+  // useEffect(() => {
+
+  const authStatus = useSelector(state => state.auth.auth)
+  // console.log("authStatus: ", authStatus);
+
   //   const checkUser = () => {
-  //     auth.onAuthStateChanged((user) => {
-  //       setUser(user);
-  //     });
+  // auth.onAuthStateChanged((user) => {
+  //   if (user) {
+  //     // console.log("USER: " + user + " " + user?.email);
+  //     setUser(user);
+  //   }
+  // });
+  // auth.onAuthStateChanged((user) => {
+  //   setUser(user);
+  // });
   //   };
   //   return checkUser();
   // }, []);
 
-  return <>{user ? <LoggedInDrawer /> : <NotLoggedInDrawer />}</>;
+  return <>{authStatus ? <LoggedInDrawer /> : <NotLoggedInDrawer />}</>;
 }
 
-// return (
-//   <Drawer.Navigator
-//     useLegacyImplementation={true}
-//     initialRouteName="Home"
-//     drawerContent={(props) => <CustomDrawer {...props} />}
-//     screenOptions={{
-//       headerShown: false,
-//       drawerPosition: "right",
-//       drawerActiveBackgroundColor: colors.primary,
-//       drawerActiveTintColor: "#fff",
-//       drawerInactiveTintColor: "#333",
-//       drawerLabelStyle: {
-//         // fontFamily: 'Roboto-Medium',
-//         fontSize: 15,
-//       },
-//     }}
-//   >
-//     {user ? (
-//       <Drawer.Screen
-//         name="LoggedIn"
-//         component={LoggedIn}
-//         options={{ header: () => <Header /> }}
-//       />
-//     ) : (
-//       <Drawer.Screen
-//         name="NotLoggedIn"
-//         component={NotLoggedIn}
-//         options={{ header: () => <Header /> }}
-//       />
-//     )}
-//   </Drawer.Navigator>
-// );
-
-// options={{
-//   drawerItemStyle: { height: 0 },
-// }}

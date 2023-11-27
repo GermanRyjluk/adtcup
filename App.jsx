@@ -5,20 +5,22 @@ import {
   StatusBar,
   StyleSheet,
 } from "react-native";
-
 import { colors } from "./shared/colors";
-
 import { NavigationContainer } from "@react-navigation/native";
-
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
 import AuthNavigator from "./navigation/authNavigator";
-
 import * as Font from "expo-font";
 import Loading from "./components/loading";
 
+// Redux
+import { Provider } from 'react-redux';
+import { store, persistor } from './store';  // Assuming you have set up your Redux store
+import { PersistGate } from 'redux-persist/integration/react'
+
 export default function App() {
-  const getFonts = () => {
+
+  // console.log("State: ", store.getState())
+  const getFonts = async () => {
     return Font.loadAsync({
       "cherry-regular": require("./assets/fonts/CherryBomb.ttf"),
       "m-3": require("./assets/fonts/Montserrat-Light.ttf"),
@@ -27,8 +29,8 @@ export default function App() {
     });
   };
 
-  // SplashScreen.preventAutoHideAsync();
   const [appIsReady, setAppIsReady] = useState(false);
+
   useEffect(() => {
     async function prepare() {
       try {
@@ -37,7 +39,6 @@ export default function App() {
         console.warn(e);
       } finally {
         setAppIsReady(true);
-        // SplashScreen.hideAsync();
       }
     }
 
@@ -47,20 +48,24 @@ export default function App() {
   if (!appIsReady) {
     return <Loading />;
   }
+
   return (
     <SafeAreaProvider>
       <StatusBar backgroundColor={colors.primary} />
-      <NavigationContainer>
-        <SafeAreaView
-          style={{
-            flex: 1,
-            backgroundColor: colors.primary,
-            // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-          }}
-        >
-          <AuthNavigator />
-        </SafeAreaView>
-      </NavigationContainer>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
+            <SafeAreaView
+              style={{
+                flex: 1,
+                backgroundColor: colors.primary,
+              }}
+            >
+              <AuthNavigator />
+            </SafeAreaView>
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
     </SafeAreaProvider>
   );
 }
