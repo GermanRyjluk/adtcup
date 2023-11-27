@@ -11,23 +11,26 @@ import {
 } from "react-native";
 import React, { useRef } from "react";
 import { colors } from "../shared/colors";
-import { auth } from "../firebase/firebase";
+
 import { PageIndicator } from "react-native-page-indicator";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
 import { sendEmailVerification } from "firebase/auth";
 
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSelector } from "react-redux";
 
 const pages = [{ text: "1" }, { text: "2" }, { text: "3" }];
 
 export default function EventInfo({ navigation, route }) {
+  const auth = useSelector(state => state.auth);
+
   const screen = route.params?.screen;
 
   const handleButton = () => {
     if (screen == 'inside') {
       navigation.goBack()
-    } else if (auth.currentUser) {
+    } else if (auth.auth) {
       if (auth.currentUser.emailVerified) {
         navigation.navigate("EventBooking", {
           eventID: route.params.eventID,
@@ -42,7 +45,9 @@ export default function EventInfo({ navigation, route }) {
           {
             text: "Già fatto",
             onPress: () => {
-              auth.currentUser.reload();
+              //FIX: funzione esterna che fa rimettere la password e fa il login di nuovo cosi da aggiornare i dati in auth
+              Alert.alert("Spiacenti", "C'è stato un errore, per risolverlo: chiudere account, effettuare nuovamente l'accesso e riprovare")
+              // auth.currentUser.reload();
             },
 
           },

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  Platform
 } from "react-native";
 import {
   DrawerContentScrollView,
@@ -18,8 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import { colors } from "../shared/colors";
-import { auth } from "../firebase/firebase";
-import { signOut, updateProfile } from "firebase/auth";
+import UpdateProfile from "../shared/updateName";
 import { font } from "../shared/fonts";
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,16 +28,17 @@ import { logoutAccount } from '../store/authSlice';
 import { useNavigation } from '@react-navigation/native';
 
 const CustomDrawer = (props) => {
+  const auth = useSelector(state => state.auth)
+
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState(auth.currentUser?.name);
 
   const navigation = useNavigation();
 
+  //TO FIX "TypeError: Cannot read property 'currentUser' of undefined"
   const updateCurrentUserName = async (name) => {
     if (auth.currentUser.displayName != name) {
-      updateProfile(auth.currentUser, {
-        displayName: name,
-      });
+      UpdateProfile({ name: name, email: auth.currentUser.email });
       setNewName(name);
       setEditing(false);
       Alert.alert("Nome cambiato con successo", "il nome " + newName + " verrà applicato al riavvio dell'app");
@@ -63,7 +64,7 @@ const CustomDrawer = (props) => {
       }}>
         <Image
           source={
-            auth.currentUser
+            auth.auth
               ? {
                 uri: auth.currentUser.photoURL,
               }
@@ -82,7 +83,7 @@ const CustomDrawer = (props) => {
           style={{
             width: "100%",
             flexDirection: "row",
-            justifyContent: auth.currentUser ? "space-evenly" : "center",
+            justifyContent: auth.auth ? "space-evenly" : "center",
             alignItems: "center",
           }}
         >
@@ -105,7 +106,7 @@ const CustomDrawer = (props) => {
           >
             {auth.currentUser.displayName}
           </TextInput> :
-            (auth.currentUser ?
+            (auth.auth ?
               <Text
                 style={{
                   color: "#fff",
@@ -118,16 +119,16 @@ const CustomDrawer = (props) => {
                 <Text style={{ fontSize: 15, fontFamily: font.bold, color: colors.primary }}>Accedi</Text>
               </TouchableOpacity>)
           }
-          {auth.currentUser ? (
+          {/* {auth.auth ? (
             !editing ?
               <>
                 <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
                   <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("QrCodeUser")} style={{ position: 'absolute', left: 10 }}>
-                  <Ionicons name="qr-code" size={25} color="white" />
-                </TouchableOpacity>
-              </>
+                </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => navigation.navigate("QrCodeUser")} style={{ position: 'absolute', left: 10 }}>
+            <Ionicons name="qr-code" size={25} color="white" />
+          </TouchableOpacity>
+          {/* </>
               : <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
                   <Ionicons name="checkmark-circle" size={25} color="white" />
@@ -136,12 +137,12 @@ const CustomDrawer = (props) => {
                   <Ionicons name="close-circle" size={25} color="white" />
                 </TouchableOpacity>
               </ View>
-          ) : null}
+          ) : null} */}
         </View>
       </View>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ marginTop: -50 }}
+        contentContainerStyle={{ marginTop: Platform.OS == 'ios' ? -50 : 0 }}
       >
         <View style={{ flex: 1, backgroundColor: colors.bg }}>
           <DrawerItemList {...props} />

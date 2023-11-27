@@ -5,7 +5,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 
 import * as Location from "expo-location";
 import { getDistance } from "geolib";
@@ -13,8 +13,11 @@ import { getDistance } from "geolib";
 import { compareAsc } from "date-fns";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useSelector } from "react-redux";
 
 export default function Ticket({ navigation, route }) {
+  const auth = useSelector(state => state.auth)
+
   const eventID = route.params.eventID;
   const [startingPoint, setStartingPoint] = useState(null)
   const [userLocation, setUserLocation] = useState(null);

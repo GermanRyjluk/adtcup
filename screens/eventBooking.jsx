@@ -2,13 +2,15 @@ import { View, Text, TouchableOpacity, Linking, Alert, Image } from "react-nativ
 import React, { useState } from "react";
 import { colors } from "../shared/colors";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 import { Header } from "../components/header";
 
 import CheckBox from "expo-checkbox";
 import { font } from "../shared/fonts";
+import { useSelector } from "react-redux";
 
 export default function EventBooking({ navigation, route }) {
+  const auth = useSelector(state => state.auth);
 
   const [completed, setCompleted] = useState(false);
   const [completedPrivacyPolicy, setCompletedPrivacyPolicy] = useState(false);

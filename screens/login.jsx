@@ -14,7 +14,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { auth, db } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 //Redux

@@ -14,7 +14,7 @@ import { colors } from "../shared/colors";
 import { font } from "../shared/fonts";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { QrButton } from "../components/qrButton";
-import { db, auth } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 
 import {
   addDoc,
@@ -26,8 +26,10 @@ import {
 
 import { Footer } from "../components/footer";
 import Loading from "../components/loading";
+import { useSelector } from "react-redux";
 
 export default function QuizHome({ navigation, route }) {
+  const auth = useSelector(state => state.auth);
   const [userTeam, setUserTeam] = useState("");
   const [quizData, setQuizData] = useState([null]);
 

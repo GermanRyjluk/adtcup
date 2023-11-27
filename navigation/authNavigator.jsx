@@ -17,7 +17,7 @@ const Drawer = createDrawerNavigator();
 export default function AuthNavigator() {
   // const [user, setUser] = useState(null)
 
-  // const user = useSelector(selectUser);d
+  // const user = useSelector(selectUser);
   // const dispatch = useDispatch();
 
   // useEffect(() => {

@@ -1,7 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { colors } from "../../shared/colors";
-import { auth } from "../../firebase/firebase";
 import { Header } from "../../components/header";
 
 import { logoutAccount } from "../../store/authSlice";

@@ -19,7 +19,7 @@ import TermsAndConditions from "../screens/termsAndConditions";
 import Hints from "../screens/hints";
 import userScoreboard from "../screens/userScoreboard";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 import Admin from "./adminStack";
 import { Header } from "../components/header";
 import Home from "../screens/home";
@@ -37,13 +37,13 @@ export function LoggedInStack() {
   const [userData, setUserData] = useState(null);
   console.log("Logged In");
 
-  const authUid = useSelector(state => state.auth.uid)
+  const auth = useSelector(state => state.auth);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const getUser = useCallback(async () => {
     // dispatch(logoutAccount());
     try {
-      await getDoc(doc(db, "users", authUid)).then((snapshot) => {
+      await getDoc(doc(db, "users", auth.currentUser.uid)).then((snapshot) => {
         if (snapshot.exists()) {
           setUserData(snapshot.data());
         }

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { colors } from "../shared/colors";
-import { auth, db } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 import { PageIndicator } from "react-native-page-indicator";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { differenceInMinutes } from "date-fns";

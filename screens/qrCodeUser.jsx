@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Header } from '../components/header'
-import { auth } from '../firebase/firebase'
 
 import QRCode from 'react-native-qrcode-svg';
 import { colors } from '../shared/colors';
 import { font } from '../shared/fonts';
+import { useSelector } from 'react-redux';
 
 export default function QrCodeUser() {
+    const auth = useSelector(state => state.auth);
     const code = auth.currentUser.uid;
     return (
         <>
