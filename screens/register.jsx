@@ -52,7 +52,6 @@ export default function Register({ navigation }) {
 
   //Redux
   const dispatch = useDispatch();
-  const authData = useSelector(state => state.authReducer)
   const UserRegistration = async (values) => {
     setLoading(true)
     // console.log(values)
@@ -239,9 +238,9 @@ export default function Register({ navigation }) {
               <TouchableOpacity
                 style={[styles.loginButton, { backgroundColor: loading ? 'gray' : colors.secondary }]}
                 onPress={() => UserRegistration({ newUserEmail, newUserPassword, newUserName, gender })}
-                disabled={authData?.loading == true || loading}
+                disabled={auth?.loading == true || loading}
               >
-                <Text style={[styles.buttonText, { color: loading ? '#474747' : colors.primary }]}>REGISTRATI</Text>
+                <Text style={[styles.buttonText, { color: auth?.loading == true || loading ? '#474747' : colors.primary }]}>REGISTRATI</Text>
               </TouchableOpacity>
             </View>
           </View>

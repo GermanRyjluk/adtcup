@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { colors } from "../../shared/colors";
 import { TextInput } from "react-native-gesture-handler";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../../firebase/firebase";
+import { db } from "../../firebase/firebase";
 import { Header } from "../../components/header";
 
 export default function TeamSettings({ navigation, route }) {

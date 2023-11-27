@@ -14,7 +14,7 @@ import { Header } from "../components/header";
 import { colors } from "../shared/colors";
 
 import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
-import { auth, db } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import Loading from "../components/loading";
 
 import * as SplashScreen from 'expo-splash-screen';
+import { useSelector } from "react-redux";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -64,6 +65,7 @@ const pastEvents = [
 ];
 
 export default function Home({ navigation }) {
+  const auth = useSelector(state => state.auth);
 
   const preloadImages = () => {
     fetch("https://www.virtuquotidiane.it/wp-content/uploads/2")
@@ -113,8 +115,8 @@ export default function Home({ navigation }) {
   };
 
   const handlePress = (eventID, scoreboardPublic) => {
-    setPressed(true)
-    auth.currentUser
+    setPressed(true);
+    auth.auth
       ? checkBookingStatus(eventID, scoreboardPublic)
       : navigation.navigate("EventInfo");
     setPressed(false)

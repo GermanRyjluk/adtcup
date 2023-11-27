@@ -9,21 +9,24 @@ import {
   Animated,
   Image,
   Linking,
+  ActivityIndicator,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { colors } from "../shared/colors";
-import { auth } from "../firebase/firebase";
 import { PageIndicator } from "react-native-page-indicator";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+// import { useSelector } from "react-redux";
 
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
 export default function PastEvents({ navigation, route }) {
+  // const auth = useSelector(state => state.auth);
+  const [loading, setLoading] = useState(false);
   const { width, height } = Dimensions.get("window");
   const scrollX = useRef(new Animated.Value(0)).current;
   return (
@@ -59,7 +62,13 @@ export default function PastEvents({ navigation, route }) {
                 alignItems: "center",
               }}
             >
-              <Image source={require("../assets/videoTorino.gif")} style={{ width: '100%', height: '75%', borderRadius: 20 }} />
+              {loading && <View style={{ width: '100%', height: '75%', borderRadius: 20, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator size="large" color={colors.primary} /></View>}
+              <Image source={require("../assets/videoTorino.gif")} style={{ width: '100%', height: '75%', borderRadius: 20 }} onLoadStart={() => {
+                setLoading(true);
+              }}
+                onLoadEnd={() => {
+                  setLoading(false);
+                }} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: "100%", marginVertical: 15 }}>
 
                 <TouchableOpacity style={{ width: 60, height: 60, backgroundColor: colors.secondary, justifyContent: 'center', alignItems: 'center', borderRadius: 20 }} onPress={() => Linking.openURL("https://www.tiktok.com/@adt_cup")}>
@@ -69,7 +78,7 @@ export default function PastEvents({ navigation, route }) {
                   <Ionicons name="logo-instagram" size={50} color={colors.primary} />
                 </TouchableOpacity>
               </View>
-              <Text style={{ fontFamily: font.bold, color: colors.secondary, fontSize: 23 }}>Premi per vedere di più!</Text>
+              <Text style={{ fontFamily: font.bold, color: colors.secondary, fontSize: 23, textAlign: 'center' }}>Premi per vedere di più!</Text>
             </View>
           </View>
           {/* <View

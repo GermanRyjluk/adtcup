@@ -6,10 +6,13 @@ import { Alert } from 'react-native';
 
 const initialState = {
     auth: false,
-    uid: '',
-    email: '',
-    displayName: '',
-    photoURL: '',
+    currentUser: {
+        uid: '',
+        email: '',
+        emailVerified: false,
+        displayName: '',
+        photoURL: '',
+    },
     loading: false,
 }
 
@@ -101,62 +104,83 @@ export const userSlice = createSlice({
         builder.addCase(registerAccount.pending, state => {
             state.loading = true;
             state.auth = false;
-            state.uid = '';
-            state.email = '';
-            state.displayName = '';
-            state.photoURL = '';
+            state.currentUser = {
+                uid: '',
+                email: '',
+                emailVerified: false,
+                displayName: '',
+                photoURL: '',
+            };
         })
         builder.addCase(registerAccount.fulfilled, (state, actions) => {
             state.loading = false;
             state.auth = true;
-            state.uid = actions.payload.uid;
-            state.email = actions.payload.email;
-            state.displayName = actions.payload.displayName;
-            state.photoURL = actions.payload.photoURL;
+            state.currentUser = {
+                uid: actions.payload.uid,
+                email: actions.payload.email,
+                emailVerified: actions.payload.emailVerified,
+                displayName: actions.payload.displayName,
+                photoURL: actions.payload.photoURL,
+            };
         })
         builder.addCase(registerAccount.rejected, state => {
             state.loading = false;
             state.auth = false;
-            state.uid = '';
-            state.email = '';
-            state.displayName = '';
-            state.photoURL = '';
+            state.currentUser = {
+                uid: '',
+                email: '',
+                emailVerified: false,
+                displayName: '',
+                photoURL: '',
+            };
         })
 
         //Login
         builder.addCase(loginAccount.pending, state => {
             state.loading = true;
             state.auth = false;
-            state.uid = '';
-            state.email = '';
-            state.displayName = '';
-            state.photoURL = '';
+            state.currentUser = {
+                uid: '',
+                email: '',
+                emailVerified: false,
+                displayName: '',
+                photoURL: '',
+            };
         })
         builder.addCase(loginAccount.fulfilled, (state, actions) => {
             state.loading = false;
             state.auth = true;
-            state.uid = actions.payload.uid;
-            state.email = actions.payload.email;
-            state.displayName = actions.payload.displayName;
-            state.photoURL = actions.payload.photoURL;
+            state.currentUser = {
+                uid: actions.payload.uid,
+                email: actions.payload.email,
+                emailVerified: actions.payload.emailVerified,
+                displayName: actions.payload.displayName,
+                photoURL: actions.payload.photoURL,
+            };
         })
         builder.addCase(loginAccount.rejected, state => {
             state.loading = false;
             state.auth = false;
-            state.uid = '';
-            state.email = '';
-            state.displayName = '';
-            state.photoURL = '';
+            state.currentUser = {
+                uid: '',
+                email: '',
+                emailVerified: false,
+                displayName: '',
+                photoURL: '',
+            };
         })
 
         //Logout
         builder.addCase(logoutAccount.fulfilled, (state, actions) => {
             state.loading = false;
             state.auth = false;
-            state.uid = '';
-            state.email = '';
-            state.displayName = '';
-            state.photoURL = '';
+            state.currentUser = {
+                uid: '',
+                email: '',
+                emailVerified: false,
+                displayName: '',
+                photoURL: '',
+            };
         })
     }
 });

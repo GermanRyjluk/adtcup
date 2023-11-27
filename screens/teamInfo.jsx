@@ -10,12 +10,14 @@ import { Footer } from "../components/footer";
 import Loading from "../components/loading";
 
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { auth, db, storage } from "../firebase/firebase";
+import { db, storage } from "../firebase/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { font } from "../shared/fonts";
+import { useSelector } from "react-redux";
 
 
 export default function TeamInfo({ navigation, route }) {
+  const auth = useSelector(state => state.auth)
   const eventID = "1VgaAztg9yvbzRLuIjql";
   const footer = route.params?.footer;
 

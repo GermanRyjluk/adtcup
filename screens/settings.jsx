@@ -3,11 +3,13 @@ import React from "react";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
 import { deleteUser, sendEmailVerification } from "firebase/auth";
-import { auth, db } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 import { colors } from "../shared/colors";
 import { deleteDoc, doc } from "firebase/firestore";
+import { useSelector } from "react-redux";
 
 export default function Settings({ navigation }) {
+  const auth = useSelector(state => state.auth)
 
   return (
     <>
