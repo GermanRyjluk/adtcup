@@ -19,7 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import { colors } from "../shared/colors";
-import UpdateProfile from "../shared/updateName";
+// import UpdateProfile from "../shared/updateName";
 import { font } from "../shared/fonts";
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -119,15 +119,17 @@ const CustomDrawer = (props) => {
                 <Text style={{ fontSize: 15, fontFamily: font.bold, color: colors.primary }}>Accedi</Text>
               </TouchableOpacity>)
           }
-          {/* {auth.auth ? (
-            !editing ?
-              <>
-                <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
-                  <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
-                </TouchableOpacity> */}
-          <TouchableOpacity onPress={() => navigation.navigate("QrCodeUser")} style={{ position: 'absolute', left: 10 }}>
-            <Ionicons name="qr-code" size={25} color="white" />
-          </TouchableOpacity>
+          {
+            auth.auth ? (
+              // !editing ?
+              //   <>
+              //     <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
+              //       <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
+              //     </TouchableOpacity> }
+              <TouchableOpacity onPress={() => navigation.navigate("QrCodeUser")} style={{ position: 'absolute', left: 10 }}>
+                <Ionicons name="qr-code" size={25} color="white" />
+              </TouchableOpacity>) : null
+          }
           {/* </>
               : <View style={{ flexDirection: 'row' }}>
                 <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
