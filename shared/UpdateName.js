@@ -1,3 +1,4 @@
+import React from 'react'
 import { updateProfile } from "firebase/auth";
 import { auth } from "firebase/auth";
 import { useState } from "react";
@@ -5,7 +6,7 @@ import { Alert } from "react-native";
 import { useDispatch } from "react-redux";
 import { loginAccount } from "../store/authSlice";
 
-export default async function UpdateProfile({ name, email }) {
+export default updateProfile = async (name, email) => {
     console.log(name, email);
     dispatch = useDispatch();
     const [password, setPassword] = useState(null)
@@ -34,10 +35,13 @@ export default async function UpdateProfile({ name, email }) {
             await updateProfile(auth.currentUser, {
                 displayName: name,
             });
+            return true;
         } catch (e) {
             console.error(e);
+            return fasle;
         }
     } else {
         Alert.alert("Errore", "Password non inserita");
+        return false;
     }
 }
