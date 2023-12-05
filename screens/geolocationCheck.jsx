@@ -39,7 +39,7 @@ export default function GeolocationCheck({ navigation, route }) {
   const [userLocation, setUserLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const radius = 1100;
+  const radius = 75;
   const startTime = new Date("2023-05-24T23:14:30.300Z");
 
   const checkTime = async () => {

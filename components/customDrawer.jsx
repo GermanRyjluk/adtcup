@@ -19,7 +19,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import { colors } from "../shared/colors";
-// import UpdateProfile from "../shared/updateName";
+// import { updateProfile } from "firebase/auth";
 import { font } from "../shared/fonts";
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,17 +36,18 @@ const CustomDrawer = (props) => {
   const navigation = useNavigation();
 
   //TO FIX "TypeError: Cannot read property 'currentUser' of undefined"
-  const updateCurrentUserName = async (name) => {
-    if (auth.currentUser.displayName != name) {
-      UpdateProfile({ name: name, email: auth.currentUser.email });
-      setNewName(name);
-      setEditing(false);
-      Alert.alert("Nome cambiato con successo", "il nome " + newName + " verrà applicato al riavvio dell'app");
-    } else {
-      setEditing(false);
-      Alert.alert("Nome non cambiato", "il nome " + newName + " è uguale al precedente");
-    }
-  }
+  // const updateCurrentUserName = async (name) => {
+  //   if (auth.currentUser.displayName != name) {
+  //     if (updateProfile(name, auth.currentUser.email)) {
+  //       setNewName(name);
+  //       setEditing(false);
+  //     }
+  //     Alert.alert("Nome cambiato con successo", "il nome " + newName + " verrà applicato al riavvio dell'app");
+  //   } else {
+  //     setEditing(false);
+  //     Alert.alert("Nome non cambiato", "il nome " + newName + " è uguale al precedente");
+  //   }
+  // }
 
   const dispatch = useDispatch();
   const logoutUser = async () => {
@@ -121,25 +122,24 @@ const CustomDrawer = (props) => {
           }
           {
             auth.auth ? (
-              // !editing ?
-              //   <>
-              //     <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
-              //       <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
-              //     </TouchableOpacity> }
-              <TouchableOpacity onPress={() => navigation.navigate("QrCodeUser")} style={{ position: 'absolute', left: 10 }}>
-                <Ionicons name="qr-code" size={25} color="white" />
-              </TouchableOpacity>) : null
-          }
-          {/* </>
-              : <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
-                  <Ionicons name="checkmark-circle" size={25} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setEditing(false)}>
-                  <Ionicons name="close-circle" size={25} color="white" />
-                </TouchableOpacity>
-              </ View>
-          ) : null} */}
+              !editing ?
+                <>
+                  {/* <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
+                    <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
+                  </TouchableOpacity> */}
+                  <TouchableOpacity onPress={() => navigation.navigate("QrCodeUser")} style={{ position: 'absolute', left: 10 }}>
+                    <Ionicons name="qr-code" size={25} color="white" />
+                  </TouchableOpacity>
+                </>
+                : <View style={{ flexDirection: 'row' }}>
+                  {/* <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
+                    <Ionicons name="checkmark-circle" size={25} color="white" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setEditing(false)}>
+                    <Ionicons name="close-circle" size={25} color="white" />
+                  </TouchableOpacity> */}
+                </ View>
+            ) : null}
         </View>
       </View>
       <DrawerContentScrollView

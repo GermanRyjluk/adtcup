@@ -28,7 +28,7 @@ export default function Ticket({ navigation, route }) {
 
   const [loading, setLoading] = useState(true)
 
-  const radius = 1000;
+  const radius = 70;
 
   const getPosition = async () => {
     setDistance(null)
@@ -51,6 +51,7 @@ export default function Ticket({ navigation, route }) {
 
     let location = await Location.getCurrentPositionAsync({})
     // console.log(location, pos)
+    setUserLocation(location)
     setDistance(getDistance(position, {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,

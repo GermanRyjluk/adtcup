@@ -7,6 +7,7 @@ import {
   Button,
   TouchableOpacity,
   Animated,
+  Platform,
 } from "react-native";
 import React, { useRef } from "react";
 import { colors } from "../shared/colors";
@@ -105,6 +106,15 @@ export default function EventInfo({ navigation, route }) {
                       }]}>In caso di parità al traguardo di più di 2 squadre, causa alleanza, nessuna tra queste sarà premiata come vincitrice della sfida;</Text>
                     </View>
                   </View>
+                  {Platform.OS == 'ios' ? <Text style={[styles.text, {
+                    fontSize: 15,
+                    textAlign: 'center',
+                    color: colors.bg,
+                    fontFamily: font.light,
+                    marginVertical: 30
+                  }]}>
+                    Apple is not a sponsor
+                  </Text> : null}
                 </ScrollView>
               </View>
             </View>
@@ -145,11 +155,20 @@ export default function EventInfo({ navigation, route }) {
                   suddivisa in 3 parti. Una caccia al tesoro per i bar della città che ha
                   determinato le prime tre finaliste.
                   Un’altra caccia al tesoro, questa volta tra le gemme nascoste della città,
-                  che ha visto vincitrici tre coppie. una finale, durante la quale i partecipanti
+                  che ha visto vincitrici tre coppie. Una finale, durante la quale i partecipanti
                   si sono cimentati in varie sfide per vincere l’ambito premio. Il tutto con il
                   convolgimento del pubblico, formato sia dai non finalisti che dagli spettatori
                   venuti per tifare i propri amici.
                 </Text>
+                {Platform.OS == 'ios' ? <Text style={[styles.text, {
+                  fontSize: 15,
+                  textAlign: 'center',
+                  color: colors.bg,
+                  fontFamily: font.light,
+                  marginVertical: 30
+                }]}>
+                  Apple is not a sponsor
+                </Text> : null}
               </ScrollView>
             </View>
           </View>
@@ -208,6 +227,16 @@ export default function EventInfo({ navigation, route }) {
                   Se cerchi un’alternativa ai soliti sabato tra discoteca e aperitivi, nasce un nuovo modo di vivere il weekend: l’ADT CUP, una caccia al tesoro urbana che vi farà fare festa per tutta la città con dei perfetti sconosciuti. Potrete scoprire il luogo, conoscere persone nuove e divertirvi ad affrontare le sfide nelle quali voi e il vostro team collaborerete per vincere il premio finale.
                   Il vero premio di questa competizione è però, il suo svolgimento. E’ un’esperienza unica, che vi permetterà di vivere un posto nuovo in un modo del tutto innovativo.
                 </Text>
+                {Platform.OS == 'ios' ? <Text style={[styles.text, {
+                  fontSize: 15,
+                  textAlign: 'center',
+                  color: colors.bg,
+                  fontFamily: font.light,
+                  marginVertical: 30
+                }]}>
+                  Apple is not a sponsor
+                </Text> : null}
+
               </ScrollView>
             </View>
           </View>
