@@ -3,14 +3,23 @@ import React from "react";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
 import { deleteUser, sendEmailVerification } from "firebase/auth";
-import { db } from "../firebase/firebase";
+import { db, auth } from "../firebase/firebase";
 import { colors } from "../shared/colors";
 import { deleteDoc, doc } from "firebase/firestore";
-import { useSelector } from "react-redux";
+
+import { useSelector, useDispatch } from "react-redux";
+import { logoutAccount } from '../store/authSlice';
 
 export default function Settings({ navigation }) {
-  const auth = useSelector(state => state.auth)
+  const dispatch = useDispatch();
 
+  const handleDeleteData = () => {
+    deleteUser(auth.currentUser);
+    deleteDoc(doc(db, "users", auth.currentUser.uid));
+    dispatch(logoutAccount());
+    navigation.navigate("Home");
+    Alert.alert("Account eliminato", "Tutti i dati relativi al tuo account sono stati eliminati");
+  }
   return (
     <>
       <Header />
@@ -24,7 +33,7 @@ export default function Settings({ navigation }) {
           <TouchableOpacity style={styles.box} onPress={() => { sendEmailVerification(auth.currentUser); Alert.alert("Email di verificazione inviata", "Verifica il tuo account per poter accedere ai servizi ADT CUP!") }}>
             <Text style={[styles.text, { fontFamily: font.medium }]}>Richiedi email di verifica</Text>
           </TouchableOpacity> : null}
-        {auth.currentUser ? <TouchableOpacity style={styles.box} onPress={() => { deleteUser(auth.currentUser); deleteDoc(doc(db, "users", auth.currentUser.uid)); navigation.navigate("Home"); Alert.alert("Account eliminato", "Tutti i dati relativi al tuo account sono stati eliminati") }}>
+        {auth.currentUser ? <TouchableOpacity style={styles.box} onPress={() => handleDeleteData()}>
           <Text style={[styles.text, { fontFamily: font.medium }]}>Cancella dati</Text>
         </TouchableOpacity> : null}
       </View>
