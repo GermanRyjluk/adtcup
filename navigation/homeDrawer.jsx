@@ -9,10 +9,9 @@ import { colors } from "../shared/colors";
 import Login from "../screens/login";
 import Register from "../screens/register";
 import RestorePWD from "../screens/restorePassword";
-import TermsAndConditions from '../screens/termsAndConditions';
+import TermsAndConditions from "../screens/termsAndConditions";
 
 import { LoggedInStack, NotLoggedInStack } from "./mainStack";
-import { Image, Text } from "react-native";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { font } from "../shared/fonts";
@@ -63,7 +62,11 @@ export function LoggedInDrawer() {
         component={TermsAndConditions}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="information-circle-outline" size={22} color={color} />
+            <Ionicons
+              name="information-circle-outline"
+              size={22}
+              color={color}
+            />
           ),
         }}
       />
@@ -120,7 +123,11 @@ export default function NotLoggedInDrawer() {
         component={TermsAndConditions}
         options={{
           drawerIcon: ({ color }) => (
-            <Ionicons name="information-circle-outline" size={22} color={color} />
+            <Ionicons
+              name="information-circle-outline"
+              size={22}
+              color={color}
+            />
           ),
         }}
       />

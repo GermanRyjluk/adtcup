@@ -19,8 +19,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 //Redux
 // import { useDispatch } from 'react-redux';
-import { loginAccount } from '../store/authSlice';
-import { useDispatch } from 'react-redux'
+import { loginAccount } from "../store/authSlice";
+import { useDispatch } from "react-redux";
 
 import { colors } from "../shared/colors";
 import { font } from "../shared/fonts";
@@ -32,7 +32,7 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -44,50 +44,15 @@ export default function Login({ navigation }) {
     }
   };
 
-  // const dispatch = useDispatch();
-  const UserLogIn = async values => {
+  const UserLogIn = async (values) => {
     setLoading(true);
     if (email.length !== 0 && password.length !== 0) {
       dispatch(loginAccount(values));
-      // try {
-      //   await signInWithEmailAndPassword(auth, email, password);
-      //   // Fetch the user after successful login
-      //   // const user = auth.currentUser;
-      //   // console.log(user);
-      //   // if (user) {
-      //   // dispatch(setUser(user));
-      //   // }
-      // } catch (e) {
-      //   if (e.code === 'auth/user-not-found') {
-      //     Alert.alert('Email incorretto o inesistente');
-      //   } else if (e.code === 'auth/wrong-password') {
-      //     Alert.alert('Password errata');
-      //   }
-      //   console.error("Errore AsyncStorage: ", e.code);
-      // }
     } else {
-      Alert.alert('Inserire credenziali');
+      Alert.alert("Inserire credenziali");
     }
     setLoading(false);
   };
-
-  // const UserLogIn = () => {
-  //   setLoading(true)
-  //   if (email.length != 0 && password.length != 0) {
-  //     signInWithEmailAndPassword(auth, email, password).catch((e) => {
-  //       if (e.code == "auth/user-not-found") {
-  //         Alert.alert("Email incorretto o inesistente");
-  //       }
-  //       if (e.code == "auth/wrong-password") {
-  //         Alert.alert("Password errata");
-  //       }
-  //       console.log(e.code)
-  //     });
-  //   } else {
-  //     Alert.alert("Inserire credenziali");
-  //   }
-  //   setLoading(false)
-  // };
 
   return (
     <KeyboardAwareScrollView style={styles.backGround}>
@@ -95,13 +60,10 @@ export default function Login({ navigation }) {
         <View style={styles.box}>
           <View style={styles.topZone}>
             <TouchableOpacity
-              style={{ position: 'absolute', left: 0, top: 20 }} onPress={() => navigation.navigate("HomeDrawer")}>
-
-              <Ionicons
-                name="arrow-back"
-                size={40}
-                color={colors.secondary}
-              />
+              style={{ position: "absolute", left: 0, top: 20 }}
+              onPress={() => navigation.navigate("HomeDrawer")}
+            >
+              <Ionicons name="arrow-back" size={40} color={colors.secondary} />
             </TouchableOpacity>
             <View
               style={{
@@ -194,8 +156,22 @@ export default function Login({ navigation }) {
               </View>
             </View>
             <View style={styles.midTwo}>
-              <TouchableOpacity style={[styles.loginButton, { backgroundColor: loading ? 'gray' : colors.secondary }]} onPress={() => UserLogIn({ email, password })} disabled={loading}>
-                <Text style={[styles.buttonText, { color: loading ? '#474747' : colors.primary }]}>ACCEDI</Text>
+              <TouchableOpacity
+                style={[
+                  styles.loginButton,
+                  { backgroundColor: loading ? "gray" : colors.secondary },
+                ]}
+                onPress={() => UserLogIn({ email, password })}
+                disabled={loading}
+              >
+                <Text
+                  style={[
+                    styles.buttonText,
+                    { color: loading ? "#474747" : colors.primary },
+                  ]}
+                >
+                  ACCEDI
+                </Text>
               </TouchableOpacity>
               {/* <TouchableOpacity onPress={() => { }}>
                 <Text style={styles.loginSubTextSkip}>Salta</Text>

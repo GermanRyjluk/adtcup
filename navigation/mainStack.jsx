@@ -30,14 +30,13 @@ import BonusMalus from "../screens/bonusMalus";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAccount } from "../store/authSlice";
 
-
 const Stack = createStackNavigator();
 
 export function LoggedInStack() {
   const [userData, setUserData] = useState(null);
   console.log("Logged In");
 
-  const auth = useSelector(state => state.auth);
+  const auth = useSelector((state) => state.auth);
 
   // const dispatch = useDispatch();
   const getUser = useCallback(async () => {
@@ -75,7 +74,10 @@ export function LoggedInStack() {
             <Stack.Screen name="PastEvents" component={PastEvents} />
             <Stack.Screen name="EventInfo" component={EventInfo} />
             <Stack.Screen name="EventBooking" component={EventBooking} />
-            <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
+            <Stack.Screen
+              name="TermsAndConditions"
+              component={TermsAndConditions}
+            />
             <Stack.Screen name="EventStatus" component={EventStatus} />
             <Stack.Screen name="Ticket" component={Ticket} />
             {/* <Stack.Screen
@@ -107,7 +109,10 @@ export function NotLoggedInStack() {
         <Stack.Screen name="Intro" component={Intro} />
         <Stack.Screen name="PastEvents" component={PastEvents} />
         <Stack.Screen name="EventInfo" component={EventInfo} />
-        <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
+        <Stack.Screen
+          name="TermsAndConditions"
+          component={TermsAndConditions}
+        />
         {/* <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} /> */}
       </Stack.Navigator>

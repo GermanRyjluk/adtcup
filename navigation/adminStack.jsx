@@ -1,8 +1,9 @@
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import React from "react";
-import { colors } from "../shared/colors";
 import { createStackNavigator } from "@react-navigation/stack";
-import Dashboard from "../screens/admin/dashboard";
+
+import Events from "../screens/admin/events";
+import NewEvent from "../screens/admin/newEvent";
+import EventDashboard from "../screens/admin/eventDashboard";
 import Stats from "../screens/admin/stats";
 import Teams from "../screens/admin/teams";
 import TeamSettings from "../screens/admin/teamSettings";
@@ -20,7 +21,9 @@ const Stack = createStackNavigator();
 export default function Admin() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen name="EventDashboard" component={EventDashboard} />
+      <Stack.Screen name="NewEvent" component={NewEvent} />
+      <Stack.Screen name="Events" component={Events} />
       <Stack.Screen name="Stats" component={Stats} />
       <Stack.Screen name="Teams" component={Teams} />
       <Stack.Screen name="TeamSettings" component={TeamSettings} />
@@ -31,7 +34,7 @@ export default function Admin() {
       <Stack.Screen name="Scoreboard" component={Scoreboard} />
       <Stack.Screen name="QrReader" component={QrReader} />
       <Stack.Screen name="BookingStatus" component={BookingStatus} />
-      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="AdminSettings" component={Settings} />
     </Stack.Navigator>
   );
 }

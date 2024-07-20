@@ -9,10 +9,15 @@ import {
   TextInput,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Header } from '../components/header'
+import { Header } from "../components/header";
 
 import { auth, db } from "../firebase/firebase";
-import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -24,17 +29,15 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { colors } from "../shared/colors";
 import { font } from "../shared/fonts";
-import CheckBox from "@react-native-community/checkbox";
 import Checkbox from "expo-checkbox";
 
-import { registerAccount } from '../store/authSlice'
+import { registerAccount } from "../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
 export default function Register({ navigation }) {
-
   const pressHandler = () => {
     navigation.navigate("Login");
   };
@@ -45,7 +48,7 @@ export default function Register({ navigation }) {
   const [newUserConfirmPassword, setUserConfirmPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const [checked, setChecked] = useState(false);
   const [gender, setGender] = useState(null);
@@ -53,7 +56,7 @@ export default function Register({ navigation }) {
   //Redux
   const dispatch = useDispatch();
   const UserRegistration = async (values) => {
-    setLoading(true)
+    setLoading(true);
     // console.log(values)
     if (newUserPassword.length >= 6) {
       if (
@@ -113,9 +116,12 @@ export default function Register({ navigation }) {
         Alert.alert("Inserire credenziali");
       }
     } else {
-      Alert.alert("Password troppo debole", "Lunghezza minima 6 caratteri, alemeno una lettera e un numero");
+      Alert.alert(
+        "Password troppo debole",
+        "Lunghezza minima 6 caratteri, alemeno una lettera e un numero"
+      );
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const passwordIsVisible = () => {
@@ -133,13 +139,10 @@ export default function Register({ navigation }) {
         <View style={styles.box}>
           <View style={styles.topZone}>
             <TouchableOpacity
-              style={{ marginBottom: 50 }} onPress={() => navigation.navigate("Login")}>
-
-              <Ionicons
-                name="arrow-back"
-                size={40}
-                color={colors.secondary}
-              />
+              style={{ marginBottom: 50 }}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <Ionicons name="arrow-back" size={40} color={colors.secondary} />
             </TouchableOpacity>
             <Text style={styles.loginText}>Crea un'account</Text>
             <Text style={styles.loginSubText}>
@@ -205,7 +208,14 @@ export default function Register({ navigation }) {
                   underlineColorAndroid="transparent"
                   placeholder="Conferma"
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
-                  onSubmitEditing={() => UserRegistration({ newUserEmail, newUserPassword, newUserName, gender })}
+                  onSubmitEditing={() =>
+                    UserRegistration({
+                      newUserEmail,
+                      newUserPassword,
+                      newUserName,
+                      gender,
+                    })
+                  }
                 />
                 <TouchableOpacity
                   style={{ position: "absolute", right: 10, padding: 10 }}
@@ -216,31 +226,75 @@ export default function Register({ navigation }) {
                   {passwordIsVisible()}
                 </TouchableOpacity>
               </View>
-              <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-evenly' }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                }}
+              >
                 <Text style={styles.checkBoxText}>Uomo</Text>
-                <Checkbox style={{ borderRadius: 50 }}
-                  value={checked && gender == 'm'}
-                  onValueChange={(state) => { setChecked(state); if (state) setGender("m") }}
-                  color={colors.secondary} />
+                <Checkbox
+                  style={{ borderRadius: 50 }}
+                  value={checked && gender == "m"}
+                  onValueChange={(state) => {
+                    setChecked(state);
+                    if (state) setGender("m");
+                  }}
+                  color={colors.secondary}
+                />
                 <Text style={styles.checkBoxText}>Donna</Text>
-                <Checkbox style={{ borderRadius: 50 }}
-                  value={checked && gender == 'f'}
-                  onValueChange={(state) => { setChecked(state); if (state) setGender("f") }}
-                  color={colors.secondary} />
+                <Checkbox
+                  style={{ borderRadius: 50 }}
+                  value={checked && gender == "f"}
+                  onValueChange={(state) => {
+                    setChecked(state);
+                    if (state) setGender("f");
+                  }}
+                  color={colors.secondary}
+                />
                 <Text style={styles.checkBoxText}>Altro</Text>
-                <Checkbox style={{ borderRadius: 50 }}
-                  value={checked && gender == 'n'}
-                  onValueChange={(state) => { setChecked(state); if (state) setGender("n") }}
-                  color={colors.secondary} />
+                <Checkbox
+                  style={{ borderRadius: 50 }}
+                  value={checked && gender == "n"}
+                  onValueChange={(state) => {
+                    setChecked(state);
+                    if (state) setGender("n");
+                  }}
+                  color={colors.secondary}
+                />
               </View>
             </View>
             <View style={styles.midTwo}>
               <TouchableOpacity
-                style={[styles.loginButton, { backgroundColor: loading ? 'gray' : colors.secondary }]}
-                onPress={() => UserRegistration({ newUserEmail, newUserPassword, newUserName, gender })}
+                style={[
+                  styles.loginButton,
+                  { backgroundColor: loading ? "gray" : colors.secondary },
+                ]}
+                onPress={() =>
+                  UserRegistration({
+                    newUserEmail,
+                    newUserPassword,
+                    newUserName,
+                    gender,
+                  })
+                }
                 disabled={auth?.loading == true || loading}
               >
-                <Text style={[styles.buttonText, { color: auth?.loading == true || loading ? '#474747' : colors.primary }]}>REGISTRATI</Text>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    {
+                      color:
+                        auth?.loading == true || loading
+                          ? "#474747"
+                          : colors.primary,
+                    },
+                  ]}
+                >
+                  REGISTRATI
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -373,6 +427,6 @@ const styles = StyleSheet.create({
   },
   checkBoxText: {
     fontFamily: font.medium,
-    color: colors.bg
+    color: colors.bg,
   },
 });

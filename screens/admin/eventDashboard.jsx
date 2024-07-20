@@ -9,10 +9,6 @@ import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 
 export default function Dashboard({ navigation }) {
-
-  const number = 3;
-  let i = 1;
-
   const handleRestart = () => {
     Alert.alert(
       "Riavvia Gioco",
@@ -28,7 +24,7 @@ export default function Dashboard({ navigation }) {
                 {
                   text: "Si",
                   onPress: async () => {
-                    Alert.alert("Gioco riavviato")
+                    Alert.alert("Gioco riavviato");
                   },
                   style: "cancel",
                 },
@@ -71,7 +67,7 @@ export default function Dashboard({ navigation }) {
           ),
       }
     );
-  }
+  };
 
   return (
     <>
@@ -99,20 +95,26 @@ export default function Dashboard({ navigation }) {
             <Ionicons name="book" size={50} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.box, {
-              backgroundColor: colors.bg,
-              marginBottom: 15,
-            }]}
+            style={[
+              styles.box,
+              {
+                backgroundColor: colors.bg,
+                marginBottom: 15,
+              },
+            ]}
             onPress={() => navigation.navigate("Bookings")}
           >
             <Text style={styles.text}>Prenotazioni</Text>
             <Ionicons name="list" size={50} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.box, {
-              backgroundColor: 'orange',
-              marginBottom: 15,
-            }]}
+            style={[
+              styles.box,
+              {
+                backgroundColor: "orange",
+                marginBottom: 15,
+              },
+            ]}
             onPress={() => navigation.navigate("QrReader", { admin: true })}
           >
             <Text style={styles.text}>Lettore Qr</Text>
@@ -138,17 +140,21 @@ export default function Dashboard({ navigation }) {
             <Text style={styles.text}>Statistiche</Text>
             <Ionicons name="analytics" size={50} />
           </TouchableOpacity> */}
-          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
             <TouchableOpacity
               style={[styles.box, { backgroundColor: "#B52F2F" }]}
-              onPress={() => { handleRestart() }}
+              onPress={() => {
+                handleRestart();
+              }}
             >
               <Ionicons name="flash" size={50} />
             </TouchableOpacity>
             <View style={{ width: 10, height: 100 }} />
             <TouchableOpacity
               style={[styles.box, { backgroundColor: "grey" }]}
-              onPress={() => navigation.navigate("Settings")}
+              onPress={() => navigation.navigate("AdminSettings")}
             >
               <Ionicons name="cog" size={50} />
             </TouchableOpacity>
@@ -173,8 +179,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly'
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
   text: {
     fontSize: 25,
