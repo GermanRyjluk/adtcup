@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { colors } from "../shared/colors";
 
 import Icon from "react-native-vector-icons/Octicons"; //Gear (gear) and Hamburger(three-bars)
-import Icon1 from "react-native-vector-icons/FontAwesome5"; //Troaaphy (trophy)
+import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
 import { QrButton } from "./qrButton";
 
 export const Footer = () => {

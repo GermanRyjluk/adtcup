@@ -2,7 +2,7 @@
   "expo": {
     "name": "ADTCUP",
     "slug": "ADTCUP",
-    "version": "1.0.8",
+    "version": "1.0.10",
     "targetSDKversion": "33",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,14 +22,14 @@
         "NSCameraUsageDescription": "Allow ADT CUP to use your camera to be able to read the QR codes that give you new quiz to play with!"
       },
       "bundleIdentifier": "com.ryyuuk.ADTCUP",
-      "buildNumber": "1.0.8"
+      "buildNumber": "1.0.10"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FEAE00"
       },
-      "versionCode": 9,
+      "versionCode": 11,
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",

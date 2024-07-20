@@ -10,7 +10,8 @@ import { colors } from "../shared/colors";
 import { Header } from "../components/header";
 import NotLoggedInDrawer, { LoggedInDrawer } from "./homeDrawer";
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutAccount } from "../store/authSlice";
 
 const Drawer = createDrawerNavigator();
 
@@ -19,6 +20,7 @@ export default function AuthNavigator() {
 
   // const user = useSelector(selectUser);
   // const dispatch = useDispatch();
+  // dispatch(logoutAccount());
 
   // useEffect(() => {
   //   const checkUser = async () => {
