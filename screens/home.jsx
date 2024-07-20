@@ -17,10 +17,10 @@ import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
 import { db } from "../firebase/firebase";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 import { font } from "../shared/fonts";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Loading from "../components/loading";
 
 import * as SplashScreen from "expo-splash-screen";
@@ -30,32 +30,32 @@ const Tab = createMaterialTopTabNavigator();
 
 // import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-const currentEvents = [
-  {
-    id: "1VgaAztg9yvbzRLuIjql",
-    name: "PAKO PAKO EDITION",
-    photo:
-      "https://firebasestorage.googleapis.com/v0/b/adt-cup.appspot.com/o/events%2FWhatsApp%20Image%202023-11-25%20at%2019.24.19.jpeg?alt=media&token=43267be2-33d4-4517-ad0b-6fb42a534cd2",
-    date: "08-12-2023",
-    isLocked: false,
-  },
-  {
-    id: "1VgaAztg9yvbzRLuIjql",
-    name: "D%$£FA/T=%§!oR(yto",
-    photo:
-      "https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg",
-    date: "24-8-2023",
-    isLocked: true,
-  },
-  {
-    id: "1VgaAztg9yvbzRLuIjql",
-    name: "D%$£FA/B=%§!Lo(ytA",
-    photo:
-      "https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg",
-    date: "25-8-2023",
-    isLocked: true,
-  },
-];
+// const currentEvents = [
+//   {
+//     id: "1VgaAztg9yvbzRLuIjql",
+//     name: "PAKO PAKO EDITION",
+//     photo:
+//       "https://firebasestorage.googleapis.com/v0/b/adt-cup.appspot.com/o/events%2FWhatsApp%20Image%202023-11-25%20at%2019.24.19.jpeg?alt=media&token=43267be2-33d4-4517-ad0b-6fb42a534cd2",
+//     date: "08-12-2023",
+//     isLocked: false,
+//   },
+//   {
+//     id: "1VgaAztg9yvbzRLuIjql",
+//     name: "D%$£FA/T=%§!oR(yto",
+//     photo:
+//       "https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg",
+//     date: "24-8-2023",
+//     isLocked: true,
+//   },
+//   {
+//     id: "1VgaAztg9yvbzRLuIjql",
+//     name: "D%$£FA/B=%§!Lo(ytA",
+//     photo:
+//       "https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg",
+//     date: "25-8-2023",
+//     isLocked: true,
+//   },
+// ];
 const pastEvents = [
   {
     name: "TORINO",
@@ -68,23 +68,29 @@ export default function Home({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [pressed, setPressed] = useState(false);
 
+  const [currentEvents, setCurrentEvents] = useState([]);
+
   const auth = useSelector((state) => state.auth);
 
   const preloadImages = () => {
-    fetch("https://www.virtuquotidiane.it/wp-content/uploads/2");
-    fetch(
-      "https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg"
-    );
-    fetch(
-      "https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg"
-    );
+    currentEvents.map((doc) => {
+      fetch(doc.photo);
+    });
   };
 
-  const loadEvents = async () => {};
+  const loadEvents = useCallback(async () => {
+    try {
+      await getDocs(collection(db, "events/")).then((snapshot) => {
+        setCurrentEvents(snapshot.docs.map((doc) => doc.data()));
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }, [currentEvents]);
 
   useEffect(() => {
+    loadEvents();
     preloadImages();
-    // loadEvents();
 
     setTimeout(() => {
       setLoading(false);
@@ -137,7 +143,7 @@ export default function Home({ navigation }) {
   const handleLocked = () => {
     Alert.alert(
       "Oh, che ti tocchi?!",
-      "Non vedi che nzi puo gioca?",
+      "Non vedi che non si puo giocare?",
       [
         {
           text: "Chiudi",
@@ -153,126 +159,128 @@ export default function Home({ navigation }) {
     return (
       <ScrollView style={{ flex: 1, padding: 15, backgroundColor: colors.bg }}>
         {currentEvents.map((data, i) => {
-          return (
-            <View
-              key={i}
-              style={[
-                styles.eventCard,
-                {
-                  backgroundColor: data.isLocked ? "#7a7a7a" : colors.primary,
-                },
-              ]}
-            >
-              {data.isLocked ? (
-                <View style={{ flex: 2, height: "100%", width: "100%" }}>
-                  <ImageBackground
-                    source={{ uri: data.photo }}
-                    imageStyle={{
-                      borderRadius: 15,
-                    }}
-                    style={{
-                      height: "100%",
-                      width: "100%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <View
+          if (data.isVisible) {
+            return (
+              <View
+                key={i}
+                style={[
+                  styles.eventCard,
+                  {
+                    backgroundColor: data.isLocked ? "#7a7a7a" : colors.primary,
+                  },
+                ]}
+              >
+                {data.isLocked ? (
+                  <View style={{ flex: 2, height: "100%", width: "100%" }}>
+                    <ImageBackground
+                      source={{ uri: data.photo }}
+                      imageStyle={{
+                        borderRadius: 15,
+                      }}
                       style={{
-                        position: "absolute",
-                        width: "100%",
                         height: "100%",
-                        backgroundColor: "gray",
-                        opacity: 0.7,
-                        borderTopRightRadius: 15,
-                        borderTopLeftRadius: 15,
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <View
+                        style={{
+                          position: "absolute",
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "gray",
+                          opacity: 0.7,
+                          borderTopRightRadius: 15,
+                          borderTopLeftRadius: 15,
+                        }}
+                      />
+                      <Icon1 name="lock" size={50} color="#474747" />
+                    </ImageBackground>
+                  </View>
+                ) : (
+                  <View style={{ flex: 2, height: "100%", width: "100%" }}>
+                    <Image
+                      source={{ uri: data.photo }}
+                      style={{
+                        borderRadius: 15,
+                        flex: 2,
+                        height: "100%",
+                        width: "100%",
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
                     />
-                    <Icon1 name="lock" size={50} color="#474747" />
-                  </ImageBackground>
-                </View>
-              ) : (
-                <View style={{ flex: 2, height: "100%", width: "100%" }}>
-                  <Image
-                    source={{ uri: data.photo }}
-                    style={{
-                      borderRadius: 15,
-                      flex: 2,
-                      height: "100%",
-                      width: "100%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  />
-                </View>
-              )}
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "space-evenly",
-                  width: "100%",
-                  padding: 15,
-                }}
-              >
+                  </View>
+                )}
                 <View
                   style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
+                    flex: 1,
                     alignItems: "center",
-                    marginBottom: 20,
+                    justifyContent: "space-evenly",
+                    width: "100%",
+                    padding: 15,
                   }}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 20,
-                      fontFamily: font.bold,
-                      width: "70%",
-                    }}
-                  >
-                    {data.name}
-                  </Text>
-                  {/* <Text
-                    style={{ color: "white", fontSize: 15, fontWeight: "500" }}
-                  >
-                    {data.date}
-                  </Text> */}
-                </View>
-                <TouchableOpacity
-                  onPress={() =>
-                    data.isLocked ? handleLocked() : handlePress(data.id)
-                  }
-                  style={{ width: "100%" }}
-                  disabled={pressed}
                 >
                   <View
                     style={{
                       width: "100%",
-                      height: 50,
-                      backgroundColor: data.isLocked
-                        ? "#474747"
-                        : colors.secondary,
-                      borderRadius: 15,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
                       alignItems: "center",
-                      justifyContent: "center",
+                      marginBottom: 20,
                     }}
                   >
                     <Text
                       style={{
-                        fontSize: 25,
-                        color: data.isLocked ? "#FFFFFF" : "#000000",
+                        color: "white",
+                        fontSize: 20,
                         fontFamily: font.bold,
+                        width: "70%",
                       }}
                     >
-                      Gioca
+                      {data.name}
                     </Text>
+                    {/* <Text
+                    style={{ color: "white", fontSize: 15, fontWeight: "500" }}
+                  >
+                    {data.date}
+                  </Text> */}
                   </View>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      data.isLocked ? handleLocked() : handlePress(data.id)
+                    }
+                    style={{ width: "100%" }}
+                    disabled={pressed}
+                  >
+                    <View
+                      style={{
+                        width: "100%",
+                        height: 50,
+                        backgroundColor: data.isLocked
+                          ? "#474747"
+                          : colors.secondary,
+                        borderRadius: 15,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 25,
+                          color: data.isLocked ? "#FFFFFF" : "#000000",
+                          fontFamily: font.bold,
+                        }}
+                      >
+                        Gioca
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          );
+            );
+          }
         })}
         <View style={{ width: "100%", height: 90 }} />
       </ScrollView>
