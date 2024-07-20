@@ -37,6 +37,7 @@
     "react-native-gesture-handler": "^2.9.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-maps": "1.3.2",
+    "react-native-modern-datepicker": "^1.0.0-beta.91",
     "react-native-onboarding-swiper": "^1.2.0",
     "react-native-page-indicator": "^1.0.0",
     "react-native-pager-view": "6.1.2",
