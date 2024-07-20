@@ -17,13 +17,13 @@ import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
 import { db } from "../firebase/firebase";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 import { font } from "../shared/fonts";
 import { useEffect, useState } from "react";
 import Loading from "../components/loading";
 
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen";
 import { useSelector } from "react-redux";
 
 const Tab = createMaterialTopTabNavigator();
@@ -37,7 +37,7 @@ const currentEvents = [
     photo:
       "https://firebasestorage.googleapis.com/v0/b/adt-cup.appspot.com/o/events%2FWhatsApp%20Image%202023-11-25%20at%2019.24.19.jpeg?alt=media&token=43267be2-33d4-4517-ad0b-6fb42a534cd2",
     date: "08-12-2023",
-    isLocked: false
+    isLocked: false,
   },
   {
     id: "1VgaAztg9yvbzRLuIjql",
@@ -45,7 +45,7 @@ const currentEvents = [
     photo:
       "https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg",
     date: "24-8-2023",
-    isLocked: true
+    isLocked: true,
   },
   {
     id: "1VgaAztg9yvbzRLuIjql",
@@ -53,7 +53,7 @@ const currentEvents = [
     photo:
       "https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg",
     date: "25-8-2023",
-    isLocked: true
+    isLocked: true,
   },
 ];
 const pastEvents = [
@@ -65,25 +65,31 @@ const pastEvents = [
 ];
 
 export default function Home({ navigation }) {
-  const auth = useSelector(state => state.auth);
-
-  const preloadImages = () => {
-    fetch("https://www.virtuquotidiane.it/wp-content/uploads/2")
-    fetch("https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg")
-    fetch("https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg")
-  }
-
   const [loading, setLoading] = useState(true);
   const [pressed, setPressed] = useState(false);
 
+  const auth = useSelector((state) => state.auth);
+
+  const preloadImages = () => {
+    fetch("https://www.virtuquotidiane.it/wp-content/uploads/2");
+    fetch(
+      "https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg"
+    );
+    fetch(
+      "https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg"
+    );
+  };
+
+  const loadEvents = async () => {};
+
   useEffect(() => {
     preloadImages();
+    // loadEvents();
 
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-  }, [])
-
+  }, []);
 
   const checkBookingStatus = async (eventID, scoreboardPublic) => {
     try {
@@ -92,8 +98,14 @@ export default function Home({ navigation }) {
       ).catch((e) => console.error(e));
 
       if (snapshot.exists()) {
-        if (snapshot.data().status == "pending" || snapshot.data().status == "pay" || snapshot.data().status == "waiting team") {
-          navigation.navigate("EventStatus", { status: snapshot.data().status });
+        if (
+          snapshot.data().status == "pending" ||
+          snapshot.data().status == "pay" ||
+          snapshot.data().status == "waiting team"
+        ) {
+          navigation.navigate("EventStatus", {
+            status: snapshot.data().status,
+          });
         } else if (snapshot.data().status == "pay") {
           navigation.navigate("EventStatus", { status: "pay" });
         } else if (snapshot.data().status == "can play") {
@@ -119,7 +131,7 @@ export default function Home({ navigation }) {
     auth.auth
       ? checkBookingStatus(eventID, scoreboardPublic)
       : navigation.navigate("EventInfo");
-    setPressed(false)
+    setPressed(false);
   };
 
   const handleLocked = () => {
@@ -138,18 +150,20 @@ export default function Home({ navigation }) {
   };
 
   const HomeScrollView = () => {
-
     return (
       <ScrollView style={{ flex: 1, padding: 15, backgroundColor: colors.bg }}>
         {currentEvents.map((data, i) => {
           return (
             <View
               key={i}
-              style={[styles.eventCard, {
-                backgroundColor: data.isLocked ? "#7a7a7a" : colors.primary
-              }]}
+              style={[
+                styles.eventCard,
+                {
+                  backgroundColor: data.isLocked ? "#7a7a7a" : colors.primary,
+                },
+              ]}
             >
-              {data.isLocked ?
+              {data.isLocked ? (
                 <View style={{ flex: 2, height: "100%", width: "100%" }}>
                   <ImageBackground
                     source={{ uri: data.photo }}
@@ -163,12 +177,21 @@ export default function Home({ navigation }) {
                       alignItems: "center",
                     }}
                   >
-                    <View style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'gray', opacity: 0.7, borderTopRightRadius: 15, borderTopLeftRadius: 15 }} />
+                    <View
+                      style={{
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "gray",
+                        opacity: 0.7,
+                        borderTopRightRadius: 15,
+                        borderTopLeftRadius: 15,
+                      }}
+                    />
                     <Icon1 name="lock" size={50} color="#474747" />
                   </ImageBackground>
-
                 </View>
-                :
+              ) : (
                 <View style={{ flex: 2, height: "100%", width: "100%" }}>
                   <Image
                     source={{ uri: data.photo }}
@@ -181,7 +204,8 @@ export default function Home({ navigation }) {
                       alignItems: "center",
                     }}
                   />
-                </ View>}
+                </View>
+              )}
               <View
                 style={{
                   flex: 1,
@@ -197,13 +221,15 @@ export default function Home({ navigation }) {
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginBottom: 20
+                    marginBottom: 20,
                   }}
                 >
                   <Text
                     style={{
-                      color: "white", fontSize: 20,
-                      fontFamily: font.bold, width: "70%",
+                      color: "white",
+                      fontSize: 20,
+                      fontFamily: font.bold,
+                      width: "70%",
                     }}
                   >
                     {data.name}
@@ -215,7 +241,9 @@ export default function Home({ navigation }) {
                   </Text> */}
                 </View>
                 <TouchableOpacity
-                  onPress={() => data.isLocked ? handleLocked() : handlePress(data.id)}
+                  onPress={() =>
+                    data.isLocked ? handleLocked() : handlePress(data.id)
+                  }
                   style={{ width: "100%" }}
                   disabled={pressed}
                 >
@@ -223,16 +251,25 @@ export default function Home({ navigation }) {
                     style={{
                       width: "100%",
                       height: 50,
-                      backgroundColor: data.isLocked ? '#474747' : colors.secondary,
+                      backgroundColor: data.isLocked
+                        ? "#474747"
+                        : colors.secondary,
                       borderRadius: 15,
                       alignItems: "center",
                       justifyContent: "center",
                     }}
                   >
-                    <Text style={{ fontSize: 25, color: data.isLocked ? "#FFFFFF" : "#000000", fontFamily: font.bold }}>Gioca</Text>
+                    <Text
+                      style={{
+                        fontSize: 25,
+                        color: data.isLocked ? "#FFFFFF" : "#000000",
+                        fontFamily: font.bold,
+                      }}
+                    >
+                      Gioca
+                    </Text>
                   </View>
                 </TouchableOpacity>
-
               </View>
             </View>
           );
@@ -286,7 +323,9 @@ export default function Home({ navigation }) {
                 >
                   <Text
                     style={{
-                      color: "white", fontSize: 25, fontFamily: font.bold,
+                      color: "white",
+                      fontSize: 25,
+                      fontFamily: font.bold,
                       marginBottom: 10,
                     }}
                   >
@@ -317,9 +356,7 @@ export default function Home({ navigation }) {
     );
   };
   if (loading) {
-    return (
-      <Loading />
-    );
+    return <Loading />;
   } else {
     return (
       <>
@@ -331,11 +368,12 @@ export default function Home({ navigation }) {
             tabBarStyle: { backgroundColor: colors.primary },
             tabBarLabelStyle: {
               fontSize: 15,
-              letterSpacing: 1, fontFamily: font.bold,
+              letterSpacing: 1,
+              fontFamily: font.bold,
               color: colors.secondary,
             },
             tabBarPressOpacity: 1,
-            tabBarPressColor: 'trasparent',
+            tabBarPressColor: "trasparent",
             tabBarIndicatorStyle: { backgroundColor: colors.secondary },
           }}
         >

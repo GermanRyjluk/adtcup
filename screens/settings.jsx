@@ -1,24 +1,23 @@
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Header } from "../components/header";
 import { font } from "../shared/fonts";
-import { deleteUser, sendEmailVerification } from "firebase/auth";
-import { db, auth } from "../firebase/firebase";
+import { sendEmailVerification } from "firebase/auth";
+import { db } from "../firebase/firebase";
 import { colors } from "../shared/colors";
 import { deleteDoc, doc } from "firebase/firestore";
 
 import { useSelector, useDispatch } from "react-redux";
-import { logoutAccount } from '../store/authSlice';
+import { deleteAccount } from '../store/authSlice';
 
 export default function Settings({ navigation }) {
+  const auth = useSelector(state => state.auth)
   const dispatch = useDispatch();
+  const [email, setEmail] = useState(auth.currentUser.email)
 
-  const handleDeleteData = () => {
-    deleteUser(auth.currentUser);
-    deleteDoc(doc(db, "users", auth.currentUser.uid));
-    dispatch(logoutAccount());
-    navigation.navigate("Home");
-    Alert.alert("Account eliminato", "Tutti i dati relativi al tuo account sono stati eliminati");
+
+  const handleDeleteData = async values => {
+    dispatch(deleteAccount(values));
   }
   return (
     <>
@@ -33,7 +32,25 @@ export default function Settings({ navigation }) {
           <TouchableOpacity style={styles.box} onPress={() => { sendEmailVerification(auth.currentUser); Alert.alert("Email di verificazione inviata", "Verifica il tuo account per poter accedere ai servizi ADT CUP!") }}>
             <Text style={[styles.text, { fontFamily: font.medium }]}>Richiedi email di verifica</Text>
           </TouchableOpacity> : null}
-        {auth.currentUser ? <TouchableOpacity style={styles.box} onPress={() => handleDeleteData()}>
+        {auth.currentUser ? <TouchableOpacity style={styles.box} onPress={() => {
+          Alert.prompt(
+            "Attenzione!",
+            "Stai per cancellare definitivamente tutti i dati relativi al tuo account, quest'azione è irreversibile. Digita la tua email per confermare",
+            [
+              {
+                text: "Cancel",
+                style: "cancel"
+              },
+              {
+                text: "OK",
+                onPress: password => {
+                  handleDeleteData({ email, password })
+                }
+              }
+            ],
+            "secure-text"
+          );
+        }}>
           <Text style={[styles.text, { fontFamily: font.medium }]}>Cancella dati</Text>
         </TouchableOpacity> : null}
       </View>

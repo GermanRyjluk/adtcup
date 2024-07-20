@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { createUserWithEmailAndPassword, reauthenticateWithCredential, sendEmailVerification, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth, db } from '../firebase/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { Alert } from 'react-native';
+import { deleteUser } from 'firebase/auth'
 
 const initialState = {
     auth: false,
@@ -86,6 +87,38 @@ export const logoutAccount = createAsyncThunk('auth/logout', async () => {
             await auth.signOut();
         } catch (e) {
             console.error(e);
+        }
+    }
+    return {};
+})
+
+export const deleteAccount = createAsyncThunk('auth/delete', async ({ email, password }) => {
+    let user = auth.currentUser;
+    if (user) {
+        // console.log(email, password);
+        // deleteUser(user);
+        // deleteDoc(doc(db, "users", auth.currentUser.uid));
+        // navigation.navigate("Home");
+        Alert.alert("Account eliminato", "Tutti i dati relativi al tuo account sono stati eliminati");
+    } else {
+        try {
+            await signInWithEmailAndPassword(auth, email, password).then(() => {
+                let user = auth.currentUser;
+                if (user) {
+                    // console.log(email, password);
+                    // deleteUser(user);
+                    // deleteDoc(doc(db, "users", auth.currentUser.uid));
+                    // navigation.navigate("Home");
+                    Alert.alert("Account eliminato", "Tutti i dati relativi al tuo account sono stati eliminati");
+                }
+            });
+        } catch (e) {
+            if (e.code === 'auth/user-not-found') {
+                Alert.alert('Email incorretto o inesistente');
+            } else if (e.code === 'auth/wrong-password') {
+                Alert.alert('Password errata');
+            }
+            console.error("Errore login: ", e.code);
         }
     }
     return {};
@@ -181,6 +214,21 @@ export const userSlice = createSlice({
                 displayName: '',
                 photoURL: '',
             };
+        })
+
+        //Delete
+        builder.addCase(deleteAccount.fulfilled, (state, actions) => {
+            state.loading = false;
+            state.auth = false;
+            state.currentUser = {
+                uid: '',
+                email: '',
+                emailVerified: false,
+                displayName: '',
+                photoURL: '',
+            };
+        })
+        builder.addCase(deleteAccount.rejected, (state, actions) => {
         })
     }
 });

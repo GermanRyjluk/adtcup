@@ -16,6 +16,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { QrButton } from "../components/qrButton";
 import { db } from "../firebase/firebase";
 
+import Icon from "react-native-vector-icons/MaterialIcons";
+
 import {
   addDoc,
   doc,
@@ -46,17 +48,17 @@ export default function QuizHome({ navigation, route }) {
   // ---------------- FETCH FUNCTIONS ---------------- //
 
   //Get Scoreboard status
-  // const checkScoreboard = async () => {
-  //   try {
-  //     await getDoc(doc(db, "events", eventID)).then((snapshot) => {
-  //       if (snapshot.exists()) {
-  //         setScoreboardPublic(snapshot.data()["scoreboardPublic"]);
-  //       }
-  //     });
-  //   } catch (e) {
-  //     console.error("Error getting scoreboard status: ", e);
-  //   }
-  // };
+  const checkScoreboard = async () => {
+    try {
+      await getDoc(doc(db, "events", eventID)).then((snapshot) => {
+        if (snapshot.exists()) {
+          setScoreboardPublic(snapshot.data()["scoreboardPublic"]);
+        }
+      });
+    } catch (e) {
+      console.error("Error getting scoreboard status: ", e);
+    }
+  };
 
   //Get new quiz and update database
   const getNewQuiz = useCallback(async (quiz, team) => {
@@ -194,7 +196,7 @@ export default function QuizHome({ navigation, route }) {
   //On refresh
   const handleRefresh = () => {
     setRefreshing(true);
-    // checkScoreboard();
+    checkScoreboard();
     if (quizID === undefined) {
       console.log("Last Quiz");
       getTeamAndData();
@@ -248,7 +250,7 @@ export default function QuizHome({ navigation, route }) {
           <View
             style={{
               width: "100%",
-              height: 500,
+              height: 450,
               backgroundColor: colors.primary,
               borderRadius: 20,
             }}
@@ -325,7 +327,7 @@ export default function QuizHome({ navigation, route }) {
             <TouchableOpacity
               style={{
                 height: "100%",
-                width: 150,
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -349,11 +351,38 @@ export default function QuizHome({ navigation, route }) {
                 Indizi
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                height: "100%", paddingHorizontal: 15,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() =>
+                scoreboardPublic
+                  ? navigation.navigate("userScoreboard")
+                  : Alert.alert(
+                    "Classifica non disponibile",
+                    "In questa fase della gara non è possibile vedere la classifica"
+                  )
+              }
+            >
+              <Icon name="leaderboard" size={55} color={colors.secondary} />
+              {/* <Text
+                style={{
+                  fontSize: 25,
+                  fontFamily: font.bold,
+                  color: colors.secondary,
+                }}
+              >
+                Classifica
+              </Text> */}
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={{
-                height: "100%",
-                width: 150,
+                height: "100%", paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -424,7 +453,7 @@ export default function QuizHome({ navigation, route }) {
           <View
             style={{
               width: "100%",
-              height: 500,
+              height: 450,
               backgroundColor: colors.primary,
               borderRadius: 20,
             }}
@@ -491,7 +520,7 @@ export default function QuizHome({ navigation, route }) {
             <TouchableOpacity
               style={{
                 height: "100%",
-                width: 150,
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -515,11 +544,38 @@ export default function QuizHome({ navigation, route }) {
                 Indizi
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                height: "100%", paddingHorizontal: 15,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() =>
+                scoreboardPublic
+                  ? navigation.navigate("userScoreboard")
+                  : Alert.alert(
+                    "Classifica non disponibile",
+                    "In questa fase della gara non è possibile vedere la classifica"
+                  )
+              }
+            >
+              <Icon name="leaderboard" size={55} color={colors.secondary} />
+              {/* <Text
+                style={{
+                  fontSize: 25,
+                  fontFamily: font.bold,
+                  color: colors.secondary,
+                }}
+              >
+                Classifica
+              </Text> */}
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={{
-                height: "100%",
-                width: 150,
+                height: "100%", paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -562,7 +618,7 @@ export default function QuizHome({ navigation, route }) {
           <View
             style={{
               width: "100%",
-              height: 500,
+              height: 450,
               backgroundColor: colors.primary,
               borderRadius: 20,
             }}
@@ -613,17 +669,18 @@ export default function QuizHome({ navigation, route }) {
             <TouchableOpacity
               style={{
                 height: "100%",
-                width: 150,
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate("Hint", {
                   eventID: eventID,
                   userTeam: userTeam,
                 })
+              }
               }
             >
               <Text
@@ -636,11 +693,38 @@ export default function QuizHome({ navigation, route }) {
                 Indizi
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                height: "100%", paddingHorizontal: 15,
+                backgroundColor: colors.primary,
+                borderRadius: 30,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() =>
+                scoreboardPublic
+                  ? navigation.navigate("userScoreboard")
+                  : Alert.alert(
+                    "Classifica non disponibile",
+                    "In questa fase della gara non è possibile vedere la classifica"
+                  )
+              }
+            >
+              <Icon name="leaderboard" size={55} color={colors.secondary} />
+              {/* <Text
+                style={{
+                  fontSize: 25,
+                  fontFamily: font.bold,
+                  color: colors.secondary,
+                }}
+              >
+                Classifica
+              </Text> */}
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={{
-                height: "100%",
-                width: 150,
+                height: "100%", paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
