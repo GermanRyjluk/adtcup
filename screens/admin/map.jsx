@@ -16,6 +16,8 @@ import { colors } from "../../shared/colors";
 import { font } from "../../shared/fonts";
 import { Header } from "../../components/header";
 
+import Icon from "react-native-vector-icons/Ionicons";
+
 const eventID = "1VgaAztg9yvbzRLuIjql";
 
 // status = pending - can pay - waiting team - can play - playing
@@ -34,10 +36,14 @@ export default function Map({ navigation }) {
   const getTeamsFromDB = useCallback(async () => {
     setRefreshing(true);
     try {
-      const snapshot = getDocs(query(collection(db, "/events", eventID, "/teams"), orderBy("number", "asc")))
-        .then((QuerySnapshot) => {
-          setPlayers(QuerySnapshot.docs.map((doc) => doc.data()));
-        });
+      const snapshot = getDocs(
+        query(
+          collection(db, "/events", eventID, "/teams"),
+          orderBy("number", "asc")
+        )
+      ).then((QuerySnapshot) => {
+        setPlayers(QuerySnapshot.docs.map((doc) => doc.data()));
+      });
     } catch (e) {
       console.error(e);
     }
@@ -64,9 +70,26 @@ export default function Map({ navigation }) {
         }}
         key={i}
       >
-        <Text style={{ fontSize: 20, fontFamily: font.bold }}>{player.number} - {player.name}</Text>
+        <View>
+          <Text style={{ fontSize: 20, fontFamily: font.bold }}>
+            {player.number} - {player.name}
+          </Text>
+        </View>
         <View style={{ flexDirection: "row" }}>
-          <Text style={{ fontSize: 20, fontFamily: font.bold }}>{player.lastQuizNum}</Text>
+          <TouchableOpacity
+            style={{
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              backgroundColor: colors.secondary,
+              borderRadius: 10,
+              marginRight: 15,
+            }}
+          >
+            <Icon name="caret-forward" size={35} color="white" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 20, fontFamily: font.bold }}>
+            {player.lastQuizNum}
+          </Text>
         </View>
       </View>
     );
@@ -110,8 +133,7 @@ export default function Map({ navigation }) {
               // marginVertical: 15,
               justifyContent: "space-around",
             }}
-          >
-          </View>
+          ></View>
         </View>
         {players.map((player, i) => {
           if (search == "") {

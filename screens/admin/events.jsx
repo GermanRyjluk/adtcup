@@ -58,6 +58,7 @@ const Events = ({ navigation }) => {
         {events.map((doc, i) => {
           return (
             <View
+              key={i}
               style={{
                 paddingVertical: 20,
                 paddingHorizontal: 15,
