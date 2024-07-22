@@ -8,20 +8,30 @@ import {
   RefreshControl,
   TextInput,
 } from "react-native";
+import { useSelector } from "react-redux";
 import CheckBox from "expo-checkbox";
 import React, { useCallback, useEffect, useState } from "react";
-import { collection, deleteDoc, doc, getDocs, or, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  or,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { colors } from "../../shared/colors";
 import { Header } from "../../components/header";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const eventID = "1VgaAztg9yvbzRLuIjql";
+// const eventID = "1VgaAztg9yvbzRLuIjql";
 
 // status = pending - can pay - waiting team - can play - playing
 
 export default function Bookings({ navigation }) {
+  const eventID = useSelector((state) => state.eventID.value);
+
   const [players, setPlayers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
@@ -85,7 +95,7 @@ export default function Bookings({ navigation }) {
         cancelable: true,
       }
     );
-  }
+  };
 
   const handleUpgradeState = async (status, uid) => {
     if (status == "pending") {
@@ -188,16 +198,17 @@ export default function Bookings({ navigation }) {
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
               padding: 10,
             }}
             onPress={() => handleDelete(player.uid)}
           >
-
             <Ionicons name="trash" size={30} />
           </TouchableOpacity>
-          {player.status == "waiting team" || player.status == "can play" || player.status == "playing" ? (
+          {player.status == "waiting team" ||
+          player.status == "can play" ||
+          player.status == "playing" ? (
             <TouchableOpacity
               style={{
                 padding: 10,
@@ -206,25 +217,25 @@ export default function Bookings({ navigation }) {
                 navigation.navigate("PlayerSettings", {
                   playerID: player.uid,
                   playerName: player.name,
-                  playerStatus: player.status
+                  playerStatus: player.status,
                 });
               }}
             >
               <Ionicons name="build" size={35} />
             </TouchableOpacity>
           ) : null}
-          {player.status != 'waiting team' && player.status != 'playing' ? <TouchableOpacity
-            style={{
-              padding: 10,
-            }}
-            onPress={() => {
-              handleUpgradeState(player.status, player.uid);
-            }}
-          >
-
-            <Ionicons name="arrow-forward" size={40} />
-          </TouchableOpacity> : null}
-
+          {player.status != "waiting team" && player.status != "playing" ? (
+            <TouchableOpacity
+              style={{
+                padding: 10,
+              }}
+              onPress={() => {
+                handleUpgradeState(player.status, player.uid);
+              }}
+            >
+              <Ionicons name="arrow-forward" size={40} />
+            </TouchableOpacity>
+          ) : null}
         </View>
       </View>
     );

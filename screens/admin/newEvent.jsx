@@ -6,24 +6,24 @@ import Checkbox from "expo-checkbox";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
 import DatePicker from "react-native-modern-datepicker";
-import { format } from "date-fns";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import { format, setDate } from "date-fns";
+import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 
 const NewEvent = () => {
   const [name, setName] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState("second");
+  const [eventDate, setEventDate] = useState(today);
   const [price, setPrice] = useState("");
   const [photoLink, setPhotoLink] = useState("");
   const [isLocked, setIsLocked] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [scoreboard, setScoreboard] = useState(true);
-  const [EventDate, setEventDate] = useState(today);
 
   var today = format(new Date(), "yyyy-MM-dd");
 
   const createEvent = async () => {
-    let dateFormatted = new Date(date);
+    const date = parseDate(eventDate);
     try {
       await addDoc(collection(db, "events/"), {
         name: name,
@@ -33,7 +33,7 @@ const NewEvent = () => {
         isLocked: isLocked,
         isVisible: isVisible,
         scoreboardPublic: scoreboard,
-        startTime: dateFormatted,
+        startTime: date,
       }).then(() => {
         Alert.alert(
           "Evento creato",
@@ -43,6 +43,15 @@ const NewEvent = () => {
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const parseDate = (dateString) => {
+    const [datePart, timePart] = dateString.split(" ");
+    const [year, month, day] = datePart.split("/");
+    const [hours, minutes] = timePart.split(":");
+
+    // Note: Months are 0-indexed in JavaScript Date
+    return new Date(year, month - 1, day, hours, minutes);
   };
 
   return (
@@ -82,6 +91,7 @@ const NewEvent = () => {
             backgroundColor: colors.bg,
             padding: 15,
           }}
+          onChange={(str) => setName(str)}
         />
         <TextInput
           placeholder="Data"
@@ -91,16 +101,18 @@ const NewEvent = () => {
             backgroundColor: colors.bg,
             padding: 15,
           }}
+          onChange={(str) => setDate(str)}
         />
         <TextInput
           placeholder="Prezzo"
-          keyboardType="number"
+          keyboardType="number-pad"
           style={{
             marginBottom: 10,
             borderRadius: 10,
             backgroundColor: colors.bg,
             padding: 15,
           }}
+          onChange={(str) => setPrice(str)}
         />
         <TextInput
           placeholder="Link Immagine"
@@ -110,6 +122,7 @@ const NewEvent = () => {
             backgroundColor: colors.bg,
             padding: 15,
           }}
+          onChange={(str) => setPhotoLink(str)}
         />
         <View
           style={{

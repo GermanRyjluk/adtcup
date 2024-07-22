@@ -10,39 +10,44 @@ import {
 } from "react-native";
 import CheckBox from "expo-checkbox";
 import React, { useCallback, useEffect, useState } from "react";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { colors } from "../../shared/colors";
 import { font } from "../../shared/fonts";
 import { Header } from "../../components/header";
 
 import Icon from "react-native-vector-icons/Ionicons";
+import { useSelector } from "react-redux";
 
-const eventID = "1VgaAztg9yvbzRLuIjql";
-
-// status = pending - can pay - waiting team - can play - playing
+// const eventID = "1VgaAztg9yvbzRLuIjql";
 
 export default function Map({ navigation }) {
+  const eventID = useSelector((state) => state.eventID.value);
+
   const [players, setPlayers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
-
-  const [red, setRed] = useState(false);
-  const [yellow, setYellow] = useState(false);
-  const [orange, setOrange] = useState(false);
-  const [blue, setBlue] = useState(false);
-  const [green, setGreen] = useState(false);
 
   const getTeamsFromDB = useCallback(async () => {
     setRefreshing(true);
     try {
       const snapshot = getDocs(
         query(
-          collection(db, "/events", eventID, "/teams"),
-          orderBy("number", "asc")
+          collection(db, "events", eventID, "teams"),
+          orderBy("lastQuizNum", "desc")
         )
-      ).then((QuerySnapshot) => {
-        setPlayers(QuerySnapshot.docs.map((doc) => doc.data()));
+      ).then((snapshot) => {
+        setPlayers(snapshot.docs.map((doc) => doc.data()));
       });
     } catch (e) {
       console.error(e);
@@ -53,6 +58,49 @@ export default function Map({ navigation }) {
   useEffect(() => {
     getTeamsFromDB();
   }, []);
+
+  const handleSkipStage = async (lastQuizNum, teamNumber) => {
+    try {
+      await getDocs(
+        query(
+          collection(db, "events", eventID, "quiz"),
+          where("number", "==", (lastQuizNum + 1).toString())
+        )
+      ).then(async (snapshot) => {
+        let nextStageID = snapshot.docs.map((doc) => doc.id);
+        try {
+          await updateDoc(doc(db, "events/", eventID, "teams/", teamNumber), {
+            lastQuiz: nextStageID[0],
+            lastQuizNum: lastQuizNum + 1,
+          });
+          await setDoc(
+            doc(
+              db,
+              "events",
+              eventID,
+              "teams",
+              teamNumber,
+              "quiz",
+              nextStageID[0]
+            ),
+            {
+              scanned: true,
+              time: serverTimestamp(),
+            }
+          );
+          Alert.alert(
+            "Aggiornato!",
+            "Aggiornamento quiz avvenuto correttamente"
+          );
+          getTeamsFromDB();
+        } catch (e) {
+          console.error("Errore aggiornando valore quiz squadra: " + e);
+        }
+      });
+    } catch (e) {
+      console.error("Errore trovando nuovo quiz: " + e);
+    }
+  };
 
   const render = (player, i) => {
     return (
@@ -75,7 +123,13 @@ export default function Map({ navigation }) {
             {player.number} - {player.name}
           </Text>
         </View>
-        <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <TouchableOpacity
             style={{
               paddingVertical: 5,
@@ -83,7 +137,10 @@ export default function Map({ navigation }) {
               backgroundColor: colors.secondary,
               borderRadius: 10,
               marginRight: 15,
+              alignItems: "center",
+              justifyContent: "center",
             }}
+            onPress={() => handleSkipStage(player.lastQuizNum, player.number)}
           >
             <Icon name="caret-forward" size={35} color="white" />
           </TouchableOpacity>

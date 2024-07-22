@@ -21,12 +21,15 @@ import {
 import { db } from "../../firebase/firebase";
 import { colors } from "../../shared/colors";
 import { Header } from "../../components/header";
+import { useSelector } from "react-redux";
 
-const eventID = "1VgaAztg9yvbzRLuIjql";
+// const eventID = "1VgaAztg9yvbzRLuIjql";
 
 // status = pending - can pay - waiting team - can play - playing
 
 export default function MapPlayers({ navigation, route }) {
+  const eventID = useSelector((state) => state.eventID.value);
+
   const [players, setPlayers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");

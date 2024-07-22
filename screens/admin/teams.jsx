@@ -18,28 +18,26 @@ import { Header } from "../../components/header";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const eventID = "1VgaAztg9yvbzRLuIjql";
-
-// status = pending - can pay - waiting team - can play - playing
+// const eventID = "1VgaAztg9yvbzRLuIjql";
 
 export default function Map({ navigation }) {
+  const eventID = useSelector((state) => state.eventID.value);
+
   const [teams, setTeams] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
 
-  const [red, setRed] = useState(false);
-  const [yellow, setYellow] = useState(false);
-  const [orange, setOrange] = useState(false);
-  const [blue, setBlue] = useState(false);
-  const [green, setGreen] = useState(false);
-
   const getTeamsFromDB = useCallback(async () => {
     setRefreshing(true);
     try {
-      const snapshot = getDocs(query(collection(db, "/events", eventID, "/teams"), orderBy("number", "asc")))
-        .then((QuerySnapshot) => {
-          setTeams(QuerySnapshot.docs.map((doc) => doc.data()));
-        });
+      const snapshot = getDocs(
+        query(
+          collection(db, "/events", eventID, "/teams"),
+          orderBy("number", "asc")
+        )
+      ).then((QuerySnapshot) => {
+        setTeams(QuerySnapshot.docs.map((doc) => doc.data()));
+      });
     } catch (e) {
       console.error(e);
     }
@@ -66,8 +64,15 @@ export default function Map({ navigation }) {
         }}
         key={i}
       >
-        <Text style={{ fontSize: 20, fontFamily: font.bold }}>{player.number} - {player.name}</Text>
-        <TouchableOpacity style={{ padding: 10 }} onPress={() => { navigation.navigate("TeamSettings", { teamNum: player.number }) }}>
+        <Text style={{ fontSize: 20, fontFamily: font.bold }}>
+          {player.number} - {player.name}
+        </Text>
+        <TouchableOpacity
+          style={{ padding: 10 }}
+          onPress={() => {
+            navigation.navigate("TeamSettings", { teamNum: player.number });
+          }}
+        >
           <Ionicons name="build" size={35} />
         </TouchableOpacity>
       </View>
@@ -112,8 +117,7 @@ export default function Map({ navigation }) {
               // marginVertical: 15,
               justifyContent: "space-around",
             }}
-          >
-          </View>
+          ></View>
         </View>
         {teams.map((player, i) => {
           if (search == "") {

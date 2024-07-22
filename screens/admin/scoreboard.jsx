@@ -21,12 +21,14 @@ import {
 import { db } from "../../firebase/firebase";
 import { Header } from "../../components/header";
 
+import { useSelector } from "react-redux";
+
 export default function Scoreboard() {
+  const eventID = useSelector((state) => state.eventID.value);
+
   const [isPublic, setIsPublic] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [teams, setTeams] = useState([]);
-
-  const eventID = "1VgaAztg9yvbzRLuIjql";
 
   const handleSwitch = async () => {
     setIsPublic((previousState) => !previousState);
@@ -126,7 +128,7 @@ export default function Scoreboard() {
             marginBottom: 20,
             padding: 5,
             borderRadius: 10,
-            padding: 20
+            padding: 20,
           }}
         >
           <Text
@@ -188,7 +190,11 @@ export default function Scoreboard() {
                     onPress={() => handleIncrease(team.number, team.points)}
                   >
                     <Text
-                      style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "800",
+                        marginBottom: 3,
+                      }}
                     >
                       +
                     </Text>
@@ -205,7 +211,11 @@ export default function Scoreboard() {
                     onPress={() => handleDecrease(team.number, team.points)}
                   >
                     <Text
-                      style={{ fontSize: 20, fontWeight: "800", marginBottom: 3 }}
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "800",
+                        marginBottom: 3,
+                      }}
                     >
                       -
                     </Text>

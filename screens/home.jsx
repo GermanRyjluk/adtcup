@@ -81,7 +81,7 @@ export default function Home({ navigation }) {
   const loadEvents = useCallback(async () => {
     try {
       await getDocs(collection(db, "events/")).then((snapshot) => {
-        setCurrentEvents(snapshot.docs.map((doc) => doc.data()));
+        setCurrentEvents(snapshot.docs.map((doc) => doc));
       });
     } catch (e) {
       console.error(e);
@@ -134,6 +134,7 @@ export default function Home({ navigation }) {
 
   const handlePress = (eventID, scoreboardPublic) => {
     setPressed(true);
+    console.log(eventID);
     auth.auth
       ? checkBookingStatus(eventID, scoreboardPublic)
       : navigation.navigate("EventInfo");
@@ -159,21 +160,23 @@ export default function Home({ navigation }) {
     return (
       <ScrollView style={{ flex: 1, padding: 15, backgroundColor: colors.bg }}>
         {currentEvents.map((data, i) => {
-          if (data.isVisible) {
+          if (data.data().isVisible) {
             return (
               <View
                 key={i}
                 style={[
                   styles.eventCard,
                   {
-                    backgroundColor: data.isLocked ? "#7a7a7a" : colors.primary,
+                    backgroundColor: data.data().isLocked
+                      ? "#7a7a7a"
+                      : colors.primary,
                   },
                 ]}
               >
-                {data.isLocked ? (
+                {data.data().isLocked ? (
                   <View style={{ flex: 2, height: "100%", width: "100%" }}>
                     <ImageBackground
-                      source={{ uri: data.photo }}
+                      source={{ uri: data.data().photo }}
                       imageStyle={{
                         borderRadius: 15,
                       }}
@@ -201,7 +204,7 @@ export default function Home({ navigation }) {
                 ) : (
                   <View style={{ flex: 2, height: "100%", width: "100%" }}>
                     <Image
-                      source={{ uri: data.photo }}
+                      source={{ uri: data.data().photo }}
                       style={{
                         borderRadius: 15,
                         flex: 2,
@@ -239,7 +242,7 @@ export default function Home({ navigation }) {
                         width: "70%",
                       }}
                     >
-                      {data.name}
+                      {data.data().name}
                     </Text>
                     {/* <Text
                     style={{ color: "white", fontSize: 15, fontWeight: "500" }}
@@ -249,7 +252,9 @@ export default function Home({ navigation }) {
                   </View>
                   <TouchableOpacity
                     onPress={() =>
-                      data.isLocked ? handleLocked() : handlePress(data.id)
+                      data.data().isLocked
+                        ? handleLocked()
+                        : handlePress(data.id, data.data().scoreboardPublic)
                     }
                     style={{ width: "100%" }}
                     disabled={pressed}
@@ -258,7 +263,7 @@ export default function Home({ navigation }) {
                       style={{
                         width: "100%",
                         height: 50,
-                        backgroundColor: data.isLocked
+                        backgroundColor: data.data().isLocked
                           ? "#474747"
                           : colors.secondary,
                         borderRadius: 15,
@@ -269,7 +274,7 @@ export default function Home({ navigation }) {
                       <Text
                         style={{
                           fontSize: 25,
-                          color: data.isLocked ? "#FFFFFF" : "#000000",
+                          color: data.data().isLocked ? "#FFFFFF" : "#000000",
                           fontFamily: font.bold,
                         }}
                       >
