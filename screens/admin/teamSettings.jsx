@@ -7,7 +7,8 @@ import { db } from "../../firebase/firebase";
 import { Header } from "../../components/header";
 
 export default function TeamSettings({ navigation, route }) {
-  const eventID = "1VgaAztg9yvbzRLuIjql";
+  // const eventID = "1VgaAztg9yvbzRLuIjql";
+  const eventID = useSelector((state) => state.eventID.value);
   teamNum = route.params.teamNum;
   const handlePress = async (team) => {
     if (team != "") {

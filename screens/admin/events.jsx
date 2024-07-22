@@ -5,18 +5,36 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { colors } from "../../shared/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
 import Icon from "react-native-vector-icons/Ionicons";
 
+import { useDispatch } from "react-redux";
+import { setEventIDValue } from "../../store/eventIDSlice";
+
 const Events = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const [events, setEvents] = useState([]);
   const getEvents = useCallback(async () => {
-    await getDocs(collection(db, "events/")).then((snapshot) => {
-      setEvents(snapshot.docs.map((doc) => doc.data()));
-    });
+    try {
+      await getDocs(collection(db, "events/")).then((snapshot) => {
+        setEvents(snapshot.docs.map((doc) => doc));
+      });
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
   useEffect(() => {
     getEvents();
   }, []);
+
+  const handleLocked = async () => {};
+  const handleVisible = async () => {};
+  const handleDelete = async () => {};
+  const handleSelect = async (id) => {
+    dispatch(setEventIDValue(id));
+    navigation.navigate("EventDashboard");
+  };
 
   return (
     <View style={{ backgroundColor: colors.bg, height: "100%" }}>
@@ -77,12 +95,12 @@ const Events = ({ navigation }) => {
                     marginBottom: 5,
                   }}
                 >
-                  {doc.name}
+                  {doc.data().name}
                 </Text>
                 <Text
                   style={{ color: colors.bg, fontSize: 12, fontWeight: "800" }}
                 >
-                  {doc.date}
+                  {doc.data().date}
                 </Text>
               </View>
               <View
@@ -93,45 +111,34 @@ const Events = ({ navigation }) => {
                   top: "50%",
                 }}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    if (doc.isLocked) {
-                    } else {
-                    }
-                  }}
-                >
-                  {doc.isLocked ? (
+                <TouchableOpacity onPress={() => handleLocked()}>
+                  {doc.data().isLocked ? (
+                    <Icon name="lock-open" size={35} color="white" />
+                  ) : (
+                    <Icon name="lock-closed" size={35} color="white" />
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleVisible()}>
+                  {doc.data().isVisible ? (
                     <Icon
-                      name="lock-open"
+                      name="eye-off"
                       size={35}
                       color="white"
                       style={{ marginHorizontal: 10 }}
                     />
                   ) : (
                     <Icon
-                      name="lock-closed"
+                      name="eye"
                       size={35}
                       color="white"
                       style={{ marginHorizontal: 10 }}
                     />
                   )}
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    if (doc.isLocked) {
-                    } else {
-                    }
-                  }}
-                >
+                <TouchableOpacity onPress={() => handleDelete()}>
                   <Icon name="trash" size={35} color="white" />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    if (doc.isLocked) {
-                    } else {
-                    }
-                  }}
-                >
+                <TouchableOpacity onPress={() => handleSelect(doc.data().id)}>
                   <Icon
                     name="build"
                     size={35}
