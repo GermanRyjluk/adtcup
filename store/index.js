@@ -1,4 +1,3 @@
-// store.js
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {
   persistStore,
@@ -11,7 +10,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import authReducer from "./authSlice";
-import eventIDReducer from "./eventIDSlice"; // Import your new slice
+import eventIDReducer from "./eventIDSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const rootReducer = combineReducers({

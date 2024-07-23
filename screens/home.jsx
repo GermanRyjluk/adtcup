@@ -30,32 +30,6 @@ const Tab = createMaterialTopTabNavigator();
 
 // import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-// const currentEvents = [
-//   {
-//     id: "1VgaAztg9yvbzRLuIjql",
-//     name: "PAKO PAKO EDITION",
-//     photo:
-//       "https://firebasestorage.googleapis.com/v0/b/adt-cup.appspot.com/o/events%2FWhatsApp%20Image%202023-11-25%20at%2019.24.19.jpeg?alt=media&token=43267be2-33d4-4517-ad0b-6fb42a534cd2",
-//     date: "08-12-2023",
-//     isLocked: false,
-//   },
-//   {
-//     id: "1VgaAztg9yvbzRLuIjql",
-//     name: "D%$£FA/T=%§!oR(yto",
-//     photo:
-//       "https://travel.thewom.it/content/uploads/sites/4/2022/09/villa-della-regina-704x528.jpeg",
-//     date: "24-8-2023",
-//     isLocked: true,
-//   },
-//   {
-//     id: "1VgaAztg9yvbzRLuIjql",
-//     name: "D%$£FA/B=%§!Lo(ytA",
-//     photo:
-//       "https://visitupbologna.com/wp-content/uploads/2017/07/Portici_Bologna_Via_De_Carbonesi.jpg",
-//     date: "25-8-2023",
-//     isLocked: true,
-//   },
-// ];
 const pastEvents = [
   {
     name: "TORINO",

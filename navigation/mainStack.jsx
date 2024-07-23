@@ -34,7 +34,7 @@ const Stack = createStackNavigator();
 
 export function LoggedInStack() {
   const [userData, setUserData] = useState(null);
-  console.log("Logged In");
+  // console.log("Logged In");
 
   const auth = useSelector((state) => state.auth);
 
@@ -57,7 +57,7 @@ export function LoggedInStack() {
 
   if (userData) {
     if (userData["420"] != undefined) {
-      console.log("Admin");
+      // console.log("Admin");
       return <Admin />;
     } else {
       console.log("User");
