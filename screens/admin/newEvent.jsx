@@ -12,7 +12,6 @@ import { db } from "../../firebase/firebase";
 
 const NewEvent = () => {
   const [name, setName] = useState("");
-  const [date, setDate] = useState("second");
   const [eventDate, setEventDate] = useState(today);
   const [price, setPrice] = useState("");
   const [photoLink, setPhotoLink] = useState("");
@@ -27,7 +26,6 @@ const NewEvent = () => {
     try {
       await addDoc(collection(db, "events/"), {
         name: name,
-        date: date,
         price: price,
         photo: photoLink,
         isLocked: isLocked,
@@ -91,17 +89,7 @@ const NewEvent = () => {
             backgroundColor: colors.bg,
             padding: 15,
           }}
-          onChange={(str) => setName(str)}
-        />
-        <TextInput
-          placeholder="Data"
-          style={{
-            marginBottom: 10,
-            borderRadius: 10,
-            backgroundColor: colors.bg,
-            padding: 15,
-          }}
-          onChange={(str) => setDate(str)}
+          onChangeText={(str) => setName(str)}
         />
         <TextInput
           placeholder="Prezzo"
@@ -112,7 +100,7 @@ const NewEvent = () => {
             backgroundColor: colors.bg,
             padding: 15,
           }}
-          onChange={(str) => setPrice(str)}
+          onChangeText={(str) => setPrice(str)}
         />
         <TextInput
           placeholder="Link Immagine"
@@ -122,7 +110,7 @@ const NewEvent = () => {
             backgroundColor: colors.bg,
             padding: 15,
           }}
-          onChange={(str) => setPhotoLink(str)}
+          onChangeText={(str) => setPhotoLink(str)}
         />
         <View
           style={{

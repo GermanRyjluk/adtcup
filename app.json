@@ -3,7 +3,7 @@
     "name": "ADTCUP",
     "slug": "ADTCUP",
     "version": "1.0.12",
-    "targetSDKversion": "33",
+    "targetSDKversion": "34",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

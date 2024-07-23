@@ -5,8 +5,6 @@ import { font } from "../../shared/fonts";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Header } from "../../components/header";
-import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
 
 export default function Dashboard({ navigation }) {
   const handleRestart = () => {
