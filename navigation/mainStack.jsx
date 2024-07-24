@@ -60,7 +60,7 @@ export function LoggedInStack() {
       // console.log("Admin");
       return <Admin />;
     } else {
-      console.log("User");
+      // console.log("User");
       return (
         <>
           {/* <Header /> */}
@@ -99,7 +99,7 @@ export function LoggedInStack() {
   }
 }
 export function NotLoggedInStack() {
-  console.log("Not Logged In");
+  // console.log("Not Logged In");
   return (
     <>
       {/* <Header /> */}
