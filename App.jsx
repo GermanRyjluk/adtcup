@@ -1,10 +1,6 @@
 import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-} from "react-native";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 import { colors } from "./shared/colors";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -13,12 +9,14 @@ import * as Font from "expo-font";
 import Loading from "./components/loading";
 
 // Redux
-import { Provider } from 'react-redux';
-import { store, persistor } from './store';  // Assuming you have set up your Redux store
-import { PersistGate } from 'redux-persist/integration/react'
+import { Provider } from "react-redux";
+import { store, persistor } from "./store"; // Assuming you have set up your Redux store
+import { PersistGate } from "redux-persist/integration/react";
+
+import registerNNPushToken from "native-notify";
 
 export default function App() {
-
+  registerNNPushToken(22645, "RLdbS1bBfc9vjKoy0FA8x1");
   // console.log("State: ", store.getState())
   const getFonts = async () => {
     return Font.loadAsync({

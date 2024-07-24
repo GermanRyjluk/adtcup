@@ -23,7 +23,7 @@ const Drawer = createDrawerNavigator();
 export function LoggedInDrawer() {
   return (
     <Drawer.Navigator
-      useLegacyImplementation={true}
+      // useLegacyImplementation={true}
       initialRouteName="Home"
       drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
