@@ -272,7 +272,12 @@ export default function EventInfo({ navigation, route }) {
                       }}
                       contentContainerStyle={{ alignItems: "center" }}
                     >
-                      <Text style={[styles.text, { color: colors.secondary }]}>
+                      <Text
+                        style={[
+                          styles.text,
+                          { color: colors.secondary, textAlign: "center" },
+                        ]}
+                      >
                         {doc.data().mainTitle}
                       </Text>
                       <Text

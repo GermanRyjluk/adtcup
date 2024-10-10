@@ -192,7 +192,7 @@ export default function TeamInfo({ navigation, route }) {
           </View>
           <View style={{ height: 150 }} />
         </ScrollView>
-        {footer ? null : <Footer />}
+        {footer ? null : <Footer eventID={eventID} />}
       </>
     );
   } else {

@@ -783,5 +783,7 @@ export default function QuizHome({ navigation, route }) {
         <Footer eventID={eventID} />
       </>
     );
+  } else {
+    return <Loading />;
   }
 }
