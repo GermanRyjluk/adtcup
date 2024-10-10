@@ -100,6 +100,7 @@ export default function Home({ navigation }) {
         }
       } else {
         navigation.navigate("EventInfo", { eventID: eventID });
+        console.log("vamosss: ", eventID);
       }
     } catch (e) {
       console.error(e);
@@ -108,10 +109,10 @@ export default function Home({ navigation }) {
 
   const handlePress = (eventID, scoreboardPublic) => {
     setPressed(true);
-    console.log(eventID);
+    // console.log(eventID);
     auth.auth
       ? checkBookingStatus(eventID, scoreboardPublic)
-      : navigation.navigate("EventInfo");
+      : navigation.navigate("EventInfo", { eventID: eventID });
     setPressed(false);
   };
 
