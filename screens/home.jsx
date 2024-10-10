@@ -7,6 +7,7 @@ import {
   ImageBackground,
   Image,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 
 import { Header } from "../components/header";
@@ -72,6 +73,7 @@ export default function Home({ navigation }) {
   }, []);
 
   const checkBookingStatus = async (eventID, scoreboardPublic) => {
+    setPressed(true);
     try {
       const snapshot = await getDoc(
         doc(db, "/events", eventID, "/bookings", auth.currentUser.uid)
@@ -100,30 +102,30 @@ export default function Home({ navigation }) {
         }
       } else {
         navigation.navigate("EventInfo", { eventID: eventID });
-        console.log("vamosss: ", eventID);
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setPressed(false);
     }
   };
 
   const handlePress = (eventID, scoreboardPublic) => {
-    setPressed(true);
-    // console.log(eventID);
     auth.auth
       ? checkBookingStatus(eventID, scoreboardPublic)
       : navigation.navigate("EventInfo", { eventID: eventID });
-    setPressed(false);
   };
 
   const handleLocked = () => {
     Alert.alert(
-      "Oh, che ti tocchi?!",
+      "Oh, perchè tocchi?!",
       "Non vedi che non si puo giocare?",
       [
         {
           text: "Chiudi",
-          onPress: () => console.log("Cancel Pressed"),
+          onPress: () => {
+            // console.log("Cancel Pressed");
+          },
           style: "cancel",
         },
       ],
@@ -246,15 +248,19 @@ export default function Home({ navigation }) {
                         justifyContent: "center",
                       }}
                     >
-                      <Text
-                        style={{
-                          fontSize: 25,
-                          color: data.data().isLocked ? "#FFFFFF" : "#000000",
-                          fontFamily: font.bold,
-                        }}
-                      >
-                        Gioca
-                      </Text>
+                      {pressed ? (
+                        <ActivityIndicator color="black" />
+                      ) : (
+                        <Text
+                          style={{
+                            fontSize: 25,
+                            color: data.data().isLocked ? "#FFFFFF" : "#000000",
+                            fontFamily: font.bold,
+                          }}
+                        >
+                          Gioca
+                        </Text>
+                      )}
                     </View>
                   </TouchableOpacity>
                 </View>

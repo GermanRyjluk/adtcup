@@ -8,6 +8,7 @@ import {
   Alert,
   TextInput,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -32,7 +33,7 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [pressed, setPressed] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -45,13 +46,20 @@ export default function Login({ navigation }) {
   };
 
   const UserLogIn = async (values) => {
-    setLoading(true);
     if (email.length !== 0 && password.length !== 0) {
-      dispatch(loginAccount(values));
+      if (!pressed) {
+        setPressed(true);
+        try {
+          dispatch(loginAccount(values));
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setPressed(false);
+        }
+      }
     } else {
       Alert.alert("Inserire credenziali");
     }
-    setLoading(false);
   };
 
   return (
@@ -115,13 +123,15 @@ export default function Login({ navigation }) {
                   onChangeText={(email) => setEmail(email)}
                   underlineColorAndroid="transparent"
                   placeholder="Email"
-                  placeholderTextColor="rgba(200, 200, 200,0.7)"
+                  placeholderTextColor="rgba(200, 200, 200, 0.7)"
                   keyboardType="email-address"
-                  returnKeyType={"next"}
-                  textContentType="emailAddress"
+                  returnKeyType="next"
+                  textContentType="emailAddress" // Helps with autofill
                   autoCapitalize="none"
+                  autoComplete="email" // Enables email autofill
                 />
               </View>
+
               <View style={styles.inputBox}>
                 <Icon name="lock" size={20} color="white" />
                 <TextInput
@@ -131,9 +141,10 @@ export default function Login({ navigation }) {
                   onSubmitEditing={() => UserLogIn({ email, password })}
                   underlineColorAndroid="transparent"
                   placeholder="Password"
-                  placeholderTextColor="rgba(200, 200, 200,0.7)"
-                  textContentType="password"
+                  placeholderTextColor="rgba(200, 200, 200, 0.7)"
+                  textContentType="password" // Helps with password autofill
                   autoCapitalize="none"
+                  autoComplete="password" // Enables password autofill
                 />
                 <TouchableOpacity
                   style={{ position: "absolute", right: 10, padding: 10 }}
@@ -159,19 +170,23 @@ export default function Login({ navigation }) {
               <TouchableOpacity
                 style={[
                   styles.loginButton,
-                  { backgroundColor: loading ? "gray" : colors.secondary },
+                  { backgroundColor: pressed ? "gray" : colors.secondary },
                 ]}
                 onPress={() => UserLogIn({ email, password })}
-                disabled={loading}
+                disabled={pressed}
               >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: loading ? "#474747" : colors.primary },
-                  ]}
-                >
-                  ACCEDI
-                </Text>
+                {pressed ? (
+                  <ActivityIndicator color={colors.primary} />
+                ) : (
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      { color: pressed ? "#474747" : colors.primary },
+                    ]}
+                  >
+                    ACCEDI
+                  </Text>
+                )}
               </TouchableOpacity>
               {/* <TouchableOpacity onPress={() => { }}>
                 <Text style={styles.loginSubTextSkip}>Salta</Text>

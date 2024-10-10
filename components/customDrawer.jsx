@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-  Platform
+  Platform,
 } from "react-native";
 import {
   DrawerContentScrollView,
@@ -22,13 +22,15 @@ import { colors } from "../shared/colors";
 // import { updateProfile } from "firebase/auth";
 import { font } from "../shared/fonts";
 
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutAccount } from '../store/authSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { logoutAccount } from "../store/authSlice";
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+
+import packageJson from "../app.json";
 
 const CustomDrawer = (props) => {
-  const auth = useSelector(state => state.auth)
+  const auth = useSelector((state) => state.auth);
 
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState(auth.currentUser?.name);
@@ -55,23 +57,25 @@ const CustomDrawer = (props) => {
     dispatch(logoutAccount());
   };
 
-
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <View style={{
-        padding: 20, backgroundColor: colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
+      <View
+        style={{
+          padding: 20,
+          backgroundColor: colors.primary,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Image
           source={
             auth.auth
               ? {
-                uri: auth.currentUser.photoURL,
-              }
+                  uri: auth.currentUser.photoURL,
+                }
               : {
-                uri: "https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE=",
-              }
+                  uri: "https://media.istockphoto.com/id/1130884625/vector/user-member-vector-icon-for-ui-user-interface-or-profile-face-avatar-app-in-circle-design.jpg?s=612x612&w=0&k=20&c=1ky-gNHiS2iyLsUPQkxAtPBWH1BZt0PKBB1WBtxQJRE=",
+                }
           }
           style={{
             height: 80,
@@ -88,68 +92,106 @@ const CustomDrawer = (props) => {
             alignItems: "center",
           }}
         >
-          {editing ? <TextInput
-            style={{
-              flex: 1,
-              height: 40,
-              marginRight: 10,
-              borderRadius: 10,
-              backgroundColor: "rgba(210, 210, 210, 0.2)",
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              color: "#fff",
-              fontSize: 18,
-              fontFamily: font.medium,
-              marginBottom: 5,
-            }}
-            onSubmitEditing={() => { updateCurrentUserName(newName); }}
-            onChangeText={(text) => setNewName(text)}
-          >
-            {auth.currentUser.displayName}
-          </TextInput> :
-            (auth.auth ?
+          {editing ? (
+            <TextInput
+              style={{
+                flex: 1,
+                height: 40,
+                marginRight: 10,
+                borderRadius: 10,
+                backgroundColor: "rgba(210, 210, 210, 0.2)",
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                color: "#fff",
+                fontSize: 18,
+                fontFamily: font.medium,
+                marginBottom: 5,
+              }}
+              onSubmitEditing={() => {
+                updateCurrentUserName(newName);
+              }}
+              onChangeText={(text) => setNewName(text)}
+            >
+              {auth.currentUser.displayName}
+            </TextInput>
+          ) : auth.auth ? (
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 18,
+                fontFamily: font.medium,
+              }}
+            >
+              {auth.currentUser.displayName}
+            </Text>
+          ) : (
+            <TouchableOpacity
+              style={{
+                backgroundColor: colors.secondary,
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                width: 100,
+                borderRadius: 10,
+                alignItems: "center",
+              }}
+              onPress={() => navigation.navigate("Login")}
+            >
               <Text
                 style={{
-                  color: "#fff",
-                  fontSize: 18,
-                  fontFamily: font.medium,
+                  fontSize: 15,
+                  fontFamily: font.bold,
+                  color: colors.primary,
                 }}
               >
-                {auth.currentUser.displayName}
-              </Text> : <TouchableOpacity style={{ backgroundColor: colors.secondary, paddingVertical: 10, paddingHorizontal: 15, width: 100, borderRadius: 10, alignItems: 'center' }} onPress={() => navigation.navigate("Login")}>
-                <Text style={{ fontSize: 15, fontFamily: font.bold, color: colors.primary }}>Accedi</Text>
-              </TouchableOpacity>)
-          }
-          {
-            auth.auth ? (
-              !editing ?
-                <>
-                  {/* <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
+                Accedi
+              </Text>
+            </TouchableOpacity>
+          )}
+          {auth.auth ? (
+            !editing ? (
+              <>
+                {/* <TouchableOpacity onPress={() => setEditing(true)} style={{ position: 'absolute', right: 10 }}>
                     <Ionicons name="ellipsis-vertical-circle-sharp" size={25} color="white" />
                   </TouchableOpacity> */}
-                  <TouchableOpacity onPress={() => navigation.navigate("QrCodeUser")} style={{ position: 'absolute', left: 10 }}>
-                    <Ionicons name="qr-code" size={25} color="white" />
-                  </TouchableOpacity>
-                </>
-                : <View style={{ flexDirection: 'row' }}>
-                  {/* <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("QrCodeUser")}
+                  style={{ position: "absolute", left: 10 }}
+                >
+                  <Ionicons name="qr-code" size={25} color="white" />
+                </TouchableOpacity>
+              </>
+            ) : (
+              <View style={{ flexDirection: "row" }}>
+                {/* <TouchableOpacity onPress={() => updateCurrentUserName(newName)}>
                     <Ionicons name="checkmark-circle" size={25} color="white" />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => setEditing(false)}>
                     <Ionicons name="close-circle" size={25} color="white" />
                   </TouchableOpacity> */}
-                </ View>
-            ) : null}
+              </View>
+            )
+          ) : null}
         </View>
       </View>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{ marginTop: Platform.OS == 'ios' ? -50 : 0 }}
+        contentContainerStyle={{ marginTop: Platform.OS == "ios" ? -50 : 0 }}
       >
         <View style={{ flex: 1, backgroundColor: colors.bg }}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 10,
+        }}
+      >
+        <Text style={{ color: "#87a1b2" }}>
+          Versione {packageJson.expo.version}
+        </Text>
+      </View>
       <View
         style={{
           padding: 20,

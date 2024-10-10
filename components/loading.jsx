@@ -4,14 +4,16 @@ import { colors } from "../shared/colors";
 import { StatusBar } from "expo-status-bar";
 import { Header } from "./header";
 
-export default function Loading() {
-  return (
-    <>
-      <View style={styles.container}>
-        <ActivityIndicator size="small" color={colors.primary} />
-      </View>
-    </>
-  );
+export default function Loading({ color = colors.bg }) {
+  if (color) {
+    return (
+      <>
+        <View style={[styles.container, { backgroundColor: color }]}>
+          <ActivityIndicator size="small" color={colors.primary} />
+        </View>
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

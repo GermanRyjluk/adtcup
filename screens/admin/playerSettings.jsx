@@ -6,6 +6,7 @@ import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { Header } from "../../components/header";
 import { font } from "../../shared/fonts";
+import { useSelector } from "react-redux";
 
 export default function PlayerSettings({ navigation, route }) {
   const eventID = useSelector((state) => state.eventID.value);

@@ -15,20 +15,20 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { font } from "../shared/fonts";
 import { useSelector } from "react-redux";
 
-
 export default function TeamInfo({ navigation, route }) {
-  const auth = useSelector(state => state.auth)
-  const eventID = "1VgaAztg9yvbzRLuIjql";
+  const auth = useSelector((state) => state.auth);
+  const eventID = route.params?.eventID;
   const footer = route.params?.footer;
 
   const [teamInfo, setTeamInfo] = useState([]);
   const [players, setPlayers] = useState([]);
 
-  const [imageURL, setImageURL] = useState('');
+  const [imageURL, setImageURL] = useState("");
 
-  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getTeamInfo = useCallback(async () => {
+    setLoading(true);
     try {
       await getDoc(
         doc(db, "users", auth.currentUser.uid, "bookings", eventID)
@@ -39,7 +39,9 @@ export default function TeamInfo({ navigation, route }) {
           ).then((snapshot) => {
             if (snapshot.exists()) {
               setTeamInfo(snapshot.data());
-              getDownloadURL(ref(storage, "flags/" + snapshot.data()["number"] + ".jpeg")).then((url) => setImageURL(url));
+              getDownloadURL(
+                ref(storage, "flags/" + snapshot.data()["number"] + ".jpeg")
+              ).then((url) => setImageURL(url));
             }
           });
           await getDocs(
@@ -54,21 +56,17 @@ export default function TeamInfo({ navigation, route }) {
           ).then((QuerySnapshot) => {
             setPlayers(QuerySnapshot.docs.map((doc) => doc.data()));
           });
-          // then((snapshot) => {
-          //   snapshot.forEach((doc) => players.push(doc.data()));
-          // });
         }
       });
-
     } catch (e) {
       console.error("Error fetching team info: ", e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const handleRefresh = useCallback(() => {
-    setRefreshing(true);
     getTeamInfo();
-    setRefreshing(false);
   }, []);
 
   useEffect(() => {
@@ -87,11 +85,11 @@ export default function TeamInfo({ navigation, route }) {
             padding: 20,
           }}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+            <RefreshControl loading={loading} onRefresh={handleRefresh} />
           }
         >
           <View>
-            <View style={{ alignItems: 'flex-end' }}>
+            <View style={{ alignItems: "flex-end" }}>
               <TouchableOpacity
                 style={{
                   height: 50,
@@ -102,61 +100,107 @@ export default function TeamInfo({ navigation, route }) {
                   alignItems: "center",
                   marginBottom: 20,
                 }}
-                onPress={() => navigation.navigate("EditTeamInfo", { nome: teamInfo.name, number: teamInfo.number })}
+                onPress={() =>
+                  navigation.navigate("EditTeamInfo", {
+                    nome: teamInfo.name,
+                    number: teamInfo.number,
+                  })
+                }
               >
-                <Text style={{
-                  fontSize: 20,
-                  fontFamily: font.bold, color: colors.secondary
-                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: font.bold,
+                    color: colors.secondary,
+                  }}
+                >
                   Modifica
                 </Text>
               </TouchableOpacity>
             </View>
-            <View>
-            </View>
+            <View></View>
             <View style={{ backgroundColor: colors.primary, borderRadius: 20 }}>
-              {imageURL != [] ? <Image source={{ uri: imageURL }} style={{
-                borderTopRightRadius: 20, borderTopLeftRadius: 20, width: '100%', height: 250
-              }} /> : null}
+              {imageURL != [] ? (
+                <Image
+                  source={{ uri: imageURL }}
+                  style={{
+                    borderTopRightRadius: 20,
+                    borderTopLeftRadius: 20,
+                    width: "100%",
+                    height: 250,
+                  }}
+                />
+              ) : null}
               <View style={{ padding: 20 }}>
-                <Text style={{
-                  fontSize: 20,
-                  fontFamily: font.bold, marginBottom: 20, color: colors.secondary
-                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: font.bold,
+                    marginBottom: 20,
+                    color: colors.secondary,
+                  }}
+                >
                   {teamInfo.name}
                 </Text>
-                <Text style={{
-                  fontSize: 25,
-                  fontFamily: font.light, color: colors.secondary, marginBottom: 10
-                }}>
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontFamily: font.light,
+                    color: colors.secondary,
+                    marginBottom: 10,
+                  }}
+                >
                   Partecipanti:
                 </Text>
                 {players.map((player, i) => {
                   return (
-                    <Text style={{
-                      fontSize: 20,
-                      fontFamily: font.medium, color: 'white', marginBottom: 10
-                    }} key={i}>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontFamily: font.medium,
+                        color: "white",
+                        marginBottom: 10,
+                      }}
+                      key={i}
+                    >
                       {player.name}
                     </Text>
                   );
                 })}
-                <Text style={{ fontSize: 25, fontFamily: font.light, color: colors.secondary, marginVertical: 10 }}>
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontFamily: font.light,
+                    color: colors.secondary,
+                    marginVertical: 10,
+                  }}
+                >
                   Punteggio:
                 </Text>
-                <Text style={{ fontSize: 20, fontFamily: font.medium, color: 'white', marginBottom: 5 }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: font.medium,
+                    color: "white",
+                    marginBottom: 5,
+                  }}
+                >
                   {teamInfo.points}K
                 </Text>
               </View>
             </View>
           </View>
           <View style={{ height: 150 }} />
-        </ScrollView >
+        </ScrollView>
         {footer ? null : <Footer />}
-
       </>
     );
   } else {
-    return <Loading />;
+    return (
+      <>
+        <Header />
+        <Loading />
+      </>
+    );
   }
 }

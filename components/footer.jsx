@@ -3,19 +3,17 @@ import { useNavigation } from "@react-navigation/native";
 
 import { colors } from "../shared/colors";
 
-import Icon from "react-native-vector-icons/Octicons"; //Gear (gear) and Hamburger(three-bars)
-import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
-import { QrButton } from "./qrButton";
-
-export const Footer = () => {
+export const Footer = ({ eventID }) => {
   const navigation = useNavigation();
-
   return (
     <>
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("GameRules", { screen: 'inside' });
+            navigation.navigate("GameRules", {
+              screen: "inside",
+              eventID: eventID,
+            });
           }}
           style={{
             top: -15,
@@ -91,7 +89,9 @@ export const Footer = () => {
         </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("TeamInfo");
+            navigation.navigate("TeamInfo", {
+              eventID: eventID,
+            });
           }}
           style={{
             top: -15,

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Linking } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 
-import { Camera } from "expo-camera";
+import { Camera, CameraView } from "expo-camera";
 import Svg, { Path } from "react-native-svg";
-
-import { BarCodeScanner } from "expo-barcode-scanner";
 
 // import { fonts } from '../../shared/fonts.js';
 // const font = fonts;
@@ -20,7 +24,7 @@ export default function App({ navigation, route }) {
 
   const askForPermissionCamera = () => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status == "granted");
     })();
   };
@@ -30,7 +34,7 @@ export default function App({ navigation, route }) {
       setScanned(false);
       setHasPermission(false);
       (async () => {
-        const { status } = await BarCodeScanner.requestPermissionsAsync();
+        const { status } = await Camera.requestCameraPermissionsAsync();
         setHasPermission(status === "granted");
       })();
     });
@@ -70,9 +74,13 @@ export default function App({ navigation, route }) {
     return (
       <View style={styles.mainContainer}>
         <View>
-          <Text style={{
-            fontFamily: font.bold
-          }}>Requesting Camera Permission</Text>
+          <Text
+            style={{
+              fontFamily: font.bold,
+            }}
+          >
+            Requesting Camera Permission
+          </Text>
         </View>
       </View>
     );
@@ -81,16 +89,34 @@ export default function App({ navigation, route }) {
     return (
       <>
         <Header />
-        <View style={[styles.mainContainer, { backgroundColor: colors.primary, padding: 30 }]}>
+        <View
+          style={[
+            styles.mainContainer,
+            { backgroundColor: colors.primary, padding: 30 },
+          ]}
+        >
           <View>
-            <Text style={[styles.text, { marginBottom: 15 }]}>Abilita accesso alla fotocamera</Text>
-            <Text style={[styles.text, { fontFamily: font.medium, color: colors.bg, fontSize: 20 }]}>Così potrai scannerizzare i QR code che ti permettono di ottenere nuovi quiz con cui giocare!</Text>
-            <TouchableOpacity onPress={() => Linking.openSettings()} style={{
-              backgroundColor: colors.secondary,
-              padding: 10,
-              borderRadius: 30,
-              marginTop: 50
-            }}>
+            <Text style={[styles.text, { marginBottom: 15 }]}>
+              Abilita accesso alla fotocamera
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                { fontFamily: font.medium, color: colors.bg, fontSize: 20 },
+              ]}
+            >
+              Così potrai scannerizzare i QR code che ti permettono di ottenere
+              nuovi quiz con cui giocare!
+            </Text>
+            <TouchableOpacity
+              onPress={() => Linking.openSettings()}
+              style={{
+                backgroundColor: colors.secondary,
+                padding: 10,
+                borderRadius: 30,
+                marginTop: 50,
+              }}
+            >
               <Text
                 style={[
                   styles.text,
@@ -105,7 +131,7 @@ export default function App({ navigation, route }) {
               </Text>
             </TouchableOpacity>
           </View>
-        </View >
+        </View>
       </>
     );
   }
@@ -113,10 +139,14 @@ export default function App({ navigation, route }) {
     <>
       <Header />
       <View style={styles.mainContainer}>
-        <Camera
-          onBarCodeScanned={scanned ? undefined : handleBarcodeScanned}
+        <CameraView
+          // onBarcodeScanned={({ data }) => console.log(data)}
+          onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           ratio="16:9"
           style={StyleSheet.absoluteFillObject}
+          barcodeScannerSettings={{
+            barcodeTypes: ["qr"],
+          }}
         />
         <View intensity={1000} style={styles.messageBox}>
           <Text style={[styles.text, { color: colors.primary }]}>
@@ -132,9 +162,13 @@ export default function App({ navigation, route }) {
         {scanned ? (
           <TouchableOpacity onPress={getQuiz} style={styles.quizBox}>
             <Text
-              style={{ fontSize: 25, fontFamily: font.bold, color: colors.secondary }}
+              style={{
+                fontSize: 25,
+                fontFamily: font.bold,
+                color: colors.secondary,
+              }}
             >
-              {route.params?.admin ? 'Ottieni stato' : 'Ottieni indovinello!'}
+              {route.params?.admin ? "Ottieni stato" : "Ottieni indovinello!"}
             </Text>
           </TouchableOpacity>
         ) : null}
@@ -150,7 +184,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  text: { fontSize: 25, fontFamily: font.bold, color: colors.secondary, textAlign: 'center' },
+  text: {
+    fontSize: 25,
+    fontFamily: font.bold,
+    color: colors.secondary,
+    textAlign: "center",
+  },
   messageBox: {
     backgroundColor: colors.bg,
     position: "absolute",

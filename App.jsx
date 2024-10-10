@@ -17,7 +17,6 @@ import registerNNPushToken from "native-notify";
 
 export default function App() {
   registerNNPushToken(22645, "RLdbS1bBfc9vjKoy0FA8x1");
-  // console.log("State: ", store.getState())
   const getFonts = async () => {
     return Font.loadAsync({
       "cherry-regular": require("./assets/fonts/CherryBomb.ttf"),

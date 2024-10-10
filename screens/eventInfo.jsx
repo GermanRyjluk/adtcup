@@ -22,10 +22,11 @@ import { useSelector } from "react-redux";
 
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase/firebase";
-
-const pages = [{ text: "1" }, { text: "2" }, { text: "3" }];
+import Loading from "../components/loading";
 
 export default function EventInfo({ navigation, route }) {
+  const [loading, setLoading] = useState(false);
+
   let auth = useSelector((state) => state.auth);
   let eventID = route.params?.eventID;
   let screen = route.params?.screen;
@@ -33,6 +34,7 @@ export default function EventInfo({ navigation, route }) {
   const [pages, setPages] = useState([]);
 
   const getInfo = useCallback(async () => {
+    setLoading(true);
     try {
       await getDocs(
         query(
@@ -44,6 +46,8 @@ export default function EventInfo({ navigation, route }) {
       });
     } catch (e) {
       console.error("Error fetchin event info: " + e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -108,240 +112,248 @@ export default function EventInfo({ navigation, route }) {
   const { width, height } = Dimensions.get("window");
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  pages.map((doc) => {
-    console.log(doc.data());
-  });
-  return (
-    <>
-      <Header />
-      <View style={styles.root}>
-        <Animated.ScrollView
-          horizontal={true}
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            {
-              useNativeDriver: true,
-            }
-          )}
-          style={{ backgroundColor: colors.bg }}
-        >
-          {pages.map((doc, i) => {
-            if (doc.data().lastPage) {
-              return (
-                <View
-                  key={doc.id}
-                  style={{
-                    width,
-                    alignItems: "center",
-                    padding: 20,
-                  }}
-                >
-                  <ScrollView
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <Loading color={colors.bg} />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <Header />
+        <View style={styles.root}>
+          <Animated.ScrollView
+            horizontal={true}
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+              {
+                useNativeDriver: true,
+              }
+            )}
+            style={{ backgroundColor: colors.bg }}
+          >
+            {pages.map((doc) => {
+              if (doc.data().lastPage) {
+                return (
+                  <View
+                    key={doc.id}
                     style={{
-                      width: "100%",
-                      height: "90%",
-                      backgroundColor: colors.primary,
-                      borderRadius: 20,
-                      padding: 30,
-                      marginBottom: 25,
-                    }}
-                    contentContainerStyle={{ alignItems: "center" }}
-                  >
-                    <Text
-                      style={[
-                        styles.text,
-                        {
-                          color: colors.secondary,
-                          textAlign: "center",
-                          marginBottom: 5,
-                        },
-                      ]}
-                    >
-                      FINALE
-                    </Text>
-                    <Text
-                      style={[
-                        styles.text,
-                        {
-                          color: colors.bg,
-                          marginBottom: 30,
-                          fontSize: 18,
-                          textAlign: "center",
-                        },
-                      ]}
-                    >
-                      09/12/23, Comala
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: font.bold,
-                        fontSize: 25,
-                        color: colors.secondary,
-                        marginBottom: 10,
-                      }}
-                    >
-                      Pako Rabanne
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: font.medium,
-                        fontSize: 20,
-                        color: colors.bg,
-                        marginBottom: 10,
-                        textAlign: "center",
-                      }}
-                    >
-                      Comala verso le 21:00
-                    </Text>
-                    <Text
-                      style={[
-                        styles.text,
-                        {
-                          fontSize: 20,
-                          fontFamily: font.medium,
-                          marginBottom: 50,
-                        },
-                      ]}
-                    >
-                      Sperimenta il magnetismo avvolgente di “BOCCIA
-                      SENSORIALE”, la straordinaria fragranza di Pako Rabanne,
-                      attraverso questo coinvolgente gioco. Ogni mossa svela
-                      strati di eleganza senza tempo, trasportandoti in un mondo
-                      di lusso e raffinatezza sensoriale.
-                    </Text>
-                  </ScrollView>
-                  <TouchableOpacity
-                    title="Gioca"
-                    onPress={() => {
-                      handleButton();
-                    }}
-                    style={{
-                      width: "100%",
-                      paddingVertical: 15,
-                      backgroundColor: colors.primary,
+                      width,
                       alignItems: "center",
-                      justifyContent: "center",
-                      borderRadius: 40,
-                      marginBottom: 50,
+                      padding: 20,
                     }}
                   >
-                    <Text
+                    <ScrollView
                       style={{
-                        color: colors.secondary,
-                        fontSize: 35,
-                        fontFamily: font.bold,
+                        width: "100%",
+                        height: "90%",
+                        backgroundColor: colors.primary,
+                        borderRadius: 20,
+                        padding: 30,
+                        marginBottom: 25,
+                      }}
+                      contentContainerStyle={{ alignItems: "center" }}
+                    >
+                      <Text
+                        style={[
+                          styles.text,
+                          {
+                            color: colors.secondary,
+                            textAlign: "center",
+                            marginBottom: 5,
+                          },
+                        ]}
+                      >
+                        {doc.data().mainTitle}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.text,
+                          {
+                            color: colors.bg,
+                            marginBottom: 30,
+                            fontSize: 18,
+                            textAlign: "center",
+                          },
+                        ]}
+                      >
+                        {`-\n${doc.data().mainDescription}\n-`}
+                      </Text>
+                      {doc.data().subtitles.map((sub, i) => {
+                        return (
+                          <View key={i} style={{ alignItems: "center" }}>
+                            <Text
+                              style={{
+                                fontFamily: font.bold,
+                                fontSize: 25,
+                                color: colors.secondary,
+                                marginBottom: 10,
+                              }}
+                            >
+                              {sub.title}
+                            </Text>
+                            <Text
+                              style={{
+                                fontFamily: font.medium,
+                                fontSize: 20,
+                                color: colors.bg,
+                                marginBottom: 10,
+                                textAlign: "center",
+                              }}
+                            >
+                              {sub.description}
+                            </Text>
+                            <Text
+                              style={[
+                                styles.text,
+                                {
+                                  fontSize: 20,
+                                  fontFamily: font.medium,
+                                  marginBottom: 50,
+                                },
+                              ]}
+                            >
+                              {sub.body}
+                            </Text>
+                          </View>
+                        );
+                      })}
+                    </ScrollView>
+                    <TouchableOpacity
+                      title="Gioca"
+                      onPress={() => {
+                        handleButton();
+                      }}
+                      style={{
+                        width: "100%",
+                        paddingVertical: 15,
+                        backgroundColor: colors.primary,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: 40,
+                        marginBottom: 50,
                       }}
                     >
-                      Gioca
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            } else {
-              return (
-                <View
-                  key={doc.id}
-                  style={{
-                    width,
-                    alignItems: "center",
-                    padding: 20,
-                    marginBottom: 20,
-                  }}
-                >
-                  <ScrollView
+                      <Text
+                        style={{
+                          color: colors.secondary,
+                          fontSize: 35,
+                          fontFamily: font.bold,
+                        }}
+                      >
+                        Gioca
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              } else {
+                return (
+                  <View
+                    key={doc.id}
                     style={{
-                      width: "100%",
-                      height: "90%",
-                      backgroundColor: colors.primary,
-                      borderRadius: 20,
-                      padding: 30,
-                      marginBottom: 25,
+                      width,
+                      alignItems: "center",
+                      padding: 20,
+                      marginBottom: 20,
                     }}
-                    contentContainerStyle={{ alignItems: "center" }}
                   >
-                    <Text style={[styles.text, { color: colors.secondary }]}>
-                      {doc.data().mainTitle}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.text,
-                        {
-                          color: colors.bg,
-                          marginBottom: 20,
-                          fontSize: 18,
-                          textAlign: "center",
-                        },
-                      ]}
+                    <ScrollView
+                      style={{
+                        width: "100%",
+                        height: "90%",
+                        backgroundColor: colors.primary,
+                        borderRadius: 20,
+                        padding: 30,
+                        marginBottom: 25,
+                      }}
+                      contentContainerStyle={{ alignItems: "center" }}
                     >
-                      {`-\n${doc.data().mainDescription}\n-`}
-                    </Text>
-                    {doc.data().subtitles.map((sub, j) => {
-                      return (
-                        <View key={doc.id}>
-                          <Text
-                            style={{
-                              fontFamily: font.bold,
-                              fontSize: 30,
-                              marginTop: 5,
-                              color: colors.secondary,
-                              marginBottom: 5,
-                              textAlign: "center",
-                            }}
-                          >
-                            {sub.title}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: font.medium,
-                              fontSize: 20,
-                              color: colors.bg,
-                              marginBottom: 10,
-                              textAlign: "center",
-                            }}
-                          >
-                            {sub.description}
-                          </Text>
-                          <Text
-                            style={[
-                              styles.text,
-                              {
-                                fontSize: 20,
+                      <Text style={[styles.text, { color: colors.secondary }]}>
+                        {doc.data().mainTitle}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.text,
+                          {
+                            color: colors.bg,
+                            marginBottom: 20,
+                            fontSize: 18,
+                            textAlign: "center",
+                          },
+                        ]}
+                      >
+                        {`-\n${doc.data().mainDescription}\n-`}
+                      </Text>
+                      {doc.data().subtitles.map((sub, j) => {
+                        return (
+                          <View key={doc.id}>
+                            <Text
+                              style={{
+                                fontFamily: font.bold,
+                                fontSize: 30,
+                                marginTop: 5,
+                                color: colors.secondary,
+                                marginBottom: 5,
+                                textAlign: "center",
+                              }}
+                            >
+                              {sub.title}
+                            </Text>
+                            <Text
+                              style={{
                                 fontFamily: font.medium,
-                                marginBottom: 50,
-                              },
-                            ]}
-                          >
-                            {sub.body}
-                          </Text>
-                        </View>
-                      );
-                    })}
+                                fontSize: 20,
+                                color: colors.bg,
+                                marginBottom: 10,
+                                textAlign: "center",
+                              }}
+                            >
+                              {sub.description}
+                            </Text>
+                            <Text
+                              style={[
+                                styles.text,
+                                {
+                                  fontSize: 20,
+                                  fontFamily: font.medium,
+                                  marginBottom: 50,
+                                },
+                              ]}
+                            >
+                              {sub.body}
+                            </Text>
+                          </View>
+                        );
+                      })}
 
-                    {/* <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center' }}>Caccia al tesoro tra i bar</Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>(sfida alcolica)</Text>
-              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Parco di Lanciano "Central Park" alle 22.30</Text>
-              <Text style={[styles.text, {
-                fontSize: 20,
-                fontFamily: font.medium,
-                marginBottom: 50
-              }]}>I concorrenti competeranno sempre in un'avvincente caccia al tesoro, ma questa volta per i bar della città. Per ogni tappa, le squadre dovranno bere shottini per ricevere il prossimo indovinello e andare avanti nella competizione. Anche in questo caso le prime 3 squadre si qualificheranno alla finale.
-              </Text> */}
-                  </ScrollView>
-                </View>
-              );
-            }
-          })}
-        </Animated.ScrollView>
-        <PageIndicator
-          style={styles.pageIndicator}
-          count={pages.length}
-          animatedCurrent={Animated.divide(scrollX, width)}
-        />
-      </View>
-    </>
-  );
+                      {/* <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center' }}>Caccia al tesoro tra i bar</Text>
+                <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>(sfida alcolica)</Text>
+                <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Parco di Lanciano "Central Park" alle 22.30</Text>
+                <Text style={[styles.text, {
+                  fontSize: 20,
+                  fontFamily: font.medium,
+                  marginBottom: 50
+                }]}>I concorrenti competeranno sempre in un'avvincente caccia al tesoro, ma questa volta per i bar della città. Per ogni tappa, le squadre dovranno bere shottini per ricevere il prossimo indovinello e andare avanti nella competizione. Anche in questo caso le prime 3 squadre si qualificheranno alla finale.
+                </Text> */}
+                    </ScrollView>
+                  </View>
+                );
+              }
+            })}
+          </Animated.ScrollView>
+          <PageIndicator
+            style={styles.pageIndicator}
+            count={pages.length}
+            animatedCurrent={Animated.divide(scrollX, width)}
+          />
+        </View>
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

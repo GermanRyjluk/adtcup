@@ -1,4 +1,12 @@
-import { View, Text, Image, Linking, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Linking,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors } from "../shared/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -16,28 +24,30 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 
 export default function Ticket({ navigation, route }) {
-  const auth = useSelector(state => state.auth)
+  const auth = useSelector((state) => state.auth);
 
   const eventID = route.params.eventID;
-  const [startingPoint, setStartingPoint] = useState(null)
+  const [startingPoint, setStartingPoint] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [position, setPosition] = useState({});
-  const [permission, setPermission] = useState()
-  const [startTime, setStartTime] = useState()
-  const [distance, setDistance] = useState(null)
+  const [permission, setPermission] = useState();
+  const [startTime, setStartTime] = useState();
+  const [distance, setDistance] = useState(null);
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   const radius = 70;
 
   const getPosition = async () => {
-    setDistance(null)
-    let location = await Location.getCurrentPositionAsync({})
-    setDistance(getDistance(position, {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    }));
-  }
+    setDistance(null);
+    let location = await Location.getCurrentPositionAsync({});
+    setDistance(
+      getDistance(position, {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      })
+    );
+  };
 
   const searchCurrentUserLocation = async (pos) => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -46,17 +56,18 @@ export default function Ticket({ navigation, route }) {
       console.log("Permission to access location was denied");
       return;
     } else {
-      setPermission(true)
+      setPermission(true);
     }
 
-    let location = await Location.getCurrentPositionAsync({})
+    let location = await Location.getCurrentPositionAsync({});
     // console.log(location, pos)
-    setUserLocation(location)
-    setDistance(getDistance(position, {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    }));
-
+    setUserLocation(location);
+    setDistance(
+      getDistance(position, {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      })
+    );
   };
 
   // const renderDistance = () => {
@@ -85,21 +96,25 @@ export default function Ticket({ navigation, route }) {
 
   const fetchStartingPoint = async () => {
     try {
-      await getDoc(doc(db, "users", auth.currentUser.uid, "bookings", eventID)).then(async (snapshot) => {
-        await getDoc(doc(db, "events", eventID, "teams", snapshot.data()["team"])).then((snapshot) => {
-          setStartingPoint(snapshot.data()["startingPoint"])
-          setPosition(snapshot.data()["startingPointCoords"])
+      await getDoc(
+        doc(db, "users", auth.currentUser.uid, "bookings", eventID)
+      ).then(async (snapshot) => {
+        await getDoc(
+          doc(db, "events", eventID, "teams", snapshot.data()["team"])
+        ).then((snapshot) => {
+          setStartingPoint(snapshot.data()["startingPoint"]);
+          setPosition(snapshot.data()["startingPointCoords"]);
 
-          searchCurrentUserLocation(snapshot.data()["startingPointCoords"])
-        })
-      })
+          searchCurrentUserLocation(snapshot.data()["startingPointCoords"]);
+        });
+      });
       await getDoc(doc(db, "events", eventID)).then((snapshot) => {
-        setStartTime(new Date(snapshot.data()["startTime"].toDate()))
-      })
+        setStartTime(new Date(snapshot.data()["startTime"].toDate()));
+      });
     } catch (e) {
       console.error("Error fetching position: " + e);
     }
-  }
+  };
 
   const checkTime = async () => {
     let currentDate = new Date();
@@ -122,14 +137,17 @@ export default function Ticket({ navigation, route }) {
 
   const handlePlayButton = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
+    if (status !== "granted") {
       Alert.alert(
         "Posizione non disponibile",
         "Abilita questa funzionalità per poter giocare",
         [
           {
             text: "Impostazioni",
-            onPress: () => { navigation.goBack(); Linking.openSettings() },
+            onPress: () => {
+              navigation.goBack();
+              Linking.openSettings();
+            },
             style: "cancel",
           },
           {
@@ -140,7 +158,7 @@ export default function Ticket({ navigation, route }) {
         ],
         {
           cancelable: true,
-        },
+        }
       );
     }
     if (userLocation && position) {
@@ -157,10 +175,11 @@ export default function Ticket({ navigation, route }) {
   };
 
   useEffect(() => {
-    setLoading(true)
-    fetchStartingPoint()
+    setLoading(true);
+    fetchStartingPoint();
     setLoading(false);
-  }, [startingPoint, distance])
+    fetchRadius();
+  }, [startingPoint, distance]);
 
   return (
     <>
@@ -171,51 +190,81 @@ export default function Ticket({ navigation, route }) {
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: colors.primary,
-          flexDirection: 'column',
+          flexDirection: "column",
           padding: 30,
         }}
       >
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginVertical: 30,
-        }}>
-          <Text style={{
-            fontSize: 40, fontFamily: font.bold, color: colors.secondary, marginBottom: 20
-          }}>Ecco la tua prevendita!</Text>
-          <Image source={require('../assets/ticket.png')} style={{ width: 200, height: 100 }} />
-
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            marginVertical: 30,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 40,
+              fontFamily: font.bold,
+              color: colors.secondary,
+              marginBottom: 20,
+            }}
+          >
+            Ecco la tua prevendita!
+          </Text>
+          <Image
+            source={require("../assets/ticket.png")}
+            style={{ width: 200, height: 100 }}
+          />
         </View>
-        <View style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Text style={{
-            fontSize: 25,
-            fontFamily: font.medium, color: 'white', marginTop: 50, textAlign: 'center'
-          }}>Vai al punto di partenza e aspetta l'ora di inizio per iniziare a giocare
-
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 25,
+              fontFamily: font.medium,
+              color: "white",
+              marginTop: 50,
+              textAlign: "center",
+            }}
+          >
+            Vai al punto di partenza e aspetta l'ora di inizio per iniziare a
+            giocare
           </Text>
         </View>
         {/* {renderDistance()} */}
-        <View style={{
-          flex: 1,
-          alignItems: 'center',
-          flexDirection: 'row'
-        }}>
-          {!distance ?
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          {!distance ? (
             <View>
-              <Text style={[styles.text, { color: colors.secondary, marginBottom: 15 }]}>Calcolando distanza</Text>
+              <Text
+                style={[
+                  styles.text,
+                  { color: colors.secondary, marginBottom: 15 },
+                ]}
+              >
+                Calcolando distanza
+              </Text>
               <ActivityIndicator size={"small"} />
             </View>
-            :
+          ) : (
             <>
-              <Text style={[styles.text, { color: colors.secondary }]}>Sei a {distance} mt.</Text>
+              <Text style={[styles.text, { color: colors.secondary }]}>
+                Sei a {distance} mt.
+              </Text>
               <TouchableOpacity
-                style={[styles.button, { flexDirection: 'row' }]}
+                style={[styles.button, { flexDirection: "row" }]}
                 onPress={() => {
                   getPosition();
                 }}
@@ -223,18 +272,20 @@ export default function Ticket({ navigation, route }) {
                 <Ionicons name="repeat" size={30} color={colors.primary} />
               </TouchableOpacity>
             </>
-          }
+          )}
         </View>
-        <View style={{
-          flex: 1,
-          alignItems: 'center',
-          flexDirection: 'row'
-        }}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
           <TouchableOpacity
             disabled={!startingPoint}
             style={styles.button}
             onPress={() => {
-              Linking.openURL(startingPoint)
+              Linking.openURL(startingPoint);
             }}
           >
             <Ionicons name="navigate-circle" size={50} color={colors.primary} />
@@ -243,20 +294,19 @@ export default function Ticket({ navigation, route }) {
             disabled={!startingPoint}
             style={[styles.button, { padding: 20 }]}
             onPress={() => {
-              handlePlayButton()
+              handlePlayButton();
             }}
           >
-            <Text
-              style={[styles.text, { fontSize: 35 }]}
-            >
-              Gioca
-            </Text>
+            <Text style={[styles.text, { fontSize: 35 }]}>Gioca</Text>
           </TouchableOpacity>
           <TouchableOpacity
             disabled={!startingPoint}
             style={styles.button}
             onPress={() => {
-              navigation.navigate("TeamInfo", { footer: true });
+              navigation.navigate("TeamInfo", {
+                footer: true,
+                eventID: eventID,
+              });
             }}
           >
             <Ionicons name="people" size={50} color={colors.primary} />
@@ -272,7 +322,7 @@ export default function Ticket({ navigation, route }) {
             <Text style={styles.text}>Simulazione di gioco</Text>
           </TouchableOpacity>
         </View> */}
-      </View >
+      </View>
     </>
   );
 }
@@ -284,11 +334,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
-    marginHorizontal: 10
+    marginHorizontal: 10,
   },
   text: {
     color: colors.primary,
     fontFamily: font.bold,
-    fontSize: 20
+    fontSize: 20,
   },
-})
+});

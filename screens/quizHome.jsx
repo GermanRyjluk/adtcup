@@ -18,20 +18,14 @@ import { db } from "../firebase/firebase";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-import {
-  addDoc,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { addDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 import { Footer } from "../components/footer";
 import Loading from "../components/loading";
 import { useSelector } from "react-redux";
 
 export default function QuizHome({ navigation, route }) {
-  const auth = useSelector(state => state.auth);
+  const auth = useSelector((state) => state.auth);
   const [userTeam, setUserTeam] = useState("");
   const [quizData, setQuizData] = useState([null]);
 
@@ -67,28 +61,53 @@ export default function QuizHome({ navigation, route }) {
       await getDoc(doc(db, "events", eventID, "quiz", quiz)).then(
         async (snapshot) => {
           if (snapshot.exists()) {
-            if (snapshot.data()["type"] == "bonus" || snapshot.data()["type"] == "malus") {
+            if (
+              snapshot.data()["type"] == "bonus" ||
+              snapshot.data()["type"] == "malus"
+            ) {
               if (!snapshot.data()["active"]) {
-                Alert.alert("Bonus/malus già utilizzato", "Questo bonus/malus è gia stato utilizzato e non puo essere riutilizzato")
+                Alert.alert(
+                  "Bonus/malus già utilizzato",
+                  "Questo bonus/malus è gia stato utilizzato e non puo essere riutilizzato"
+                );
               } else {
-                Alert.alert("Hai ottenuto un bonus/malus!", "Controlla la sezione bonus/malus per scoprire di più")
-                await updateDoc(doc(db, "events", eventID, "quiz", snapshot.id), {
-                  active: false
-                })
-                await setDoc(doc(db, "events", eventID, "teams", userTeam, "b-m", snapshot.id), {
-                  type: snapshot.data()["type"],
-                  message: snapshot.data()["message"]
-                })
+                Alert.alert(
+                  "Hai ottenuto un bonus/malus!",
+                  "Controlla la sezione bonus/malus per scoprire di più"
+                );
+                await updateDoc(
+                  doc(db, "events", eventID, "quiz", snapshot.id),
+                  {
+                    active: false,
+                  }
+                );
+                await setDoc(
+                  doc(
+                    db,
+                    "events",
+                    eventID,
+                    "teams",
+                    userTeam,
+                    "b-m",
+                    snapshot.id
+                  ),
+                  {
+                    type: snapshot.data()["type"],
+                    message: snapshot.data()["message"],
+                  }
+                );
                 navigation.navigate("BonusMalus", {
                   eventID: eventID,
                   userTeam: userTeam,
-                })
+                });
               }
             } else {
               // console.log(parseInt(snapshot.data()["number"]) === parseInt(quizData["number"]))
               // console.log("Old: " + quizData["number"] + " - New: " + snapshot.data()["number"])
-              if (parseInt(snapshot.data()["number"]) == parseInt(quizData["number"]) + 1) {
-
+              if (
+                parseInt(snapshot.data()["number"]) ==
+                parseInt(quizData["number"]) + 1
+              ) {
                 setQuizData(snapshot.data());
                 await updateDoc(doc(db, "events", eventID, "teams", team), {
                   lastQuiz: quizID,
@@ -102,10 +121,19 @@ export default function QuizHome({ navigation, route }) {
                     time: currentTime,
                   }
                 );
-              } else if (parseInt(snapshot.data()["number"]) === parseInt(quizData["number"])) {
-                Alert.alert("QR già letto", "Questo QR code è stato già scannerizzato da te o da un tuo compagno di squadra")
+              } else if (
+                parseInt(snapshot.data()["number"]) ===
+                parseInt(quizData["number"])
+              ) {
+                Alert.alert(
+                  "QR già letto",
+                  "Questo QR code è stato già scannerizzato da te o da un tuo compagno di squadra"
+                );
               } else {
-                Alert.alert("Dove vai cosi veloce?", "Questo non è il qr che avresti dovuto trovare, riprova :)")
+                Alert.alert(
+                  "Dove vai cosi veloce?",
+                  "Questo non è il qr che avresti dovuto trovare, riprova :)"
+                );
               }
             }
           }
@@ -198,10 +226,10 @@ export default function QuizHome({ navigation, route }) {
     setRefreshing(true);
     checkScoreboard();
     if (quizID === undefined) {
-      console.log("Last Quiz");
+      // console.log("Last Quiz");
       getTeamAndData();
     } else {
-      console.log("New Quiz: ", quizID);
+      // console.log("New Quiz: ", quizID);
       getNewQuiz(quizID, userTeam);
     }
     setRefreshing(false);
@@ -232,11 +260,9 @@ export default function QuizHome({ navigation, route }) {
   }, [route.params.eventID, route.params.quizID]);
 
   // ---------------- RENDER ---------------- //
-
   if (!quizData) {
     return <Loading />;
   }
-
   if (quizData.type == "both") {
     return (
       <>
@@ -337,9 +363,8 @@ export default function QuizHome({ navigation, route }) {
                 navigation.navigate("Hint", {
                   eventID: eventID,
                   userTeam: userTeam,
-                })
-              }
-              }
+                });
+              }}
             >
               <Text
                 style={{
@@ -353,7 +378,8 @@ export default function QuizHome({ navigation, route }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                height: "100%", paddingHorizontal: 15,
+                height: "100%",
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -363,9 +389,9 @@ export default function QuizHome({ navigation, route }) {
                 scoreboardPublic
                   ? navigation.navigate("userScoreboard")
                   : Alert.alert(
-                    "Classifica non disponibile",
-                    "In questa fase della gara non è possibile vedere la classifica"
-                  )
+                      "Classifica non disponibile",
+                      "In questa fase della gara non è possibile vedere la classifica"
+                    )
               }
             >
               <Icon name="leaderboard" size={55} color={colors.secondary} />
@@ -382,7 +408,8 @@ export default function QuizHome({ navigation, route }) {
 
             <TouchableOpacity
               style={{
-                height: "100%", paddingHorizontal: 15,
+                height: "100%",
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -400,7 +427,7 @@ export default function QuizHome({ navigation, route }) {
                   fontSize: 25,
                   fontFamily: font.bold,
                   color: colors.secondary,
-                  textAlign: 'center'
+                  textAlign: "center",
                 }}
               >
                 {"Bonus\nMalus"}
@@ -437,7 +464,7 @@ export default function QuizHome({ navigation, route }) {
           </View>
           <View style={{ width: "100%", height: 200 }}></View>
         </ScrollView>
-        <Footer />
+        <Footer eventID={eventID} />
       </>
     );
   } else if (quizData.type == "message") {
@@ -530,9 +557,8 @@ export default function QuizHome({ navigation, route }) {
                 navigation.navigate("Hint", {
                   eventID: eventID,
                   userTeam: userTeam,
-                })
-              }
-              }
+                });
+              }}
             >
               <Text
                 style={{
@@ -546,7 +572,8 @@ export default function QuizHome({ navigation, route }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                height: "100%", paddingHorizontal: 15,
+                height: "100%",
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -556,9 +583,9 @@ export default function QuizHome({ navigation, route }) {
                 scoreboardPublic
                   ? navigation.navigate("userScoreboard")
                   : Alert.alert(
-                    "Classifica non disponibile",
-                    "In questa fase della gara non è possibile vedere la classifica"
-                  )
+                      "Classifica non disponibile",
+                      "In questa fase della gara non è possibile vedere la classifica"
+                    )
               }
             >
               <Icon name="leaderboard" size={55} color={colors.secondary} />
@@ -575,7 +602,8 @@ export default function QuizHome({ navigation, route }) {
 
             <TouchableOpacity
               style={{
-                height: "100%", paddingHorizontal: 15,
+                height: "100%",
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -593,7 +621,7 @@ export default function QuizHome({ navigation, route }) {
                   fontSize: 25,
                   fontFamily: font.bold,
                   color: colors.secondary,
-                  textAlign: 'center'
+                  textAlign: "center",
                 }}
               >
                 {"Bonus\nMalus"}
@@ -602,7 +630,7 @@ export default function QuizHome({ navigation, route }) {
           </View>
           <View style={{ width: "100%", height: 150 }}></View>
         </ScrollView>
-        <Footer />
+        <Footer eventID={eventID} />
       </>
     );
   } else if (quizData.type == "photo") {
@@ -679,9 +707,8 @@ export default function QuizHome({ navigation, route }) {
                 navigation.navigate("Hint", {
                   eventID: eventID,
                   userTeam: userTeam,
-                })
-              }
-              }
+                });
+              }}
             >
               <Text
                 style={{
@@ -695,7 +722,8 @@ export default function QuizHome({ navigation, route }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                height: "100%", paddingHorizontal: 15,
+                height: "100%",
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -705,9 +733,9 @@ export default function QuizHome({ navigation, route }) {
                 scoreboardPublic
                   ? navigation.navigate("userScoreboard")
                   : Alert.alert(
-                    "Classifica non disponibile",
-                    "In questa fase della gara non è possibile vedere la classifica"
-                  )
+                      "Classifica non disponibile",
+                      "In questa fase della gara non è possibile vedere la classifica"
+                    )
               }
             >
               <Icon name="leaderboard" size={55} color={colors.secondary} />
@@ -724,7 +752,8 @@ export default function QuizHome({ navigation, route }) {
 
             <TouchableOpacity
               style={{
-                height: "100%", paddingHorizontal: 15,
+                height: "100%",
+                paddingHorizontal: 15,
                 backgroundColor: colors.primary,
                 borderRadius: 30,
                 alignItems: "center",
@@ -742,7 +771,7 @@ export default function QuizHome({ navigation, route }) {
                   fontSize: 25,
                   fontFamily: font.bold,
                   color: colors.secondary,
-                  textAlign: 'center'
+                  textAlign: "center",
                 }}
               >
                 {"Bonus\nMalus"}
@@ -751,7 +780,7 @@ export default function QuizHome({ navigation, route }) {
           </View>
           <View style={{ width: "100%", height: 200 }}></View>
         </ScrollView>
-        <Footer />
+        <Footer eventID={eventID} />
       </>
     );
   }
