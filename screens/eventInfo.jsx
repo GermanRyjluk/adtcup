@@ -9,7 +9,7 @@ import {
   Animated,
   Alert,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { colors } from "../shared/colors";
 
 import { PageIndicator } from "react-native-page-indicator";
@@ -17,61 +17,100 @@ import { Header } from "../components/header";
 import { font } from "../shared/fonts";
 import { sendEmailVerification } from "firebase/auth";
 
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 import { useSelector } from "react-redux";
+
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 const pages = [{ text: "1" }, { text: "2" }, { text: "3" }];
 
 export default function EventInfo({ navigation, route }) {
-  const auth = useSelector(state => state.auth);
+  let auth = useSelector((state) => state.auth);
+  let eventID = route.params?.eventID;
+  let screen = route.params?.screen;
 
-  const screen = route.params?.screen;
+  const [pages, setPages] = useState([]);
+
+  const getInfo = useCallback(async () => {
+    try {
+      await getDocs(
+        query(
+          collection(db, "events", eventID, "info"),
+          orderBy("number", "asc")
+        )
+      ).then((snapshot) => {
+        setPages(snapshot.docs.map((doc) => doc));
+      });
+    } catch (e) {
+      console.error("Error fetchin event info: " + e);
+    }
+  }, []);
+
+  useEffect(() => {
+    getInfo();
+  }, []);
 
   const handleButton = () => {
-    if (screen == 'inside') {
-      navigation.goBack()
+    if (screen == "inside") {
+      navigation.goBack();
     } else if (auth.auth) {
       if (auth.currentUser.emailVerified) {
         navigation.navigate("EventBooking", {
           eventID: route.params.eventID,
-        })
+        });
       } else {
-        Alert.alert("Verifica la tua mail", "Per procedere devi verificare che l'email sia tua, se il problema persiste esci e rientra dal tuo account", [
-          {
-            text: "Ricevi email",
-            onPress: () => { sendEmailVerification(auth.currentUser); Alert.alert("Email inviata", "Controlla la tua casella e riprova") },
-
-          },
-          {
-            text: "Già fatto",
-            onPress: () => {
-              //FIX: funzione esterna che fa rimettere la password e fa il login di nuovo cosi da aggiornare i dati in auth
-              Alert.alert("Spiacenti", "C'è stato un errore, per risolverlo: chiudere account, effettuare nuovamente l'accesso e riprovare")
-              // auth.currentUser.reload();
+        Alert.alert(
+          "Verifica la tua mail",
+          "Per procedere devi verificare che l'email sia tua, se il problema persiste esci e rientra dal tuo account",
+          [
+            {
+              text: "Ricevi email",
+              onPress: () => {
+                sendEmailVerification(auth.currentUser);
+                Alert.alert(
+                  "Email inviata",
+                  "Controlla la tua casella e riprova"
+                );
+              },
             },
-
-          },
-          {
-            text: "Esci",
-            onPress: () => null,
-            style: "cancel",
-          },
-        ],
+            {
+              text: "Già fatto",
+              onPress: () => {
+                //FIX: funzione esterna che fa rimettere la password e fa il login di nuovo cosi da aggiornare i dati in auth
+                Alert.alert(
+                  "Spiacenti",
+                  "C'è stato un errore, per risolverlo: chiudere account, effettuare nuovamente l'accesso e riprovare"
+                );
+                // auth.currentUser.reload();
+              },
+            },
+            {
+              text: "Esci",
+              onPress: () => null,
+              style: "cancel",
+            },
+          ],
           {
             cancelable: true,
           },
           [],
           {
             cancelable: true,
-          })
+          }
+        );
       }
     } else {
       navigation.navigate("Login");
     }
-  }
+  };
 
   const { width, height } = Dimensions.get("window");
   const scrollX = useRef(new Animated.Value(0)).current;
+
+  pages.map((doc) => {
+    console.log(doc.data());
+  });
   return (
     <>
       <Header />
@@ -88,50 +127,199 @@ export default function EventInfo({ navigation, route }) {
           )}
           style={{ backgroundColor: colors.bg }}
         >
-          <View
-            style={{
-              width,
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <ScrollView
-              style={{
-                width: "100%",
-                height: "90%",
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                padding: 30,
-                marginBottom: 25,
-              }}
-              contentContainerStyle={{ alignItems: 'center' }}
-            >
-              <Text
-                style={[
-                  styles.text,
-                  { color: colors.secondary },
-                ]}
-              >
-                GIORNATA 1
-              </Text>
-              <Text
-                style={[
-                  styles.text,
-                  { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
-                ]}
-              >
-                {"08/12/2023\nParco del Valentino"}
-              </Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 30, marginTop: 5, color: colors.secondary, marginBottom: 5, textAlign: 'center' }}>Christus Pakus</Text>
-              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Fontana dei dodici mesi alle 14:30</Text>
-              <Text style={[styles.text, {
-                fontSize: 20,
-                fontFamily: font.medium,
-                marginBottom: 50
-              }]}>Immergiti nell’epica storia di Christus Pakus, un ambizioso leader che si è elevato al potere grazie a cuore, testa e gambe. In questo gioco di ruolo avventuroso, dovrai seguire i passi del protagonista mentre naviga attraverso intricati intrighi politici, affronta nemici spietati e prende decisioni cruciali che plasmeranno il suo destino e il destino del suo regno.
-              </Text>
+          {pages.map((doc, i) => {
+            if (doc.data().lastPage) {
+              return (
+                <View
+                  key={doc.id}
+                  style={{
+                    width,
+                    alignItems: "center",
+                    padding: 20,
+                  }}
+                >
+                  <ScrollView
+                    style={{
+                      width: "100%",
+                      height: "90%",
+                      backgroundColor: colors.primary,
+                      borderRadius: 20,
+                      padding: 30,
+                      marginBottom: 25,
+                    }}
+                    contentContainerStyle={{ alignItems: "center" }}
+                  >
+                    <Text
+                      style={[
+                        styles.text,
+                        {
+                          color: colors.secondary,
+                          textAlign: "center",
+                          marginBottom: 5,
+                        },
+                      ]}
+                    >
+                      FINALE
+                    </Text>
+                    <Text
+                      style={[
+                        styles.text,
+                        {
+                          color: colors.bg,
+                          marginBottom: 30,
+                          fontSize: 18,
+                          textAlign: "center",
+                        },
+                      ]}
+                    >
+                      09/12/23, Comala
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: font.bold,
+                        fontSize: 25,
+                        color: colors.secondary,
+                        marginBottom: 10,
+                      }}
+                    >
+                      Pako Rabanne
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: font.medium,
+                        fontSize: 20,
+                        color: colors.bg,
+                        marginBottom: 10,
+                        textAlign: "center",
+                      }}
+                    >
+                      Comala verso le 21:00
+                    </Text>
+                    <Text
+                      style={[
+                        styles.text,
+                        {
+                          fontSize: 20,
+                          fontFamily: font.medium,
+                          marginBottom: 50,
+                        },
+                      ]}
+                    >
+                      Sperimenta il magnetismo avvolgente di “BOCCIA
+                      SENSORIALE”, la straordinaria fragranza di Pako Rabanne,
+                      attraverso questo coinvolgente gioco. Ogni mossa svela
+                      strati di eleganza senza tempo, trasportandoti in un mondo
+                      di lusso e raffinatezza sensoriale.
+                    </Text>
+                  </ScrollView>
+                  <TouchableOpacity
+                    title="Gioca"
+                    onPress={() => {
+                      handleButton();
+                    }}
+                    style={{
+                      width: "100%",
+                      paddingVertical: 15,
+                      backgroundColor: colors.primary,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 40,
+                      marginBottom: 50,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: colors.secondary,
+                        fontSize: 35,
+                        fontFamily: font.bold,
+                      }}
+                    >
+                      Gioca
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            } else {
+              return (
+                <View
+                  key={doc.id}
+                  style={{
+                    width,
+                    alignItems: "center",
+                    padding: 20,
+                    marginBottom: 20,
+                  }}
+                >
+                  <ScrollView
+                    style={{
+                      width: "100%",
+                      height: "90%",
+                      backgroundColor: colors.primary,
+                      borderRadius: 20,
+                      padding: 30,
+                      marginBottom: 25,
+                    }}
+                    contentContainerStyle={{ alignItems: "center" }}
+                  >
+                    <Text style={[styles.text, { color: colors.secondary }]}>
+                      {doc.data().mainTitle}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.text,
+                        {
+                          color: colors.bg,
+                          marginBottom: 20,
+                          fontSize: 18,
+                          textAlign: "center",
+                        },
+                      ]}
+                    >
+                      {`-\n${doc.data().mainDescription}\n-`}
+                    </Text>
+                    {doc.data().subtitles.map((sub, j) => {
+                      return (
+                        <View key={doc.id}>
+                          <Text
+                            style={{
+                              fontFamily: font.bold,
+                              fontSize: 30,
+                              marginTop: 5,
+                              color: colors.secondary,
+                              marginBottom: 5,
+                              textAlign: "center",
+                            }}
+                          >
+                            {sub.title}
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: font.medium,
+                              fontSize: 20,
+                              color: colors.bg,
+                              marginBottom: 10,
+                              textAlign: "center",
+                            }}
+                          >
+                            {sub.description}
+                          </Text>
+                          <Text
+                            style={[
+                              styles.text,
+                              {
+                                fontSize: 20,
+                                fontFamily: font.medium,
+                                marginBottom: 50,
+                              },
+                            ]}
+                          >
+                            {sub.body}
+                          </Text>
+                        </View>
+                      );
+                    })}
 
-              {/* <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center' }}>Caccia al tesoro tra i bar</Text>
+                    {/* <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center' }}>Caccia al tesoro tra i bar</Text>
               <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>(sfida alcolica)</Text>
               <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Parco di Lanciano "Central Park" alle 22.30</Text>
               <Text style={[styles.text, {
@@ -140,135 +328,11 @@ export default function EventInfo({ navigation, route }) {
                 marginBottom: 50
               }]}>I concorrenti competeranno sempre in un'avvincente caccia al tesoro, ma questa volta per i bar della città. Per ogni tappa, le squadre dovranno bere shottini per ricevere il prossimo indovinello e andare avanti nella competizione. Anche in questo caso le prime 3 squadre si qualificheranno alla finale.
               </Text> */}
-
-            </ScrollView>
-          </View>
-          <View
-            style={{
-              width,
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <ScrollView
-              style={{
-                width: "100%",
-                height: "90%",
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                padding: 30,
-                marginBottom: 25
-              }}
-              contentContainerStyle={{ alignItems: 'center' }}
-            >
-              <Text
-                style={[
-                  styles.text,
-                  { color: colors.secondary },
-                ]}
-              >
-                GIORNATA 2
-              </Text>
-              <Text
-                style={[
-                  styles.text,
-                  { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
-                ]}
-              >
-                {"09/12/2023\nParco Pellerina"}
-              </Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 30, color: colors.secondary, marginVertical: 5, textAlign: 'center' }}>Pako al mare!</Text>
-              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Fontana dõ sBurracaõ alle 14:30</Text>
-              <Text style={[styles.text, {
-                fontSize: 20,
-                fontFamily: font.medium,
-                marginBottom: 20
-              }]}>Immergiti nelle profondità marine e vivi l'emozionante avventura di Pako, un coraggioso pesce in cerca di suo padre. Attraversa gli intricati labirinti oceanici, affronta pericoli sconosciuti e incontra personaggi marini unici mentre sveli i misteri del vasto oceano. Portate occhialini, braccioli e slippini rossi per aiutare Pako
-              </Text>
-
-              {/* <Text style={[styles.text, {
-                fontSize: 20,
-                fontFamily: font.medium,
-                marginBottom: 50
-              }]}> Tra una sfida e l'altra ci sarà la possibilità di usufruire di un rinfresco per rifocillarsi dopo le fatiche della prima metà di giornata;
-              </Text> */}
-              {/* <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center', marginBottom: 10 }}>Fossaceca, non LA</Text>
-              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Fossacesia alle 17:00</Text>
-              <Text style={[styles.text, {
-                fontSize: 20,
-                fontFamily: font.medium,
-                marginBottom: 50
-              }]}>I partecipanti partecipanno ad una caccia al tesoro per i bar di fossacesia marina, nel corso della quale ci saranno anche sfide per progredire nel gioco. Le prime 2 squadre otterranno l'accesso alla finalissima.
-              </Text> */}
-
-            </ScrollView>
-          </View>
-          <View
-            style={{
-              width,
-              alignItems: "center",
-              padding: 20,
-            }}
-          >
-            <ScrollView
-              style={{
-                width: "100%",
-                height: "90%",
-                backgroundColor: colors.primary,
-                borderRadius: 20,
-                padding: 30,
-                marginBottom: 25
-              }}
-              contentContainerStyle={{ alignItems: 'center' }}
-            >
-              <Text
-                style={[
-                  styles.text,
-                  { color: colors.secondary, textAlign: 'center', marginBottom: 5 },
-                ]}
-              >
-                FINALE
-              </Text>
-              <Text
-                style={[
-                  styles.text,
-                  { color: colors.bg, marginBottom: 30, fontSize: 18, textAlign: 'center' },
-                ]}
-              >
-                09/12/23, Comala
-              </Text>
-              <Text style={{ fontFamily: font.bold, fontSize: 25, color: colors.secondary, marginBottom: 10 }}>Pako Rabanne</Text>
-              <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Comala verso le 21:00</Text>
-              <Text style={[styles.text, {
-                fontSize: 20,
-                fontFamily: font.medium,
-                marginBottom: 50
-              }]}>Sperimenta il magnetismo avvolgente di “BOCCIA SENSORIALE”, la straordinaria fragranza di Pako Rabanne, attraverso questo coinvolgente gioco. Ogni mossa svela strati di eleganza senza tempo, trasportandoti in un mondo di lusso e raffinatezza sensoriale.
-              </Text>
-            </ScrollView>
-            <TouchableOpacity
-              title="Gioca"
-              onPress={() => { handleButton() }}
-              style={{
-                width: "100%",
-                paddingVertical: 15,
-                backgroundColor: colors.primary,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 40,
-                marginBottom: 50,
-              }}
-            >
-              <Text
-                style={{
-                  color: colors.secondary,
-                  fontSize: 35, fontFamily: font.bold,
-                }}
-              >
-                Gioca
-              </Text>
-            </TouchableOpacity>
-          </View>
+                  </ScrollView>
+                </View>
+              );
+            }
+          })}
         </Animated.ScrollView>
         <PageIndicator
           style={styles.pageIndicator}
@@ -288,7 +352,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 35,
-    color: "#ededed", fontFamily: font.bold,
+    color: "#ededed",
+    fontFamily: font.bold,
   },
   root: {
     flex: 1,

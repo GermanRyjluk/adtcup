@@ -9,7 +9,7 @@ import Teams from "../screens/admin/teams";
 import TeamSettings from "../screens/admin/teamSettings";
 import Bookings from "../screens/admin/bookings";
 import Map from "../screens/admin/map";
-import Scoreboard from "../screens/admin/scoreboard";
+import Scoreboard from "../screens/admin/scoreboard/scoreboard";
 import Settings from "../screens/admin/settings";
 import PlayerSettings from "../screens/admin/playerSettings";
 import MapPlayers from "../screens/admin/mapPlayers";

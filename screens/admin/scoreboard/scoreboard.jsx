@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { colors } from "../../shared/colors";
+import { colors } from "../../../shared/colors";
 import {
   collection,
   doc,
@@ -18,8 +18,8 @@ import {
   query,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
-import { Header } from "../../components/header";
+import { db } from "../../../firebase/firebase";
+import { Header } from "../../../components/header";
 
 import { useSelector } from "react-redux";
 

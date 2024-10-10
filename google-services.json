@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "432629975377",
+    "project_id": "adt-cup",
+    "storage_bucket": "adt-cup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:432629975377:android:31de2ac6d896e5993cab70",
+        "android_client_info": {
+          "package_name": "com.ryyuuk.ADTCUP"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "432629975377-fgf9njqlsbh8n77892b55dp43b958cl9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHMomGArFCmH-okGwUGdXWwQ50J8USB-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "432629975377-962t6hmr5idr2fttjlk7ft97qsn425e9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
