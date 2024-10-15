@@ -14,6 +14,9 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "entitlements": {
+        "aps-environment": "production"
+      },
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow ADT CUP to use your location to check if you are on the right spot to start the game!",

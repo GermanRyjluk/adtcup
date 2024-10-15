@@ -13,10 +13,20 @@ import { Provider } from "react-redux";
 import { store, persistor } from "./store"; // Assuming you have set up your Redux store
 import { PersistGate } from "redux-persist/integration/react";
 
-import registerNNPushToken from "native-notify";
+import messaging from "@react-native-firebase/messaging";
 
 export default function App() {
-  registerNNPushToken(22645, "RLdbS1bBfc9vjKoy0FA8x1");
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log("Authorization status:", authStatus);
+    }
+  };
+
   const getFonts = async () => {
     return Font.loadAsync({
       "cherry-regular": require("./assets/fonts/CherryBomb.ttf"),
