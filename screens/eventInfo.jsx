@@ -18,20 +18,22 @@ import { font } from "../shared/fonts";
 import { sendEmailVerification } from "firebase/auth";
 
 import { LinearGradient } from "expo-linear-gradient";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import Loading from "../components/loading";
+import { checkEmailVerified } from "../store/authSlice";
 
 export default function EventInfo({ navigation, route }) {
   const [loading, setLoading] = useState(false);
+  const [pages, setPages] = useState([]);
 
   let auth = useSelector((state) => state.auth);
   let eventID = route.params?.eventID;
   let screen = route.params?.screen;
 
-  const [pages, setPages] = useState([]);
+  const dispatch = useDispatch();
 
   const getInfo = useCallback(async () => {
     setLoading(true);
@@ -53,59 +55,82 @@ export default function EventInfo({ navigation, route }) {
 
   useEffect(() => {
     getInfo();
+    if (!auth.currentUser.emailVerified) {
+      try {
+        dispatch(checkEmailVerified());
+      } catch (e) {
+        console.error(e);
+      } finally {
+        // console.log("EmailVerified: ", auth.currentUser.emailVerified);
+      }
+    }
   }, []);
 
   const handleButton = () => {
-    if (screen == "inside") {
-      navigation.goBack();
-    } else if (auth.auth) {
-      if (auth.currentUser.emailVerified) {
-        navigation.navigate("EventBooking", {
-          eventID: route.params.eventID,
-        });
+    try {
+      dispatch(checkEmailVerified());
+    } catch (e) {
+      console.error(e);
+    } finally {
+      if (screen == "inside") {
+        navigation.goBack();
+      } else if (auth.auth) {
+        if (auth.currentUser.emailVerified) {
+          navigation.navigate("EventBooking", {
+            eventID: route.params.eventID,
+          });
+        } else {
+          // Alert.alert(
+          //   "Verifica la tua mail",
+          //   "Per continuare, ti preghiamo di verificare la tua mail"
+          // );
+          Alert.alert(
+            "Verifica la tua mail",
+            "Per continuare, ti preghiamo di verificare la tua mail",
+            [
+              {
+                text: "Ricevi email",
+                onPress: () => {
+                  sendEmailVerification(auth.currentUser);
+                  Alert.alert(
+                    "Email inviata",
+                    "Controlla la tua casella e riprova"
+                  );
+                },
+              },
+              {
+                text: "Già fatto",
+                onPress: () => {
+                  dispatch(checkEmailVerified());
+                  handleButton();
+
+                  // if (auth.currentUser.emailVerified) {
+                  //   navigation.navigate("EventBooking", {
+                  //     eventID: route.params.eventID,
+                  //   });
+                  // }
+
+                  // auth.currentUser.reload();
+                },
+              },
+              {
+                text: "Esci",
+                onPress: () => null,
+                style: "cancel",
+              },
+            ],
+            {
+              cancelable: true,
+            },
+            [],
+            {
+              cancelable: true,
+            }
+          );
+        }
       } else {
-        Alert.alert(
-          "Verifica la tua mail",
-          "Per procedere devi verificare che l'email sia tua, se il problema persiste esci e rientra dal tuo account",
-          [
-            {
-              text: "Ricevi email",
-              onPress: () => {
-                sendEmailVerification(auth.currentUser);
-                Alert.alert(
-                  "Email inviata",
-                  "Controlla la tua casella e riprova"
-                );
-              },
-            },
-            {
-              text: "Già fatto",
-              onPress: () => {
-                //FIX: funzione esterna che fa rimettere la password e fa il login di nuovo cosi da aggiornare i dati in auth
-                Alert.alert(
-                  "Spiacenti",
-                  "C'è stato un errore, per risolverlo: chiudere account, effettuare nuovamente l'accesso e riprovare"
-                );
-                // auth.currentUser.reload();
-              },
-            },
-            {
-              text: "Esci",
-              onPress: () => null,
-              style: "cancel",
-            },
-          ],
-          {
-            cancelable: true,
-          },
-          [],
-          {
-            cancelable: true,
-          }
-        );
+        navigation.navigate("Login");
       }
-    } else {
-      navigation.navigate("Login");
     }
   };
 

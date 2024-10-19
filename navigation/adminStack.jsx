@@ -15,6 +15,9 @@ import PlayerSettings from "../screens/admin/playerSettings";
 import MapPlayers from "../screens/admin/mapPlayers";
 import QrReader from "../screens/qrReader";
 import BookingStatus from "../screens/admin/bookingStatus";
+import Quiz from "../screens/admin/quiz";
+import QuizInfo from "../screens/admin/quizInfo";
+import QuizEdit from "../screens/admin/quizEdit";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +33,9 @@ export default function Admin() {
       <Stack.Screen name="Bookings" component={Bookings} />
       <Stack.Screen name="PlayerSettings" component={PlayerSettings} />
       <Stack.Screen name="Map" component={Map} />
+      <Stack.Screen name="Quiz" component={Quiz} />
+      <Stack.Screen name="QuizInfo" component={QuizInfo} />
+      <Stack.Screen name="QuizEdit" component={QuizEdit} />
       <Stack.Screen name="MapPlayers" component={MapPlayers} />
       <Stack.Screen name="Scoreboard" component={Scoreboard} />
       <Stack.Screen name="QrReader" component={QrReader} />

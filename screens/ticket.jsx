@@ -178,7 +178,6 @@ export default function Ticket({ navigation, route }) {
     setLoading(true);
     fetchStartingPoint();
     setLoading(false);
-    fetchRadius();
   }, [startingPoint, distance]);
 
   return (

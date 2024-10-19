@@ -96,7 +96,7 @@ export default function EventInfo({ navigation, route }) {
                       <Text style={[styles.text, {
                         fontSize: 20,
                         fontFamily: font.medium,
-                      }]}>Le alleanze tra 2 squadre sono consentite, a patto che esse si scambino le rispettive bandiere per tuta la durata dell'accordo;</Text>
+                      }]}>Le alleanze tra 2 squadre sono consentite, a patto che esse si scambino le rispettive bandiere per tutta la durata dell'accordo;</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginBottom: 25, width: '90%' }}>
                       <Text style={{ color: colors.secondary, fontFamily: font.medium, fontSize: 25, marginRight: 5 }}>6)</Text>

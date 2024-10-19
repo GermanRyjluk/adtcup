@@ -25,7 +25,8 @@ import { useCallback, useEffect, useState } from "react";
 import Loading from "../components/loading";
 
 import * as SplashScreen from "expo-splash-screen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { checkEmailVerified } from "../store/authSlice";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -46,6 +47,7 @@ export default function Home({ navigation }) {
   const [currentEvents, setCurrentEvents] = useState([]);
 
   const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const preloadImages = () => {
     currentEvents.map((doc) => {
@@ -66,6 +68,15 @@ export default function Home({ navigation }) {
   useEffect(() => {
     loadEvents();
     preloadImages();
+
+    if (!auth.currentUser.emailVerified) {
+      try {
+        dispatch(checkEmailVerified());
+        console.log("EmailVerified: ", auth.currentUser.emailVerified);
+      } catch (e) {
+        console.error(e);
+      }
+    }
 
     setTimeout(() => {
       setLoading(false);

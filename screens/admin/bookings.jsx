@@ -7,6 +7,9 @@ import {
   ScrollView,
   RefreshControl,
   TextInput,
+  Modal,
+  TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
 import { useSelector } from "react-redux";
 import CheckBox from "expo-checkbox";
@@ -41,6 +44,8 @@ export default function Bookings({ navigation }) {
   const [orange, setOrange] = useState(false);
   const [blue, setBlue] = useState(false);
   const [green, setGreen] = useState(false);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const getTeamsFromDB = useCallback(async () => {
     setRefreshing(true);
@@ -244,6 +249,151 @@ export default function Bookings({ navigation }) {
   return (
     <>
       <Header />
+
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 10,
+          right: 30,
+          zIndex: 10,
+          backgroundColor: colors.primary,
+          borderRadius: 50,
+          padding: 10,
+          alignItems: "center",
+          justifyContent: "center",
+          borderWidth: 3,
+          borderColor: colors.secondary,
+        }}
+        onPress={() => setModalVisible(true)}
+      >
+        <Ionicons
+          name="information-circle-outline"
+          size={50}
+          color={colors.secondary}
+        />
+      </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>
+            Glossario degli stati di prenotazione
+          </Text>
+
+          <View
+            style={{
+              marginVertical: 15,
+              alignItems: "baseline",
+            }}
+          >
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={red}
+                onValueChange={(state) => setRed(state)}
+                color={"#DF2A2A"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In attesa di essere accettato
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={yellow}
+                onValueChange={(state) => setYellow(state)}
+                color={colors.secondary}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In attesa di pagamento
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={orange}
+                onValueChange={(state) => setOrange(state)}
+                color={"#FF6033"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In attesa di avere una squadra
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={blue}
+                onValueChange={(state) => setBlue(state)}
+                color={"#3B9BE1"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In attesa di inizio evento
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={green}
+                onValueChange={(state) => setGreen(state)}
+                color={"#2ADF7D"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In gioco
+              </Text>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.textStyle}>Chiudi</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
       <ScrollView
         style={{
           flex: 1,
@@ -359,5 +509,42 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: "white",
     letterSpacing: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "55%", // 3/4 dello schermo
+    backgroundColor: colors.primary,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    paddingTop: 30,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: colors.secondary,
+    textAlign: "center",
+  },
+  closeButton: {
+    position: "absolute",
+    bottom: 50,
+    backgroundColor: colors.secondary,
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    elevation: 2,
+  },
+  textStyle: {
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

@@ -105,8 +105,9 @@ export default function QuizHome({ navigation, route }) {
               // console.log(parseInt(snapshot.data()["number"]) === parseInt(quizData["number"]))
               // console.log("Old: " + quizData["number"] + " - New: " + snapshot.data()["number"])
               if (
-                parseInt(snapshot.data()["number"]) ==
-                parseInt(quizData["number"]) + 1
+                parseInt(teamData["lastQuizNum"]) ==
+                  parseInt(quizData["number"]) + 1 ||
+                teamData["lastQuizNum"] == 0
               ) {
                 setQuizData(snapshot.data());
                 await updateDoc(doc(db, "events", eventID, "teams", team), {
@@ -121,9 +122,18 @@ export default function QuizHome({ navigation, route }) {
                     time: currentTime,
                   }
                 );
+                console.log(quiz, team);
+                await setDoc(
+                  doc(db, "events", eventID, "quiz", quiz, "scanned", team),
+                  {
+                    name: teamData["name"],
+                    timeOfScan: currentTime,
+                  }
+                );
               } else if (
-                parseInt(snapshot.data()["number"]) ===
-                parseInt(quizData["number"])
+                parseInt(teamData["lastQuizNum"]) ===
+                  parseInt(quizData["number"]) ||
+                parseInt(teamData["lastQuizNum"]) < parseInt(quizData["number"])
               ) {
                 Alert.alert(
                   "QR già letto",

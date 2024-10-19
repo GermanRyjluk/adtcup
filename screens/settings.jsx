@@ -16,7 +16,7 @@ export default function Settings({ navigation }) {
   const [email, setEmail] = useState(auth.currentUser.email);
 
   const handleDeleteData = async (values) => {
-    dispatch(deleteAccount(values));
+    dispatch(deleteAccount({ ...values, navigation }));
   };
   return (
     <>
