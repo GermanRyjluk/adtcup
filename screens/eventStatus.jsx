@@ -11,10 +11,12 @@ import React from "react";
 import { colors } from "../shared/colors";
 import { font } from "../shared/fonts";
 import { Header } from "../components/header";
+import { Ionicons } from "react-native-vector-icons";
 
-export default function EventStatus({ route }) {
+export default function EventStatus({ navigation, route }) {
   const status = route.params.status;
-  console.log(status);
+  const eventID = route.params?.eventID;
+  // console.log(status);
 
   const renderContent = () => {
     switch (status) {
@@ -29,17 +31,82 @@ export default function EventStatus({ route }) {
       case "pay":
         return (
           <View style={styles.payContainer}>
-            <Text style={styles.payText}>
-              Sei stato accettato! contatta gli amministratori per scoprire come
-              procedere
-            </Text>
-            <View style={styles.centerAlign}>
-              <ContactButton name="Gius" url="https://wa.me/+393894960846" />
-              <ContactButton
-                name="Pie"
-                url="https://wa.me/+393208970258"
-                style={styles.contactButtonMargin}
+            <TouchableOpacity
+              style={styles.eventInfoContainer}
+              onPress={() => {
+                navigation.navigate("EventInfo", {
+                  eventID: eventID,
+                  screen: "outside",
+                });
+              }}
+            >
+              <Ionicons
+                name="information-circle"
+                size={24}
+                color={colors.primary}
               />
+              <Text style={styles.eventInfoText}>Info evento</Text>
+            </TouchableOpacity>
+            <View style={styles.centerAlign}>
+              <Text style={styles.payText}>Sei stato accettato!</Text>
+              <Text style={styles.paySubText}>
+                Contatta gli amministratori per scoprire come procedere
+              </Text>
+              <TouchableOpacity
+                style={{
+                  width: 170,
+                  height: 60,
+                  backgroundColor: colors.secondary,
+                  borderRadius: 30,
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+                onPress={() => Linking.openURL("https://wa.me/+393894960846")}
+              >
+                <Image
+                  source={require("../assets/whatsapp.png")}
+                  style={{ width: 30, height: 30, left: 30 }}
+                ></Image>
+                <Text
+                  style={{
+                    left: 50,
+                    color: "black",
+                    textAlign: "center",
+                    fontSize: 25,
+                    fontFamily: font.bold,
+                  }}
+                >
+                  Gius
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: 170,
+                  height: 60,
+                  backgroundColor: colors.secondary,
+                  borderRadius: 30,
+                  alignItems: "center",
+                  flexDirection: "row",
+                  marginTop: 20,
+                }}
+                onPress={() => Linking.openURL("https://wa.me/+393208970258")}
+              >
+                <Image
+                  source={require("../assets/whatsapp.png")}
+                  style={{ width: 30, height: 30, left: 30 }}
+                ></Image>
+                <Text
+                  style={{
+                    left: 50,
+                    color: "black",
+                    textAlign: "center",
+                    fontSize: 25,
+                    fontFamily: font.bold,
+                  }}
+                >
+                  Pie
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         );
@@ -47,8 +114,25 @@ export default function EventStatus({ route }) {
       case "waiting team":
         return (
           <View style={styles.waitingContainer}>
-            <Text style={styles.waitingText}>
-              È tutto pronto! tra poco ti verrà comunicata la squadra!
+            <TouchableOpacity
+              style={[styles.eventInfoContainer, { marginBottom: 30 }]}
+              onPress={() => {
+                navigation.navigate("EventInfo", {
+                  eventID: eventID,
+                  screen: "outside",
+                });
+              }}
+            >
+              <Ionicons
+                name="information-circle"
+                size={24}
+                color={colors.primary}
+              />
+              <Text style={styles.eventInfoText}>Info evento</Text>
+            </TouchableOpacity>
+            <Text style={styles.waitingText}>È tutto pronto!</Text>
+            <Text style={styles.waitingSubText}>
+              tra poco ti verrà comunicata la squadra!
             </Text>
           </View>
         );
@@ -56,8 +140,24 @@ export default function EventStatus({ route }) {
       case "eliminated":
         return (
           <View style={styles.eliminatedContainer}>
+            <TouchableOpacity
+              style={styles.eventInfoContainer}
+              onPress={() => {
+                navigation.navigate("EventInfo", {
+                  eventID: eventID,
+                  screen: "outside",
+                });
+              }}
+            >
+              <Ionicons
+                name="information-circle"
+                size={24}
+                color={colors.primary}
+              />
+              <Text style={styles.eventInfoText}>Info evento</Text>
+            </TouchableOpacity>
             <View style={styles.eliminatedBadge}>
-              <Text style={styles.eliminatedBadgeText}>Eliminato</Text>
+              <Text style={styles.eliminatedBadgeText}>💀 Eliminato 💀</Text>
             </View>
             <Text style={styles.eliminatedText}>Sei un pollo</Text>
           </View>
@@ -77,6 +177,29 @@ export default function EventStatus({ route }) {
 }
 
 const styles = StyleSheet.create({
+  eventInfoContainer: {
+    borderRadius: 30,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.secondary,
+    padding: 10,
+    paddingHorizontal: 20,
+  },
+  eventInfoBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.secondary,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+  },
+  eventInfoText: {
+    color: colors.primary,
+    textAlign: "center",
+    fontSize: 15,
+    fontFamily: font.bold,
+    marginLeft: 5,
+  },
   pendingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -103,6 +226,14 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontFamily: font.bold,
   },
+  paySubText: {
+    color: colors.bg,
+    fontSize: 15,
+    fontFamily: font.bold,
+    textAlign: "center",
+    marginTop: 20,
+    marginBottom: 40,
+  },
   centerAlign: {
     flex: 1,
     alignItems: "center",
@@ -123,6 +254,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 30,
     fontFamily: font.bold,
+  },
+  waitingSubText: {
+    color: colors.bg,
+    fontSize: 15,
+    fontFamily: font.bold,
+    textAlign: "center",
+    marginTop: 10,
   },
   eliminatedContainer: {
     flex: 1,

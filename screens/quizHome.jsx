@@ -104,9 +104,10 @@ export default function QuizHome({ navigation, route }) {
             } else {
               // console.log(parseInt(snapshot.data()["number"]) === parseInt(quizData["number"]))
               // console.log("Old: " + quizData["number"] + " - New: " + snapshot.data()["number"])
+              console.log(parseInt(snapshot.data()["number"]) + 1);
               if (
-                parseInt(teamData["lastQuizNum"]) ==
-                  parseInt(quizData["number"]) + 1 ||
+                parseInt(teamData["lastQuizNum"]) + 1 ==
+                  parseInt(snapshot.data()["number"]) ||
                 teamData["lastQuizNum"] == 0
               ) {
                 setQuizData(snapshot.data());
@@ -132,8 +133,9 @@ export default function QuizHome({ navigation, route }) {
                 );
               } else if (
                 parseInt(teamData["lastQuizNum"]) ===
-                  parseInt(quizData["number"]) ||
-                parseInt(teamData["lastQuizNum"]) < parseInt(quizData["number"])
+                  parseInt(snapshot.data()["number"]) ||
+                parseInt(teamData["lastQuizNum"]) >
+                  parseInt(snapshot.data()["number"])
               ) {
                 Alert.alert(
                   "QR già letto",
@@ -397,7 +399,7 @@ export default function QuizHome({ navigation, route }) {
               }}
               onPress={() =>
                 scoreboardPublic
-                  ? navigation.navigate("userScoreboard")
+                  ? navigation.navigate("userScoreboard", { eventID: eventID })
                   : Alert.alert(
                       "Classifica non disponibile",
                       "In questa fase della gara non è possibile vedere la classifica"
@@ -591,7 +593,7 @@ export default function QuizHome({ navigation, route }) {
               }}
               onPress={() =>
                 scoreboardPublic
-                  ? navigation.navigate("userScoreboard")
+                  ? navigation.navigate("userScoreboard", { eventID: eventID })
                   : Alert.alert(
                       "Classifica non disponibile",
                       "In questa fase della gara non è possibile vedere la classifica"
@@ -741,7 +743,7 @@ export default function QuizHome({ navigation, route }) {
               }}
               onPress={() =>
                 scoreboardPublic
-                  ? navigation.navigate("userScoreboard")
+                  ? navigation.navigate("userScoreboard", { eventID: eventID })
                   : Alert.alert(
                       "Classifica non disponibile",
                       "In questa fase della gara non è possibile vedere la classifica"

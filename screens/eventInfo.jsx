@@ -67,69 +67,73 @@ export default function EventInfo({ navigation, route }) {
   }, []);
 
   const handleButton = () => {
-    try {
-      dispatch(checkEmailVerified());
-    } catch (e) {
-      console.error(e);
-    } finally {
-      if (screen == "inside") {
-        navigation.goBack();
-      } else if (auth.auth) {
-        if (auth.currentUser.emailVerified) {
-          navigation.navigate("EventBooking", {
-            eventID: route.params.eventID,
-          });
+    if (screen == "outside") {
+      navigation.goBack();
+    } else {
+      try {
+        dispatch(checkEmailVerified());
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (screen == "inside") {
+          navigation.goBack();
+        } else if (auth.auth) {
+          if (auth.currentUser.emailVerified) {
+            navigation.navigate("EventBooking", {
+              eventID: route.params.eventID,
+            });
+          } else {
+            // Alert.alert(
+            //   "Verifica la tua mail",
+            //   "Per continuare, ti preghiamo di verificare la tua mail"
+            // );
+            Alert.alert(
+              "Verifica la tua mail",
+              "Per continuare, ti preghiamo di verificare la tua mail",
+              [
+                {
+                  text: "Ricevi email",
+                  onPress: () => {
+                    sendEmailVerification(auth.currentUser);
+                    Alert.alert(
+                      "Email inviata",
+                      "Controlla la tua casella e riprova"
+                    );
+                  },
+                },
+                {
+                  text: "Già fatto",
+                  onPress: () => {
+                    dispatch(checkEmailVerified());
+                    handleButton();
+
+                    // if (auth.currentUser.emailVerified) {
+                    //   navigation.navigate("EventBooking", {
+                    //     eventID: route.params.eventID,
+                    //   });
+                    // }
+
+                    // auth.currentUser.reload();
+                  },
+                },
+                {
+                  text: "Esci",
+                  onPress: () => null,
+                  style: "cancel",
+                },
+              ],
+              {
+                cancelable: true,
+              },
+              [],
+              {
+                cancelable: true,
+              }
+            );
+          }
         } else {
-          // Alert.alert(
-          //   "Verifica la tua mail",
-          //   "Per continuare, ti preghiamo di verificare la tua mail"
-          // );
-          Alert.alert(
-            "Verifica la tua mail",
-            "Per continuare, ti preghiamo di verificare la tua mail",
-            [
-              {
-                text: "Ricevi email",
-                onPress: () => {
-                  sendEmailVerification(auth.currentUser);
-                  Alert.alert(
-                    "Email inviata",
-                    "Controlla la tua casella e riprova"
-                  );
-                },
-              },
-              {
-                text: "Già fatto",
-                onPress: () => {
-                  dispatch(checkEmailVerified());
-                  handleButton();
-
-                  // if (auth.currentUser.emailVerified) {
-                  //   navigation.navigate("EventBooking", {
-                  //     eventID: route.params.eventID,
-                  //   });
-                  // }
-
-                  // auth.currentUser.reload();
-                },
-              },
-              {
-                text: "Esci",
-                onPress: () => null,
-                style: "cancel",
-              },
-            ],
-            {
-              cancelable: true,
-            },
-            [],
-            {
-              cancelable: true,
-            }
-          );
+          navigation.navigate("Login");
         }
-      } else {
-        navigation.navigate("Login");
       }
     }
   };
@@ -359,16 +363,6 @@ export default function EventInfo({ navigation, route }) {
                           </View>
                         );
                       })}
-
-                      {/* <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, textAlign: 'center' }}>Caccia al tesoro tra i bar</Text>
-                <Text style={{ fontFamily: font.bold, fontSize: 20, color: colors.secondary, marginBottom: 10, textAlign: 'center' }}>(sfida alcolica)</Text>
-                <Text style={{ fontFamily: font.medium, fontSize: 20, color: colors.bg, marginBottom: 10, textAlign: 'center' }}>Parco di Lanciano "Central Park" alle 22.30</Text>
-                <Text style={[styles.text, {
-                  fontSize: 20,
-                  fontFamily: font.medium,
-                  marginBottom: 50
-                }]}>I concorrenti competeranno sempre in un'avvincente caccia al tesoro, ma questa volta per i bar della città. Per ogni tappa, le squadre dovranno bere shottini per ricevere il prossimo indovinello e andare avanti nella competizione. Anche in questo caso le prime 3 squadre si qualificheranno alla finale.
-                </Text> */}
                     </ScrollView>
                   </View>
                 );

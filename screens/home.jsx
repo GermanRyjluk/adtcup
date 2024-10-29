@@ -92,17 +92,24 @@ export default function Home({ navigation }) {
 
       if (snapshot.exists()) {
         if (
-          snapshot.data().status == "pending" ||
-          snapshot.data().status == "pay" ||
+          // snapshot.data().status == "pending" ||
+          // snapshot.data().status == "pay" ||
           snapshot.data().status == "waiting team"
         ) {
           navigation.navigate("EventStatus", {
             status: snapshot.data().status,
+            eventID: eventID,
           });
         } else if (snapshot.data().status == "pay") {
-          navigation.navigate("EventStatus", { status: "pay" });
+          navigation.navigate("EventStatus", {
+            status: "pay",
+            eventID: eventID,
+          });
         } else if (snapshot.data().status == "eliminated") {
-          navigation.navigate("EventStatus", { status: "eliminated" });
+          navigation.navigate("EventStatus", {
+            status: "eliminated",
+            eventID: eventID,
+          });
         } else if (snapshot.data().status == "can play") {
           navigation.navigate("Ticket", {
             eventID: eventID,
@@ -112,6 +119,8 @@ export default function Home({ navigation }) {
             eventID: eventID,
             scoreboardPublic: scoreboardPublic,
           });
+        } else if (snapshot.data().status == "pending") {
+          navigation.navigate("EventInfo", { eventID: eventID });
         }
       } else {
         navigation.navigate("EventInfo", { eventID: eventID });

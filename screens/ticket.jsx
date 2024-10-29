@@ -226,9 +226,9 @@ export default function Ticket({ navigation, route }) {
         >
           <Text
             style={{
-              fontSize: 25,
-              fontFamily: font.medium,
-              color: "white",
+              fontSize: 20,
+              fontFamily: font.bold,
+              color: colors.bg,
               marginTop: 50,
               textAlign: "center",
             }}
@@ -238,6 +238,22 @@ export default function Ticket({ navigation, route }) {
           </Text>
         </View>
         {/* {renderDistance()} */}
+        <TouchableOpacity
+          style={styles.eventInfoContainer}
+          onPress={() => {
+            navigation.navigate("EventInfo", {
+              eventID: eventID,
+              screen: "outside",
+            });
+          }}
+        >
+          <Ionicons
+            name="information-circle"
+            size={24}
+            color={colors.primary}
+          />
+          <Text style={styles.eventInfoText}>Info evento</Text>
+        </TouchableOpacity>
         <View
           style={{
             flex: 1,
@@ -339,5 +355,29 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: font.bold,
     fontSize: 20,
+  },
+  eventInfoContainer: {
+    borderRadius: 30,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.secondary,
+    padding: 10,
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
+  eventInfoBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.secondary,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+  },
+  eventInfoText: {
+    color: colors.primary,
+    textAlign: "center",
+    fontSize: 15,
+    fontFamily: font.bold,
+    marginLeft: 5,
   },
 });

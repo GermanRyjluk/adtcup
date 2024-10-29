@@ -99,9 +99,9 @@ export default function EventBooking({ navigation, route }) {
             status: "pending",
           }
         );
-        navigation.navigate("Home");
-        Alert.alert("Richiesta inviata!");
-        navigation.navigate("HomeDrawer");
+        // navigation.navigate("Home");
+        // Alert.alert("Richiesta inviata!");
+        // navigation.navigate("HomeDrawer");
       } catch (e) {
         console.error(e);
       } finally {
@@ -145,71 +145,16 @@ export default function EventBooking({ navigation, route }) {
             </Text>
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 30,
                 fontFamily: font.bold,
                 color: colors.secondary,
                 textAlign: "center",
               }}
             >
-              COMPILA IL QUESTIONARIO E TORNA SULL'APP PER TERMINARE
-              L'ISCRIZIONE
+              COMPILA IL QUESTIONARIO
             </Text>
           </View>
-          <View
-            style={{
-              flex: 0.75,
-              justifyContent: "space-evenly",
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                padding: 20,
-                width: 250,
-                height: 70,
-                backgroundColor: colors.bg,
-                alignItems: "center",
-                justifyContent: "space-evenly",
-                borderRadius: 50,
-                flexDirection: "row",
-              }}
-              onPress={() => {
-                Alert.alert(
-                  "Attenzione!",
-                  "Inviato il google forms, torna sull'app e premi gioca affinchè la tua prenotazione sia presa in considerazione!",
-                  [
-                    {
-                      text: "Ok, compila",
-                      onPress: () => Linking.openURL(formLink),
-                    },
-                    {
-                      text: "Esci",
-                      onPress: () => null,
-                      style: "cancel",
-                    },
-                  ],
-                  {
-                    cancelable: true,
-                  }
-                );
-              }}
-            >
-              <Image
-                source={require("../assets/googledocs.png")}
-                style={{ width: 25, height: 31, marginRight: 10 }}
-              />
-              <Text
-                style={{
-                  fontSize: 25,
-                  fontFamily: font.bold,
-                  color: colors.primary,
-                }}
-              >
-                Google Form
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flex: 1, alignItems: "center" }}>
+          <View style={{ flex: 1, alignItems: "center", marginTop: 20 }}>
             <Text
               style={{
                 color: colors.bg,
@@ -284,7 +229,7 @@ export default function EventBooking({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            <View
+            {/* <View
               style={{
                 width: 250,
                 flexDirection: "row",
@@ -312,60 +257,128 @@ export default function EventBooking({ navigation, route }) {
               >
                 Ho compilato il form
               </Text>
-            </View>
+            </View> */}
             <View
               style={{
-                width: 250,
-                flexDirection: "row",
+                flex: 0.75,
+                justifyContent: "space-evenly",
                 alignItems: "center",
-                marginBottom: 20,
               }}
             >
-              <CheckBox
+              <View
                 style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 15,
-                  marginRight: 10,
-                }}
-                value={completedPrivacyPolicy}
-                onValueChange={(state) => setCompletedPrivacyPolicy(state)}
-                color={colors.secondary}
-              />
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontFamily: font.medium,
-                  color: "#dadada",
+                  width: 250,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 30,
                 }}
               >
-                Accetto
-              </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("TermsAndConditions")}
-              >
+                <CheckBox
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 15,
+                    marginRight: 10,
+                  }}
+                  value={completedPrivacyPolicy}
+                  onValueChange={(state) => setCompletedPrivacyPolicy(state)}
+                  color={colors.secondary}
+                />
                 <Text
                   style={{
                     fontSize: 15,
-                    fontFamily: font.bold,
-                    color: colors.secondary,
+                    fontFamily: font.medium,
+                    color: "#dadada",
                   }}
                 >
-                  {" "}
-                  termini e condizioni
+                  Accetto
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("TermsAndConditions")}
+                >
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: font.bold,
+                      color: colors.secondary,
+                    }}
+                  >
+                    {" "}
+                    termini e condizioni
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                disabled={!completedPrivacyPolicy}
+                style={{
+                  padding: 20,
+                  width: 250,
+                  height: 70,
+                  backgroundColor: completedPrivacyPolicy ? colors.bg : "gray",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                  borderRadius: 50,
+                  flexDirection: "row",
+                }}
+                onPress={() => {
+                  Alert.alert(
+                    "Attenzione!",
+                    "Se non invii il modulo della personalità non potrai essere selezionato per l'evento",
+                    [
+                      {
+                        text: "Compila",
+                        onPress: () => {
+                          handleSendRequest();
+                          Linking.openURL(formLink);
+                        },
+                      },
+                      {
+                        text: "Esci",
+                        onPress: () => null,
+                        style: "cancel",
+                      },
+                    ],
+                    {
+                      cancelable: true,
+                    }
+                  );
+                }}
+              >
+                <Image
+                  source={require("../assets/googledocs.png")}
+                  style={{ width: 25, height: 31, marginRight: 10 }}
+                />
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontFamily: font.bold,
+                    color: completedPrivacyPolicy ? colors.primary : "#cdcdcd",
+                  }}
+                >
+                  Google Form
                 </Text>
               </TouchableOpacity>
+              <Text
+                style={{
+                  color: colors.bg,
+                  fontSize: 15,
+                  fontFamily: font.bold,
+                  textAlign: "center",
+                  marginTop: 20,
+                }}
+              >
+                Se hai gia inviato il form attendi di essere accettato!
+              </Text>
             </View>
-            <TouchableOpacity
-              disabled={!completed || !completedPrivacyPolicy}
+            {/* <TouchableOpacity
+              disabled={!completedPrivacyPolicy}
               style={{
                 padding: 20,
                 width: 250,
                 height: 70,
-                backgroundColor:
-                  completed && completedPrivacyPolicy
-                    ? colors.secondary
-                    : "gray",
+                backgroundColor: completedPrivacyPolicy
+                  ? colors.secondary
+                  : "gray",
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 50,
@@ -391,7 +404,7 @@ export default function EventBooking({ navigation, route }) {
                   Invia richiesta
                 </Text>
               )}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </>

@@ -27,8 +27,8 @@ export default function Scoreboard({ route }) {
   const [refreshing, setRefreshing] = useState(false);
   const [teams, setTeams] = useState([]);
 
-  const eventID = "1VgaAztg9yvbzRLuIjql";
-  // const eventID = route.params.eventID;
+  // const eventID = "1VgaAztg9yvbzRLuIjql";
+  const eventID = route.params.eventID;
 
   const getTeamsFromDB = useCallback(async () => {
     setRefreshing(true);
