@@ -103,7 +103,9 @@ export default function Quiz({ navigation }) {
           alignItems: "center",
           justifyContent: "center",
         }}
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate("QuizEdit", { quiz: "" });
+        }}
       >
         <Ionicons name="add" size={50} color={colors.primary} />
       </TouchableOpacity>

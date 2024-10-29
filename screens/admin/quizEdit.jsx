@@ -7,6 +7,7 @@ import {
   ScrollView,
   RefreshControl,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -56,93 +57,101 @@ export default function QuizEdit({ navigation, route }) {
     console.log(newQuiz); // Puoi sostituire questo con una funzione che invia il quiz al database
   };
 
-  return (
-    <>
-      <Header />
-      <View style={styles.container}>
-        {/* Titolo */}
-        <Text style={styles.title}>Modifica quiz</Text>
+  if (quiz != "") {
+    return (
+      <>
+        <Header />
+        <View style={styles.container}>
+          {/* Titolo */}
+          <Text style={styles.title}>Modifica quiz</Text>
 
-        {/* Input per il messaggio */}
-        <TextInput
-          style={styles.input}
-          placeholder="Messaggio"
-          placeholderTextColor="gray"
-          value={message}
-          onChangeText={(text) => setMessage(text)}
-        />
+          {/* Input per il messaggio */}
+          <TextInput
+            style={styles.input}
+            placeholder="Messaggio"
+            placeholderTextColor="gray"
+            value={message}
+            onChangeText={(text) => setMessage(text)}
+          />
 
-        {/* Input per la foto */}
-        <TextInput
-          style={styles.input}
-          placeholder="URL della foto"
-          placeholderTextColor="gray"
-          value={photo}
-          onChangeText={(text) => setPhoto(text)}
-        />
+          {/* Input per la foto */}
+          <TextInput
+            style={styles.input}
+            placeholder="URL della foto"
+            placeholderTextColor="gray"
+            value={photo}
+            onChangeText={(text) => setPhoto(text)}
+          />
 
-        {/* Input per il numero */}
-        <TextInput
-          style={styles.input}
-          placeholder="Numero"
-          placeholderTextColor="gray"
-          value={number}
-          keyboardType="numeric"
-          onChangeText={(text) => setNumber(text)}
-        />
+          {/* Input per il numero */}
+          <TextInput
+            style={styles.input}
+            placeholder="Numero"
+            placeholderTextColor="gray"
+            value={number}
+            keyboardType="numeric"
+            onChangeText={(text) => setNumber(text)}
+          />
 
-        {/* Input per la giornata */}
-        <TextInput
-          style={styles.input}
-          placeholder="Giornata"
-          placeholderTextColor="gray"
-          value={giornata}
-          keyboardType="numeric"
-          onChangeText={(text) => setGiornata(text)}
-        />
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={type}
-            onValueChange={(itemValue) => setType(itemValue)} // Cambia stato in base alla selezione
-            style={styles.picker}
-          >
-            <Picker.Item label="Entrambi" value="both" />
-            <Picker.Item label="Solo Testo" value="message" />
-            <Picker.Item label="Solo Foto" value="photo" />
-            <Picker.Item label="Bonus" value="bonus" />
-            <Picker.Item label="Malus" value="malus" />
-          </Picker>
-        </View>
-
-        <TouchableOpacity
-          style={{
-            width: "100%",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 10,
-          }}
-          onPress={() => {
-            handleModifiy();
-          }}
-        >
-          <View style={[styles.button]}>
-            <Ionicons name="pencil" size={30} color={colors.primary} />
-            <Text
-              style={{
-                fontSize: 25,
-                color: colors.primary,
-                fontWeight: "bold",
-                marginLeft: 10,
-              }}
+          {/* Input per la giornata */}
+          <TextInput
+            style={styles.input}
+            placeholder="Giornata"
+            placeholderTextColor="gray"
+            value={giornata}
+            keyboardType="numeric"
+            onChangeText={(text) => setGiornata(text)}
+          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={type}
+              onValueChange={(itemValue) => setType(itemValue)} // Cambia stato in base alla selezione
+              style={styles.picker}
             >
-              Modifica
-            </Text>
+              <Picker.Item label="Entrambi" value="both" />
+              <Picker.Item label="Solo Testo" value="message" />
+              <Picker.Item label="Solo Foto" value="photo" />
+              <Picker.Item label="Bonus" value="bonus" />
+              <Picker.Item label="Malus" value="malus" />
+            </Picker>
           </View>
-        </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              width: "100%",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 10,
+            }}
+            onPress={() => {
+              handleModifiy();
+            }}
+          >
+            <View style={[styles.button]}>
+              <Ionicons name="pencil" size={30} color={colors.primary} />
+              <Text
+                style={{
+                  fontSize: 25,
+                  color: colors.primary,
+                  fontWeight: "bold",
+                  marginLeft: 10,
+                }}
+              >
+                Modifica
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </>
+    );
+  } else {
+    return (
+      <View>
+        <ActivityIndicator />
       </View>
-    </>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({

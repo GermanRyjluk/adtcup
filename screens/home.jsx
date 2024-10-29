@@ -101,6 +101,8 @@ export default function Home({ navigation }) {
           });
         } else if (snapshot.data().status == "pay") {
           navigation.navigate("EventStatus", { status: "pay" });
+        } else if (snapshot.data().status == "eliminated") {
+          navigation.navigate("EventStatus", { status: "eliminated" });
         } else if (snapshot.data().status == "can play") {
           navigation.navigate("Ticket", {
             eventID: eventID,
