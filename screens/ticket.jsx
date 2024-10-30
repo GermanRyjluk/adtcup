@@ -27,6 +27,7 @@ export default function Ticket({ navigation, route }) {
   const auth = useSelector((state) => state.auth);
 
   const eventID = route.params.eventID;
+
   const [startingPoint, setStartingPoint] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [position, setPosition] = useState({});
@@ -70,31 +71,8 @@ export default function Ticket({ navigation, route }) {
     );
   };
 
-  // const renderDistance = () => {
-  //   if (userLocation) {
-  //     setDistance(getDistance(position, {
-  //       latitude: userLocation.coords.latitude,
-  //       longitude: userLocation.coords.longitude,
-  //     }));
-  //     return (
-  //       <View
-  //         style={{
-  //           borderRadius: 10,
-  //           justifyContent: "center",
-  //           alignItems: "center",
-  //         }}
-  //       >
-  //         <Text
-  //           style={{ fontSize: 25, fontFamily: font.medium, color: colors.secondary }}
-  //         >
-  //           Sei a {distance} metri
-  //         </Text>
-  //       </View>
-  //     );
-  //   }
-  // };
-
   const fetchStartingPoint = async () => {
+    setLoading(true);
     try {
       await getDoc(
         doc(db, "users", auth.currentUser.uid, "bookings", eventID)
@@ -113,6 +91,8 @@ export default function Ticket({ navigation, route }) {
       });
     } catch (e) {
       console.error("Error fetching position: " + e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -175,9 +155,7 @@ export default function Ticket({ navigation, route }) {
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchStartingPoint();
-    setLoading(false);
   }, [startingPoint, distance]);
 
   return (

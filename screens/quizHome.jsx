@@ -7,6 +7,7 @@ import {
   ScrollView,
   RefreshControl,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { Header } from "../components/header";
@@ -24,19 +25,28 @@ import { Footer } from "../components/footer";
 import Loading from "../components/loading";
 import { useSelector } from "react-redux";
 
+import { getDistance } from "geolib";
+import * as Location from "expo-location";
+
 export default function QuizHome({ navigation, route }) {
   const auth = useSelector((state) => state.auth);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [userTeam, setUserTeam] = useState("");
   const [quizData, setQuizData] = useState([null]);
 
-  const [refreshing, setRefreshing] = useState(false);
-
   const [teamData, setTeamData] = useState([]); //lastQuiz, currentHint, timeOfScan, name, number
-
   const [scoreboardPublic, setScoreboardPublic] = useState(false);
+
+  const [userLocation, setUserLocation] = useState(null);
+  const [position, setPosition] = useState({});
+  const [permission, setPermission] = useState();
+  const [distance, setDistance] = useState(null);
 
   const eventID = route.params.eventID;
   const quizID = route.params.quizID;
+
   const currentTime = new Date();
 
   // ---------------- FETCH FUNCTIONS ---------------- //
@@ -52,6 +62,52 @@ export default function QuizHome({ navigation, route }) {
     } catch (e) {
       console.error("Error getting scoreboard status: ", e);
     }
+  };
+
+  const geolocationCheck = async (quizID) => {
+    let flag = false;
+    setLoading(true);
+    try {
+      const snapshot = await getDoc(doc(db, "events", eventID, "quiz", quizID));
+      const quizCoords = snapshot.data()["quizCoords"];
+      setPosition(quizCoords);
+
+      // Request location permission
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setPermission(false);
+        console.log("Permission to access location was denied");
+        return false; // Return immediately if permission is denied
+      } else {
+        setPermission(true);
+      }
+
+      // Get the current location
+      const location = await Location.getCurrentPositionAsync({});
+      setUserLocation(location);
+
+      // Calculate the distance between user and quiz coordinates
+      const distance = getDistance(
+        { latitude: quizCoords.latitude, longitude: quizCoords.longitude },
+        {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }
+      );
+      console.log("Distanza: ", distance);
+      // Set flag to true if within 70 meters
+      if (distance < 50) {
+        flag = true;
+      }
+
+      setDistance(distance); // Optionally update distance state
+    } catch (e) {
+      console.error("Error fetching position: " + e);
+    } finally {
+      setLoading(false);
+    }
+
+    return flag; // Safely return the flag after try-catch
   };
 
   //Get new quiz and update database
@@ -102,13 +158,16 @@ export default function QuizHome({ navigation, route }) {
                 });
               }
             } else {
-              // console.log(parseInt(snapshot.data()["number"]) === parseInt(quizData["number"]))
-              // console.log("Old: " + quizData["number"] + " - New: " + snapshot.data()["number"])
               console.log(parseInt(snapshot.data()["number"]) + 1);
+
+              // Check if the team's last quiz number and geolocation are valid
+              const isGeolocationValid = await geolocationCheck(quiz);
+
               if (
-                parseInt(teamData["lastQuizNum"]) + 1 ==
+                (parseInt(teamData["lastQuizNum"]) + 1 ===
                   parseInt(snapshot.data()["number"]) ||
-                teamData["lastQuizNum"] == 0
+                  teamData["lastQuizNum"] === 0) &&
+                isGeolocationValid
               ) {
                 setQuizData(snapshot.data());
                 await updateDoc(doc(db, "events", eventID, "teams", team), {
@@ -123,13 +182,17 @@ export default function QuizHome({ navigation, route }) {
                     time: currentTime,
                   }
                 );
-                console.log(quiz, team);
                 await setDoc(
                   doc(db, "events", eventID, "quiz", quiz, "scanned", team),
                   {
                     name: teamData["name"],
                     timeOfScan: currentTime,
                   }
+                );
+              } else if (!isGeolocationValid) {
+                Alert.alert(
+                  "Troppo distante!",
+                  "Avvicinati alla tappa per poter leggere questo QR"
                 );
               } else if (
                 parseInt(teamData["lastQuizNum"]) ===
@@ -274,6 +337,30 @@ export default function QuizHome({ navigation, route }) {
   // ---------------- RENDER ---------------- //
   if (!quizData) {
     return <Loading />;
+  }
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.bg,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            color: colors.primary,
+            marginBottom: 10,
+          }}
+        >
+          Verifica quiz in corso...
+        </Text>
+        <ActivityIndicator color={colors.primary} size={20} />
+      </View>
+    );
   }
   if (quizData.type == "both") {
     return (
