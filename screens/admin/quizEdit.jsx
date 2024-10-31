@@ -61,7 +61,7 @@ export default function QuizEdit({ navigation, route }) {
     return (
       <>
         <Header />
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           {/* Titolo */}
           <Text style={styles.title}>Modifica quiz</Text>
 
@@ -97,6 +97,22 @@ export default function QuizEdit({ navigation, route }) {
           <TextInput
             style={styles.input}
             placeholder="Giornata"
+            placeholderTextColor="gray"
+            value={giornata}
+            keyboardType="numeric"
+            onChangeText={(text) => setGiornata(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Latitude"
+            placeholderTextColor="gray"
+            value={giornata}
+            keyboardType="numeric"
+            onChangeText={(text) => setGiornata(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Longitude"
             placeholderTextColor="gray"
             value={giornata}
             keyboardType="numeric"
@@ -142,7 +158,7 @@ export default function QuizEdit({ navigation, route }) {
               </Text>
             </View>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </>
     );
   } else {

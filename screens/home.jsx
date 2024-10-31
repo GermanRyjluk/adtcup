@@ -280,7 +280,7 @@ export default function Home({ navigation }) {
                             fontFamily: font.bold,
                           }}
                         >
-                          Gioca
+                          GIOCA
                         </Text>
                       )}
                     </View>

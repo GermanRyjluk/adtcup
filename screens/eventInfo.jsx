@@ -174,6 +174,13 @@ export default function EventInfo({ navigation, route }) {
                       width,
                       alignItems: "center",
                       padding: 20,
+                      // Shadow for iOS
+                      shadowColor: "#000",
+                      shadowOffset: { width: 0, height: 5 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 10,
+                      // Shadow for Android
+                      elevation: 10,
                     }}
                   >
                     <ScrollView
@@ -181,7 +188,7 @@ export default function EventInfo({ navigation, route }) {
                         width: "100%",
                         height: "90%",
                         backgroundColor: colors.primary,
-                        borderRadius: 20,
+                        borderRadius: 15,
                         padding: 30,
                         marginBottom: 25,
                       }}
@@ -263,8 +270,16 @@ export default function EventInfo({ navigation, route }) {
                         backgroundColor: colors.primary,
                         alignItems: "center",
                         justifyContent: "center",
-                        borderRadius: 40,
+                        borderRadius: 15,
                         marginBottom: 50,
+
+                        // Shadow for iOS
+                        shadowColor: "#000",
+                        shadowOffset: { width: 0, height: 5 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 10,
+                        // Shadow for Android
+                        elevation: 10,
                       }}
                     >
                       <Text
@@ -274,7 +289,7 @@ export default function EventInfo({ navigation, route }) {
                           fontFamily: font.bold,
                         }}
                       >
-                        Gioca
+                        GIOCA
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -288,6 +303,13 @@ export default function EventInfo({ navigation, route }) {
                       alignItems: "center",
                       padding: 20,
                       marginBottom: 20,
+                      // Shadow for iOS
+                      shadowColor: "#000",
+                      shadowOffset: { width: 0, height: 5 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 10,
+                      // Shadow for Android
+                      elevation: 10,
                     }}
                   >
                     <ScrollView
@@ -295,7 +317,7 @@ export default function EventInfo({ navigation, route }) {
                         width: "100%",
                         height: "90%",
                         backgroundColor: colors.primary,
-                        borderRadius: 20,
+                        borderRadius: 15,
                         padding: 30,
                         marginBottom: 25,
                       }}

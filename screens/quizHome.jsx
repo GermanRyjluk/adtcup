@@ -161,7 +161,12 @@ export default function QuizHome({ navigation, route }) {
               console.log(parseInt(snapshot.data()["number"]) + 1);
 
               // Check if the team's last quiz number and geolocation are valid
-              const isGeolocationValid = await geolocationCheck(quiz);
+              let isGeolocationValid;
+              if (snapshot.data()["geolocationCheck"]) {
+                isGeolocationValid = await geolocationCheck(quiz);
+              } else {
+                isGeolocationValid = true;
+              }
 
               if (
                 (parseInt(teamData["lastQuizNum"]) + 1 ===
@@ -366,11 +371,11 @@ export default function QuizHome({ navigation, route }) {
     return (
       <>
         <Header screen={"OnGame"} />
-        <ScrollView
+        <View
           style={{ padding: 20, flex: 1, backgroundColor: colors.bg }}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-          }
+          // refreshControl={
+          //   <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          // }
         >
           <View
             style={{
@@ -389,12 +394,13 @@ export default function QuizHome({ navigation, route }) {
                 borderTopLeftRadius: 20,
               }}
             />
-            <View
+            <ScrollView
               style={{
                 padding: 20,
                 borderBottomRightRadius: 20,
                 borderBottomLeftRadius: 20,
                 height: "50%",
+                paddingBottom: 100,
               }}
             >
               <Text
@@ -412,7 +418,7 @@ export default function QuizHome({ navigation, route }) {
                   fontSize: 20,
                   fontFamily: font.medium,
                   color: "white",
-                  marginBottom: 10,
+                  marginBottom: 100,
                 }}
               >
                 {quizData.message}
@@ -421,9 +427,10 @@ export default function QuizHome({ navigation, route }) {
                 style={{
                   position: "absolute",
                   bottom: 10,
-                  left: 20,
                   width: "100%",
                   alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 30,
                 }}
               >
                 <Text
@@ -431,13 +438,12 @@ export default function QuizHome({ navigation, route }) {
                     fontSize: 20,
                     fontFamily: font.medium,
                     color: "white",
-                    marginBottom: 10,
                   }}
                 >
                   {quizData.number}/??
                 </Text>
               </View>
-            </View>
+            </ScrollView>
           </View>
           <View
             style={{
@@ -562,7 +568,7 @@ export default function QuizHome({ navigation, route }) {
             </TouchableOpacity> */}
           </View>
           <View style={{ width: "100%", height: 200 }}></View>
-        </ScrollView>
+        </View>
         <Footer eventID={eventID} />
       </>
     );
@@ -576,7 +582,7 @@ export default function QuizHome({ navigation, route }) {
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
         >
-          <View
+          <ScrollView
             style={{
               width: "100%",
               height: 450,
@@ -589,7 +595,8 @@ export default function QuizHome({ navigation, route }) {
                 padding: 20,
                 borderBottomRightRadius: 20,
                 borderBottomLeftRadius: 20,
-                height: "50%",
+                height: "100%",
+                marginBottom: 50,
               }}
             >
               <Text
@@ -632,7 +639,7 @@ export default function QuizHome({ navigation, route }) {
                 {quizData.number}/??
               </Text>
             </View>
-          </View>
+          </ScrollView>
           <View
             style={{
               width: "100%",

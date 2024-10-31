@@ -7,7 +7,6 @@ import Icon from "react-native-vector-icons/Octicons"; //Gear (gear) and Hamburg
 import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-
 export const Header = ({ screen }) => {
   const navigation = useNavigation();
   const openDrawer = () => {
@@ -23,29 +22,21 @@ export const Header = ({ screen }) => {
         {/* <TouchableOpacity>
           <Icon name="gear" size={25} color={colors.secondary} />
         </TouchableOpacity> */}
-        {screen == 'home' ? null :
-          screen == "OnGame" ?
-            <TouchableOpacity
-              style={{ position: 'absolute', left: 30 }}
-              onPress={() => navigation.navigate("HomeDrawer")}>
-
-              <Ionicons
-                name="home"
-                size={30}
-                color={colors.secondary}
-              />
-            </TouchableOpacity> :
-            <TouchableOpacity
-              style={{ position: 'absolute', left: 30 }}
-              onPress={() => navigation.goBack()}>
-
-              <Ionicons
-                name="arrow-back"
-                size={40}
-                color={colors.secondary}
-              />
-            </TouchableOpacity>
-        }
+        {screen == "home" ? null : screen == "OnGame" ? (
+          <TouchableOpacity
+            style={{ position: "absolute", left: 30 }}
+            onPress={() => navigation.navigate("HomeDrawer")}
+          >
+            <Ionicons name="home" size={30} color={colors.secondary} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={{ position: "absolute", left: 30 }}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={40} color={colors.secondary} />
+          </TouchableOpacity>
+        )}
         <View
           style={{
             flexDirection: "row",
@@ -86,6 +77,6 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     fontSize: 25,
     marginHorizontal: 5,
-    fontFamily: 'cherry-regular',
+    fontFamily: "cherry-regular",
   },
 });

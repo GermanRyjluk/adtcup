@@ -44,6 +44,7 @@ export default function Bookings({ navigation }) {
   const [orange, setOrange] = useState(false);
   const [blue, setBlue] = useState(false);
   const [green, setGreen] = useState(false);
+  const [grey, setGrey] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -74,33 +75,72 @@ export default function Bookings({ navigation }) {
     if (status == "eliminated") return "#7d7d7d";
   };
 
-  const handleDelete = async (uid) => {
-    Alert.alert(
-      "Elimina giocatore",
-      "Attenzione, quest'azione è irreversibile!",
-      [
-        {
-          text: "Conferma",
-          onPress: async () => {
-            try {
-              await deleteDoc(doc(db, "/events", eventID, "/bookings", uid));
-              Alert.alert("Eliminato!", "Giocatore eliminato permanentemente");
-            } catch (e) {
-              console.error(e);
-            }
+  const handleDelete = async (status, uid) => {
+    if (status == "eliminated") {
+      Alert.alert(
+        "Rianima giocatore",
+        "Attenzione, ora potrà scannerizzare i QR!",
+        [
+          {
+            text: "Conferma",
+            onPress: async () => {
+              try {
+                await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
+                  status: "playing",
+                });
+                Alert.alert(
+                  "Rianimato",
+                  "Il giocatore è stato rianimato e può ricominciare a giocare"
+                );
+              } catch (e) {
+                console.error(e);
+              }
+            },
+            style: "cancel",
           },
-          style: "cancel",
-        },
+          {
+            text: "Anulla",
+            onPress: () => null,
+            style: "cancel",
+          },
+        ],
         {
-          text: "Anulla",
-          onPress: () => null,
-          style: "cancel",
-        },
-      ],
-      {
-        cancelable: true,
-      }
-    );
+          cancelable: true,
+        }
+      );
+    } else {
+      Alert.alert(
+        "Elimina giocatore",
+        "Attenzione, non potrà più scannerizzare i QR!",
+        [
+          {
+            text: "Conferma",
+            onPress: async () => {
+              try {
+                await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
+                  status: "eliminated",
+                });
+                Alert.alert(
+                  "Eliminato",
+                  "Il giocatore è stato eliminato e aspetta di essere reinserito"
+                );
+              } catch (e) {
+                console.error(e);
+              }
+            },
+            style: "cancel",
+          },
+          {
+            text: "Anulla",
+            onPress: () => null,
+            style: "cancel",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    }
   };
 
   const handleUpgradeState = async (status, uid) => {
@@ -208,9 +248,14 @@ export default function Bookings({ navigation }) {
               justifyContent: "center",
               padding: 10,
             }}
-            onPress={() => handleDelete(player.uid)}
+            onPress={() => handleDelete(player.status, player.uid)}
           >
-            <Ionicons name="trash" size={30} />
+            {player.status == "playing" ? (
+              <Ionicons name="trash" size={30} />
+            ) : null}
+            {player.status == "eliminated" ? (
+              <Ionicons name="reload" size={30} />
+            ) : null}
           </TouchableOpacity>
           {player.status == "waiting team" ||
           player.status == "can play" ||
@@ -384,6 +429,24 @@ export default function Bookings({ navigation }) {
                 In gioco
               </Text>
             </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={grey}
+                onValueChange={(state) => setGrey(state)}
+                color={"#7d7d7d"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                Eliminato
+              </Text>
+            </View>
           </View>
 
           <TouchableOpacity
@@ -461,6 +524,12 @@ export default function Bookings({ navigation }) {
               onValueChange={(state) => setGreen(state)}
               color={"#2ADF7D"}
             />
+            <CheckBox
+              style={{ width: 30, height: 30, borderRadius: 5 }}
+              value={grey}
+              onValueChange={(state) => setGrey(state)}
+              color={"#7d7d7d"}
+            />
           </View>
         </View>
         {players.map((player, i) => {
@@ -472,12 +541,13 @@ export default function Bookings({ navigation }) {
               orange: status === "waiting team" && orange,
               blue: status === "can play" && blue,
               green: status === "playing" && green,
+              grey: status === "eliminated" && grey,
             };
 
             // Check if any of the color conditions are true
             return (
               Object.values(colorConditions).some(Boolean) ||
-              (!red && !yellow && !orange && !blue && !green)
+              (!red && !yellow && !orange && !blue && !green && !grey)
             );
           };
 
