@@ -11,7 +11,7 @@ import EventStatus from "../screens/eventStatus";
 import QrReader from "../screens/qrReader";
 import GameRules from "../screens/eventInfo";
 import TeamInfo from "../screens/teamInfo";
-import QuizHome from "../screens/quizHome";
+import QuizHome from "../screens/quizHome/quizHome";
 import GeolocationCheck from "../screens/geolocationCheck";
 import Ticket from "../screens/ticket";
 import EventBooking from "../screens/eventBooking";

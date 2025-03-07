@@ -57,15 +57,15 @@ export default function PlayerSettings({ navigation, route }) {
         });
         await setDoc(doc(db, "/events", eventID, "/teams", teamNum), {
           name: "Squadra " + teamNum,
-          lastQuiz: "vErhQU5ApvBVNfQwD8Td",
+          lastQuiz: "TBjKSllevzJ1UHmUbSAN",
           lastQuizNum: 1,
           number: teamNum,
           points: 0,
           timeOfScan: new Date(),
-          startingPoint: "https://goo.gl/maps/MqjWxfvu7nMN6Pjk6",
+          startingPoint: "https://maps.app.goo.gl/JPeTXexYrRbo8C6j9",
           startingPointCoords: {
-            latitude: "42.22799298389713",
-            longitude: "14.396967792527494",
+            latitude: "45.064645011932726",
+            longitude: "7.695622851785126",
           },
         });
         Alert.alert("Aggiornato!");

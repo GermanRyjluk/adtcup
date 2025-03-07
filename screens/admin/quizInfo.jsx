@@ -43,10 +43,10 @@ export default function QuizInfo({ navigation, route }) {
     setRefreshing(true);
     try {
       const snapshot = getDocs(
-        // query(
-        collection(db, "events", eventID, "quiz", quiz.id, "scanned")
-        // orderBy("timeOfScan", "asc")
-        // )
+        query(
+          collection(db, "events", eventID, "quiz", quiz.id, "scanned"),
+          orderBy("timeOfScan", "asc")
+        )
       ).then((snapshot) => {
         setTeamsOrder(snapshot.docs.map((doc) => doc.data()));
         snapshot.docs.map((doc) => console.log(doc.data()));
