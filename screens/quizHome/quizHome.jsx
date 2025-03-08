@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, Alert } from "react-native";
 import { useSelector } from "react-redux";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import * as Location from "expo-location";
 import { getDistance } from "geolib";
 
@@ -131,6 +131,7 @@ export default function QuizHome({ navigation, route }) {
               isGeolocationValid
             ) {
               setQuizData(data);
+              setTeamData({ ...teamData, lastQuizNum: data.number });
               await updateDoc(doc(db, "events", eventID, "teams", team), {
                 lastQuiz: quizID,
                 lastQuizNum: data.number,
@@ -165,7 +166,7 @@ export default function QuizHome({ navigation, route }) {
             } else {
               Alert.alert(
                 "Dove vai così veloce?",
-                "Questo non è il QR che avresti dovuto trovare, riprova :)"
+                "Questo non è il QR che avresti dovuto trovare, riprova :)."
               );
             }
           }

@@ -75,7 +75,9 @@ export default function QuizEdit({ navigation, route }) {
       <Header />
       <ScrollView style={styles.container}>
         {/* Titolo */}
-        <Text style={styles.title}>Modifica quiz</Text>
+        <Text style={styles.title}>
+          {quiz == "" ? "Crea" : "Modifica"} quiz
+        </Text>
 
         {/* Input per l'id */}
         <TextInput

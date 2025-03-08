@@ -123,6 +123,19 @@ export default function Dashboard({ navigation }) {
               <Text style={styles.text}>Classifica</Text>
               <Ionicons name="bar-chart" size={50} />
             </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.box,
+                {
+                  backgroundColor: "#73bbff",
+                  marginBottom: 15,
+                },
+              ]}
+              onPress={() => navigation.navigate("Quiz")}
+            >
+              <Text style={styles.text}>Quiz</Text>
+              <Ionicons name="search" size={50} />
+            </TouchableOpacity>
             <View style={{ flex: 1, flexDirection: "row" }}>
               <TouchableOpacity
                 style={[
@@ -145,13 +158,13 @@ export default function Dashboard({ navigation }) {
                   {
                     marginBottom: 15,
                     flex: 1,
-                    backgroundColor: "#73bbff",
+                    backgroundColor: "orange",
                   },
                 ]}
-                onPress={() => navigation.navigate("Quiz")}
+                onPress={() => navigation.navigate("QrReader", { admin: true })}
               >
-                <Text style={styles.text}>Quiz</Text>
-                <Ionicons name="search" size={40} />
+                <Text style={styles.text}>QR</Text>
+                <Ionicons name="qr-code" size={40} />
               </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -167,19 +180,7 @@ export default function Dashboard({ navigation }) {
               <Text style={styles.text}>Prenotazioni</Text>
               <Ionicons name="list" size={50} />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.box,
-                {
-                  backgroundColor: "orange",
-                  marginBottom: 15,
-                },
-              ]}
-              onPress={() => navigation.navigate("QrReader", { admin: true })}
-            >
-              <Text style={styles.text}>Lettore Qr</Text>
-              <Ionicons name="qr-code" size={50} />
-            </TouchableOpacity>
+
             {/* <TouchableOpacity
               style={[
                 styles.box,

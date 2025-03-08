@@ -26,10 +26,10 @@ const BarScreen = ({ navigation, eventID, barData }) => {
   // State to track whether additional info is visible.
   const [moreInfoVisible, setMoreInfoVisible] = useState(false);
 
-  const handleAddFavorite = () => {
-    const query = encodeURIComponent(barData.place);
-    const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
-    Linking.openURL(url);
+  const handleAddFavorite = (link) => {
+    // const query = encodeURIComponent(barData.place);
+    // const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+    Linking.openURL(link);
   };
 
   const handleMoreInfo = () => {
@@ -67,7 +67,7 @@ const BarScreen = ({ navigation, eventID, barData }) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.favButton}
-                  onPress={handleAddFavorite}
+                  onPress={() => handleAddFavorite(barData.link)}
                 >
                   <MapPin color={colors.primary} style={{ marginRight: 10 }} />
                   <Text style={styles.favButtonText}>Apri in Google Maps</Text>

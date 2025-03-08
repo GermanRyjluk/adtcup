@@ -42,50 +42,51 @@ export default function Quiz({ navigation }) {
   const getQuiz = useCallback(async () => {
     setRefreshing(true);
     try {
-      const snapshot = getDocs(
+      const snapshot = await getDocs(
         query(
           collection(db, "events", eventID, "quiz"),
-          orderBy("number", "asc")
+          orderBy("number", "desc")
         )
-      ).then((snapshot) => {
-        setQuiz(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-      });
+      );
+      setQuiz(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     } catch (e) {
-      console.error(e);
+      console.error("Errore fetching data: ", e);
     } finally {
       setRefreshing(false);
     }
-  }, []);
+  }, [eventID]);
 
   useEffect(() => {
     getQuiz();
   }, []);
 
   const render = (quiz, i) => {
-    return (
-      <TouchableOpacity
-        style={{
-          width: "100%",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          backgroundColor: colors.bg,
-          marginBottom: 10,
-          paddingHorizontal: 20,
-          paddingVertical: 20,
-          paddingRight: 50,
-          borderRadius: 10,
-        }}
-        key={i}
-        onPress={() => navigation.navigate("QuizInfo", { quiz })}
-      >
-        <View>
-          <Text style={{ fontSize: 20, fontFamily: font.bold }}>
-            {quiz.number} - {quiz.message}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
+    if (quiz.type == "bar") {
+      return (
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexDirection: "row",
+            backgroundColor: colors.bg,
+            marginBottom: 10,
+            paddingHorizontal: 20,
+            paddingVertical: 20,
+            paddingRight: 50,
+            borderRadius: 10,
+          }}
+          key={i}
+          onPress={() => navigation.navigate("QuizInfo", { quiz })}
+        >
+          <View>
+            <Text style={{ fontSize: 20, fontFamily: font.bold }}>
+              {quiz.number / 2} - {quiz.title}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
   };
 
   return (
@@ -160,7 +161,6 @@ export default function Quiz({ navigation }) {
             style={{
               width: "100%",
               flexDirection: "row",
-              // marginVertical: 15,
               justifyContent: "space-around",
             }}
           ></View>
@@ -173,14 +173,14 @@ export default function Quiz({ navigation }) {
           } else if (search == "" && !bonmal) {
             return render(quiz, i);
           } else if (
-            quiz.message.toLowerCase().includes(search.toLowerCase()) &&
+            quiz.title?.toLowerCase().includes(search.toLowerCase()) &&
             bonmal
           ) {
             if (quiz.type == "malus" || quiz.type == "bonus") {
               return render(quiz, i);
             } else return null;
           } else if (
-            quiz.message.toLowerCase().includes(search.toLowerCase()) &&
+            quiz.title?.toLowerCase().includes(search.toLowerCase()) &&
             !bonmal
           ) {
             return render(quiz, i);

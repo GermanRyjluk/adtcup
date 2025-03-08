@@ -104,50 +104,67 @@ export default function Map({ navigation }) {
 
   const render = (player, i) => {
     return (
-      <View
-        style={{
-          width: "100%",
-          height: 70,
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          backgroundColor: colors.bg,
-          marginBottom: 10,
-          paddingHorizontal: 20,
-          borderRadius: 10,
-        }}
-        key={i}
-      >
-        <View>
-          <Text style={{ fontSize: 20, fontFamily: font.bold }}>
-            {player.number} - {player.name}
+      // <View
+      //   style={{
+      //     width: "100%",
+      //     height: 70,
+      //     justifyContent: "space-between",
+      //     alignItems: "center",
+      //     flexDirection: "row",
+      //     backgroundColor: colors.bg,
+      //     marginBottom: 10,
+      //     paddingHorizontal: 20,
+      //     borderRadius: 10,
+      //   }}
+      //   key={i}
+      // >
+      //   <View>
+      //     <Text style={{ fontSize: 20, fontFamily: font.bold }}>
+      //       {player.number} - {player.name}
+      //     </Text>
+      //   </View>
+      //   <View
+      //     style={{
+      //       flexDirection: "row",
+      //       alignItems: "center",
+      //       justifyContent: "center",
+      //     }}
+      //   >
+      //     <TouchableOpacity
+      //       style={{
+      //         paddingVertical: 5,
+      //         paddingHorizontal: 10,
+      //         backgroundColor: colors.secondary,
+      //         borderRadius: 10,
+      //         marginRight: 15,
+      //         alignItems: "center",
+      //         justifyContent: "center",
+      //       }}
+      //       onPress={() => handleSkipStage(player.lastQuizNum, player.number)}
+      //     >
+      //       <Icon name="caret-forward" size={35} color="white" />
+      //     </TouchableOpacity>
+      //     <Text style={{ fontSize: 20, fontFamily: font.bold }}>
+      //       {player.lastQuizNum}
+      //     </Text>
+      //   </View>
+      // </View>
+      <View style={styles.teamRow} key={i}>
+        <View style={styles.teamInfo}>
+          <Text style={styles.teamText}>
+            {i + 1}. {player.name}
+          </Text>
+          <Text style={styles.pointsText}>
+            Quiz attuale: {player.lastQuizNum}
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+
+        <TouchableOpacity
+          style={styles.skipButton}
+          onPress={() => handleSkipStage(player.lastQuizNum, player.number)}
         >
-          <TouchableOpacity
-            style={{
-              paddingVertical: 5,
-              paddingHorizontal: 10,
-              backgroundColor: colors.secondary,
-              borderRadius: 10,
-              marginRight: 15,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-            onPress={() => handleSkipStage(player.lastQuizNum, player.number)}
-          >
-            <Icon name="caret-forward" size={35} color="white" />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontFamily: font.bold }}>
-            {player.lastQuizNum}
-          </Text>
-        </View>
+          <Icon name="caret-forward" size={35} color="white" />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -214,5 +231,44 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: "white",
     letterSpacing: 1,
+  },
+  teamRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.bg,
+    marginBottom: 15,
+    borderRadius: 10,
+    padding: 15,
+  },
+  teamInfo: {
+    flex: 1,
+    marginRight: 10,
+  },
+  teamText: {
+    fontSize: 20,
+    fontFamily: font.bold,
+    color: colors.primary,
+    marginBottom: 5,
+  },
+  pointsText: {
+    fontSize: 16,
+    fontFamily: font.regular,
+    color: "black",
+  },
+  pointsInput: {
+    width: 80,
+    height: 40,
+    backgroundColor: colors.bg,
+    borderRadius: 5,
+    textAlign: "center",
+    fontSize: 18,
+    fontFamily: font.bold,
+  },
+  skipButton: {
+    backgroundColor: colors.primary,
+    padding: 5,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
