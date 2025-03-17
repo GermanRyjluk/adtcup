@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { colors } from "../shared/colors";
+import { colors } from "@//shared/colors";
 import {
   collection,
   doc,
@@ -17,10 +17,10 @@ import {
   query,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db } from "@//firebase/firebase";
 import { RefreshControl } from "react-native";
-import { Header } from "../components/header";
-import { font } from "../shared/fonts";
+import { Header } from "@//components/header";
+import { font } from "@//shared/fonts";
 
 export default function Scoreboard({ route }) {
   const [isPublic, setIsPublic] = useState(false);

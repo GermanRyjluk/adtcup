@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -10,23 +11,22 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { Header } from "../components/header";
+import { Header } from "@//components/header";
 
-import { colors } from "../shared/colors";
+import { colors } from "@//shared/colors";
 
 import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
-import { db } from "../firebase/firebase";
+import { db } from "@//firebase/firebase";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
-import { font } from "../shared/fonts";
-import { useCallback, useEffect, useState } from "react";
-import Loading from "../components/loading";
+import { font } from "@//shared/fonts";
+import Loading from "@//components/loading";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useDispatch, useSelector } from "react-redux";
-import { checkEmailVerified } from "../store/authSlice";
+import { checkEmailVerified } from "@//store/authSlice";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -35,7 +35,7 @@ const Tab = createMaterialTopTabNavigator();
 const pastEvents = [
   {
     name: "TORINO",
-    photo: "../assets/torino(fake).jpeg",
+    photo: "@//assets/torino(fake).jpeg",
     date: "09-05-2023",
   },
 ];
@@ -308,7 +308,7 @@ export default function Home({ navigation }) {
               style={styles.eventCard}
             >
               <ImageBackground
-                source={require("../assets/torino(fake).jpeg")}
+                source={require("@//assets/torino(fake).jpeg")}
                 imageStyle={{
                   borderRadius: 15,
                 }}
@@ -415,7 +415,7 @@ export default function Home({ navigation }) {
           <View style={styles.trophyBox}>
             {/* <Icon1 name="trophy" size={50} color={colors.secondary} /> */}
             <Image
-              source={require("../assets/trophyY.png")}
+              source={require("@//assets/trophyY.png")}
               style={{ width: 63, height: 63 }}
             />
           </View>

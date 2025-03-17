@@ -9,9 +9,9 @@ import {
   TextInput,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Header } from "../components/header";
+import { Header } from "@//components/header";
 
-import { auth, db } from "../firebase/firebase";
+import { auth, db } from "@//firebase/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -27,11 +27,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 // import { fonts } from '../../shared/fonts.js';
 // const font = fonts;
 
-import { colors } from "../shared/colors";
-import { font } from "../shared/fonts";
+import { colors } from "@//shared/colors";
+import { font } from "@//shared/fonts";
 import Checkbox from "expo-checkbox";
 
-import { registerAccount } from "../store/authSlice";
+import { registerAccount } from "../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const primaryColor = colors.primary;

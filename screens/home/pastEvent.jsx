@@ -12,15 +12,14 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { colors } from "../shared/colors";
+import { colors } from "@//shared/colors";
 import { PageIndicator } from "react-native-page-indicator";
-import { Header } from "../components/header";
-import { font } from "../shared/fonts";
+import { Header } from "@//components/header";
+import { font } from "@//shared/fonts";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 // import { useSelector } from "react-redux";
-
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
@@ -62,23 +61,86 @@ export default function PastEvents({ navigation, route }) {
                 alignItems: "center",
               }}
             >
-              {loading && <View style={{ width: '100%', height: '75%', borderRadius: 20, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator size="large" color={colors.primary} /></View>}
-              <Image source={require("../assets/videoTorino.gif")} style={{ width: '100%', height: '75%', borderRadius: 20 }} onLoadStart={() => {
-                setLoading(true);
-              }}
+              {loading && (
+                <View
+                  style={{
+                    width: "100%",
+                    height: "75%",
+                    borderRadius: 20,
+                    backgroundColor: colors.bg,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ActivityIndicator size="large" color={colors.primary} />
+                </View>
+              )}
+              <Image
+                source={require("@//assets/videoTorino.gif")}
+                style={{ width: "100%", height: "75%", borderRadius: 20 }}
+                onLoadStart={() => {
+                  setLoading(true);
+                }}
                 onLoadEnd={() => {
                   setLoading(false);
-                }} />
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: "100%", marginVertical: 15 }}>
-
-                <TouchableOpacity style={{ width: 60, height: 60, backgroundColor: colors.secondary, justifyContent: 'center', alignItems: 'center', borderRadius: 20 }} onPress={() => Linking.openURL("https://www.tiktok.com/@adt_cup")}>
-                  <Image source={require("../assets/tiktok-blue.png")} style={{ width: 45, height: 51 }} />
+                }}
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  width: "100%",
+                  marginVertical: 15,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    width: 60,
+                    height: 60,
+                    backgroundColor: colors.secondary,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 20,
+                  }}
+                  onPress={() =>
+                    Linking.openURL("https://www.tiktok.com/@adt_cup")
+                  }
+                >
+                  <Image
+                    source={require("@//assets/tiktok-blue.png")}
+                    style={{ width: 45, height: 51 }}
+                  />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ width: 60, height: 60, backgroundColor: colors.secondary, justifyContent: 'center', alignItems: 'center', borderRadius: 20 }} onPress={() => Linking.openURL("https://www.instagram.com/adt_cup")}>
-                  <Ionicons name="logo-instagram" size={50} color={colors.primary} />
+                <TouchableOpacity
+                  style={{
+                    width: 60,
+                    height: 60,
+                    backgroundColor: colors.secondary,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 20,
+                  }}
+                  onPress={() =>
+                    Linking.openURL("https://www.instagram.com/adt_cup")
+                  }
+                >
+                  <Ionicons
+                    name="logo-instagram"
+                    size={50}
+                    color={colors.primary}
+                  />
                 </TouchableOpacity>
               </View>
-              <Text style={{ fontFamily: font.bold, color: colors.secondary, fontSize: 23, textAlign: 'center' }}>Premi per vedere di più!</Text>
+              <Text
+                style={{
+                  fontFamily: font.bold,
+                  color: colors.secondary,
+                  fontSize: 23,
+                  textAlign: "center",
+                }}
+              >
+                Premi per vedere di più!
+              </Text>
             </View>
           </View>
           {/* <View
@@ -166,11 +228,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 45,
     color: "#ededed",
-    fontFamily: font.bold
+    fontFamily: font.bold,
   },
   root: {
     flex: 1,
-    backgroundColor: colors.bg
+    backgroundColor: colors.bg,
   },
   page: {
     alignItems: "center",

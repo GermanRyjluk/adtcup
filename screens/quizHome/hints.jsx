@@ -10,14 +10,14 @@ import {
   Image,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { colors } from "../shared/colors";
-import { db } from "../firebase/firebase";
+import { colors } from "@//shared/colors";
+import { db } from "@//firebase/firebase";
 import { PageIndicator } from "react-native-page-indicator";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { differenceInMinutes } from "date-fns";
-import Loading from "../components/loading";
-import { Header } from "../components/header";
-import { font } from "../shared/fonts";
+import Loading from "@//components/loading";
+import { Header } from "@//components/header";
+import { font } from "@//shared/fonts";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 

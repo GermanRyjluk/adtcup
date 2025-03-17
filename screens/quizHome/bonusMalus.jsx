@@ -10,14 +10,14 @@ import {
   Image,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { colors } from "../shared/colors";
-import { db } from "../firebase/firebase";
+import { colors } from "@//shared/colors";
+import { db } from "@//firebase/firebase";
 import { PageIndicator } from "react-native-page-indicator";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { differenceInMinutes } from "date-fns";
-import Loading from "../components/loading";
-import { Header } from "../components/header";
-import { font } from "../shared/fonts";
+import Loading from "@//components/loading";
+import { Header } from "@//components/header";
+import { font } from "@//shared/fonts";
 
 const pages = [{ text: "asd" }, { text: "123" }];
 
@@ -35,9 +35,11 @@ export default function BonusMalus({ route }) {
   const getData = useCallback(async () => {
     setRefreshing(true);
     try {
-      await getDocs(collection(db, "events", eventID, "teams", team, "b-m")).then((snapshot) => {
+      await getDocs(
+        collection(db, "events", eventID, "teams", team, "b-m")
+      ).then((snapshot) => {
         snapshot.forEach((doc) => render.push(doc.data()));
-      })
+      });
     } catch (e) {
       console.error("Error fetching team data", e);
     }
@@ -59,25 +61,49 @@ export default function BonusMalus({ route }) {
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: colors.bg,
-            padding: 50
+            padding: 50,
           }}
         >
-          <View style={{ width: '80%', backgroundColor: colors.primary, borderRadius: 15, padding: 20 }}>
-            <Text style={{ fontFamily: font.bold, fontSize: 20, textAlign: 'center', color: colors.secondary, marginBottom: 20 }}>Non ci sono ancora bonus/malus da mostrare</Text>
-            <Text style={{ fontFamily: font.medium, fontSize: 20, textAlign: 'center', color: colors.secondary }}>Li troverai esplorando il mondo ADT</Text>
+          <View
+            style={{
+              width: "80%",
+              backgroundColor: colors.primary,
+              borderRadius: 15,
+              padding: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: font.bold,
+                fontSize: 20,
+                textAlign: "center",
+                color: colors.secondary,
+                marginBottom: 20,
+              }}
+            >
+              Non ci sono ancora bonus/malus da mostrare
+            </Text>
+            <Text
+              style={{
+                fontFamily: font.medium,
+                fontSize: 20,
+                textAlign: "center",
+                color: colors.secondary,
+              }}
+            >
+              Li troverai esplorando il mondo ADT
+            </Text>
           </View>
         </View>
       </>
-    )
+    );
   } else {
     return (
       <>
         <Header />
         <View style={styles.root}>
           <>
-            <ScrollView
-              style={{ backgroundColor: colors.bg }}
-            >
+            <ScrollView style={{ backgroundColor: colors.bg }}>
               {render.map((bm, i) => {
                 return (
                   <View
@@ -95,7 +121,7 @@ export default function BonusMalus({ route }) {
                         borderRadius: 20,
                         alignItems: "center",
                         borderWidth: 5,
-                        borderColor: bm.type == "bonus" ? 'lime' : 'red',
+                        borderColor: bm.type == "bonus" ? "lime" : "red",
                       }}
                     >
                       <View style={{ width: "100%", padding: 20 }}>
@@ -132,7 +158,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 25,
     color: "#ededed",
-    fontFamily: font.bold
+    fontFamily: font.bold,
   },
   root: {
     flex: 1,

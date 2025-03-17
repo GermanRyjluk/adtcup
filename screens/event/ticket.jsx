@@ -8,12 +8,12 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { colors } from "../shared/colors";
+import { colors } from "@//shared/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Header } from "../components/header";
-import { font } from "../shared/fonts";
+import { Header } from "@//components/header";
+import { font } from "@//shared/fonts";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db } from "@//firebase/firebase";
 
 import * as Location from "expo-location";
 import { getDistance } from "geolib";
@@ -191,7 +191,7 @@ export default function Ticket({ navigation, route }) {
             Ecco la tua prevendita!
           </Text>
           <Image
-            source={require("../assets/ticket.png")}
+            source={require("@//assets/ticket.png")}
             style={{ width: 200, height: 100 }}
           />
         </View>

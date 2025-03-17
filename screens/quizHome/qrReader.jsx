@@ -10,12 +10,12 @@ import {
 import { Camera, CameraView } from "expo-camera";
 import Svg, { Path } from "react-native-svg";
 
-// import { fonts } from '../../shared/fonts.js';
+// import { fonts } from '@//shared/fonts.js';
 // const font = fonts;
 
-import { colors } from "../shared/colors.jsx";
-import { Header } from "../components/header.jsx";
-import { font } from "../shared/fonts.jsx";
+import { colors } from "@//shared/colors.jsx";
+import { Header } from "@//components/header.jsx";
+import { font } from "@//shared/fonts.jsx";
 
 export default function App({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState(null);

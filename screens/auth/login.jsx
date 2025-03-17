@@ -15,16 +15,16 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { db } from "../firebase/firebase";
+import { db } from "@//firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 //Redux
 // import { useDispatch } from 'react-redux';
-import { loginAccount } from "../store/authSlice";
+import { loginAccount } from "@//store/authSlice";
 import { useDispatch } from "react-redux";
 
-import { colors } from "../shared/colors";
-import { font } from "../shared/fonts";
+import { colors } from "@//shared/colors";
+import { font } from "@//shared/fonts";
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 

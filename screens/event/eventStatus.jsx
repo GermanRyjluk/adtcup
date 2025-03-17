@@ -3,15 +3,27 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   Linking,
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import { Header } from "../components/header";
-import { Ionicons } from "react-native-vector-icons";
-import { colors } from "../shared/colors";
-import { font } from "../shared/fonts";
+import { Header } from "@//components/header";
+import { colors } from "@//shared/colors";
+import { font } from "@//shared/fonts";
+
+/**
+ * Using Lucide icons.
+ * Install with: npm i lucide-react-native
+ */
+import {
+  Info,
+  Hourglass,
+  CheckCircle,
+  Users,
+  Skull,
+  MessageSquare,
+} from "lucide-react-native";
+import BookingProgressBar from "../shared/BookingProgressBar";
 
 export default function EventStatus({ navigation, route }) {
   const {
@@ -22,7 +34,7 @@ export default function EventStatus({ navigation, route }) {
     eventLocation = "Torino",
   } = route.params || {};
 
-  // Sezione in alto con informazioni sull'evento e pulsante info
+  // Header section with event details and info button
   const renderHeaderInfo = () => {
     return (
       <View style={styles.headerInfoContainer}>
@@ -32,36 +44,27 @@ export default function EventStatus({ navigation, route }) {
         </Text>
         <TouchableOpacity
           style={styles.eventInfoButton}
-          onPress={() => {
+          onPress={() =>
             navigation.navigate("EventInfo", {
               eventID: eventID,
               screen: "outside",
-            });
-          }}
+            })
+          }
         >
-          <Ionicons
-            name="information-circle"
-            size={24}
-            color={colors.primary}
-          />
+          <Info size={20} color={colors.primary} />
           <Text style={styles.eventInfoText}>Info evento</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
-  // Sezione centrale che mostra lo stato dell'evento
-  const renderStatus = () => {
+  // Status card using a clean card layout with Lucide icons
+  const renderStatusCard = () => {
     switch (status) {
       case "pending":
         return (
-          <View style={styles.statusContainer}>
-            <Ionicons
-              name="time-outline"
-              size={80}
-              color={colors.secondary}
-              style={{ marginVertical: 20 }}
-            />
+          <View style={styles.card}>
+            <Hourglass size={80} color={colors.primary} />
             <Text style={styles.mainTitle}>In attesa di conferma</Text>
             <Text style={styles.description}>
               La tua richiesta di partecipazione è stata ricevuta. Attendi che
@@ -69,20 +72,15 @@ export default function EventStatus({ navigation, route }) {
             </Text>
             <ActivityIndicator
               size="large"
-              color={colors.secondary}
+              color={colors.primary}
               style={{ marginTop: 20 }}
             />
           </View>
         );
       case "pay":
         return (
-          <View style={styles.statusContainer}>
-            <Ionicons
-              name="checkmark-done-circle"
-              size={80}
-              color={colors.secondary}
-              style={{ marginVertical: 20 }}
-            />
+          <View style={styles.card}>
+            <CheckCircle size={80} color={colors.primary} />
             <Text style={styles.mainTitle}>Sei stato accettato!</Text>
             <Text style={styles.description}>
               Per completare la tua registrazione, contatta gli amministratori e
@@ -93,20 +91,14 @@ export default function EventStatus({ navigation, route }) {
                 style={styles.contactButton}
                 onPress={() => Linking.openURL("https://wa.me/+393894960846")}
               >
-                <Image
-                  source={require("../assets/whatsapp.png")}
-                  style={styles.contactIcon}
-                />
+                <MessageSquare size={24} color={colors.primary} />
                 <Text style={styles.contactText}>Gius</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.contactButton, { marginTop: 20 }]}
                 onPress={() => Linking.openURL("https://wa.me/+393208970258")}
               >
-                <Image
-                  source={require("../assets/whatsapp.png")}
-                  style={styles.contactIcon}
-                />
+                <MessageSquare size={24} color={colors.primary} />
                 <Text style={styles.contactText}>Pie</Text>
               </TouchableOpacity>
             </View>
@@ -114,13 +106,8 @@ export default function EventStatus({ navigation, route }) {
         );
       case "waiting team":
         return (
-          <View style={styles.statusContainer}>
-            <Ionicons
-              name="people-circle"
-              size={80}
-              color={colors.secondary}
-              style={{ marginVertical: 20 }}
-            />
+          <View style={styles.card}>
+            <Users size={80} color={colors.primary} />
             <Text style={styles.mainTitle}>Sei stato accettato!</Text>
             <Text style={styles.description}>
               A breve ti verrà assegnata la squadra. Resta sintonizzato!
@@ -129,13 +116,8 @@ export default function EventStatus({ navigation, route }) {
         );
       case "eliminated":
         return (
-          <View style={styles.statusContainer}>
-            <Ionicons
-              name="skull-outline"
-              size={80}
-              color={colors.secondary}
-              style={{ marginVertical: 20 }}
-            />
+          <View style={styles.card}>
+            <Skull size={80} color={colors.primary} />
             <Text style={styles.mainTitle}>Eliminato</Text>
             <Text style={[styles.description, { marginBottom: 30 }]}>
               Purtroppo la tua avventura finisce qui.
@@ -156,11 +138,9 @@ export default function EventStatus({ navigation, route }) {
     <>
       <Header />
       <View style={styles.container}>
-        {/* Sezione in alto: informazioni sull'evento */}
-        {renderHeaderInfo()}
-
-        {/* Sezione centrale: stato */}
-        <View style={styles.centerContainer}>{renderStatus()}</View>
+        {/* {renderHeaderInfo()} */}
+        <BookingProgressBar currentStep={status == "pay" ? 1 : 2} />
+        <View style={styles.centerContainer}>{renderStatusCard()}</View>
       </View>
     </>
   );
@@ -210,22 +190,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  statusContainer: {
+  card: {
     width: "100%",
+    backgroundColor: colors.bg,
+    borderRadius: 20,
+    padding: 25,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 5,
   },
   mainTitle: {
     fontFamily: font.bold,
     fontSize: 26,
-    color: colors.secondary,
+    color: colors.primary,
     textAlign: "center",
+    marginTop: 20,
   },
   description: {
     fontFamily: font.regular,
     fontSize: 16,
-    color: colors.bg,
+    color: colors.primary,
     textAlign: "center",
-    marginHorizontal: 10,
     marginTop: 10,
   },
   contactArea: {
@@ -241,17 +229,13 @@ const styles = StyleSheet.create({
     width: 180,
     height: 60,
     paddingHorizontal: 15,
-  },
-  contactIcon: {
-    width: 30,
-    height: 30,
-    tintColor: colors.primary,
-    marginRight: 10,
+    justifyContent: "center",
   },
   contactText: {
     fontFamily: font.bold,
     fontSize: 20,
     color: colors.primary,
+    marginLeft: 10,
   },
   eliminatedBadge: {
     backgroundColor: colors.secondary,

@@ -13,7 +13,7 @@ import Scoreboard from "../screens/admin/scoreboard/scoreboard";
 import Settings from "../screens/admin/settings";
 import PlayerSettings from "../screens/admin/playerSettings";
 import MapPlayers from "../screens/admin/mapPlayers";
-import QrReader from "../screens/qrReader";
+import QrReader from "../screens/quizHome/qrReader";
 import BookingStatus from "../screens/admin/bookingStatus";
 import Quiz from "../screens/admin/quiz";
 import QuizInfo from "../screens/admin/quizInfo";

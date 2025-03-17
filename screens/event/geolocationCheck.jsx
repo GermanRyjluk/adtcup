@@ -19,14 +19,14 @@ import { getDistance } from "geolib";
 
 import { compareAsc } from "date-fns";
 
-import { colors } from "../shared/colors";
-import { db } from "../firebase/firebase";
+import { colors } from "@//shared/colors";
+import { db } from "@//firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { Header } from "../components/header";
+import { Header } from "@//components/header";
 import { useSelector } from "react-redux";
 
 export default function GeolocationCheck({ navigation, route }) {
-  const auth = useSelector(state => state.auth);
+  const auth = useSelector((state) => state.auth);
   const defaultProvider =
     Platform.OS === "ios" ? PROVIDER_DEFAULT : PROVIDER_GOOGLE;
   const [position, setPosition] = useState({
@@ -382,7 +382,10 @@ export default function GeolocationCheck({ navigation, route }) {
         {Platform.OS !== "ios" ? (
           <MapView
             style={styles.map}
-            region={[position, { latitudeDelta: 0.0922, longitudeDelta: 0.0421 }]}
+            region={[
+              position,
+              { latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+            ]}
             provider={defaultProvider}
             customMapStyle={mapstyle}
             showsUserLocation
@@ -417,7 +420,11 @@ export default function GeolocationCheck({ navigation, route }) {
             style={styles.box}
           >
             <Text
-              style={{ fontSize: 35, fontWeight: "800", color: colors.secondary }}
+              style={{
+                fontSize: 35,
+                fontWeight: "800",
+                color: colors.secondary,
+              }}
             >
               Gioca!
             </Text>

@@ -10,20 +10,20 @@ import {
   Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { colors } from "../shared/colors";
+import { colors } from "@//shared/colors";
 
 import { PageIndicator } from "react-native-page-indicator";
-import { Header } from "../components/header";
-import { font } from "../shared/fonts";
+import { Header } from "@//components/header";
+import { font } from "@//shared/fonts";
 import { sendEmailVerification } from "firebase/auth";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch, useSelector } from "react-redux";
 
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
-import { db } from "../firebase/firebase";
-import Loading from "../components/loading";
-import { checkEmailVerified } from "../store/authSlice";
+import { db } from "@//firebase/firebase";
+import Loading from "@//components/loading";
+import { checkEmailVerified } from "@//store/authSlice";
 
 export default function EventInfo({ navigation, route }) {
   const [loading, setLoading] = useState(false);

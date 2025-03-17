@@ -1,18 +1,17 @@
 import { View, Text, ScrollView, RefreshControl } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { Header } from "../components/header";
-import { colors } from "../shared/colors";
+import { Header } from "@//components/header";
+import { colors } from "@//shared/colors";
 import { Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-import { QrButton } from "../components/qrButton";
-import { Footer } from "../components/footer";
-import Loading from "../components/loading";
+import { Footer } from "@//components/footer";
+import Loading from "@//components/loading";
 
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { db, storage } from "../firebase/firebase";
+import { db, storage } from "@//firebase/firebase";
 import { getDownloadURL, ref } from "firebase/storage";
-import { font } from "../shared/fonts";
+import { font } from "@//shared/fonts";
 import { useSelector } from "react-redux";
 
 export default function TeamInfo({ navigation, route }) {

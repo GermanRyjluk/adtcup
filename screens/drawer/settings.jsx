@@ -1,14 +1,14 @@
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import React, { useState } from "react";
-import { Header } from "../components/header";
-import { font } from "../shared/fonts";
+import { Header } from "@//components/header";
+import { font } from "@//shared/fonts";
 import { sendEmailVerification } from "firebase/auth";
-import { db } from "../firebase/firebase";
-import { colors } from "../shared/colors";
+import { db } from "@//firebase/firebase";
+import { colors } from "@//shared/colors";
 import { deleteDoc, doc } from "firebase/firestore";
 
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAccount } from "../store/authSlice";
+import { deleteAccount } from "@//store/authSlice";
 
 export default function Settings({ navigation }) {
   const auth = useSelector((state) => state.auth);
