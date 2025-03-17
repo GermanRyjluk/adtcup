@@ -7,6 +7,7 @@ const SimpleBookingProgressBar = ({ currentStep = 0 }) => {
   // Define your four steps.
   const steps = [
     { label: "Form e iscrizione" },
+    { label: "Attendi risposta" },
     { label: "Contatta gli admin" },
     { label: "Creazione Squadra" },
     { label: "Attendi l'inzio" },

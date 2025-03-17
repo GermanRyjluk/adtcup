@@ -1,101 +1,25 @@
-// import "expo-dev-client";
 import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  PermissionsAndroid,
-  Alert,
-  Platform,
-} from "react-native";
-import { colors } from "./shared/colors";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AuthNavigator from "./navigation/authNavigator";
+
+import { colors } from "./shared/colors";
 import * as Font from "expo-font";
+
 import Loading from "./components/loading";
 
 // Redux
 import { Provider } from "react-redux";
-import { store, persistor } from "./store";
+import { store, persistor } from "./store"; // Assuming you have set up your Redux store
 import { PersistGate } from "redux-persist/integration/react";
 
-import messaging from "@react-native-firebase/messaging";
-
-// Register background handler
-messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log("Message handled in the background!", remoteMessage);
-});
+import registerNNPushToken from "native-notify";
 
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false);
-
-  // Funzione per richiedere i permessi per le notifiche
-  const requestUserPermission = async () => {
-    try {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        console.log("Authorization status:", authStatus);
-        return true;
-      } else {
-        console.log("Notification permission not granted");
-        return false;
-      }
-    } catch (error) {
-      console.error("Errore nella richiesta dei permessi:", error);
-      return false;
-    }
-  };
-
-  // Richiesta di permesso per le notifiche su Android
-  useEffect(() => {
-    if (Platform.OS === "android") {
-      PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-      );
-    }
-  }, []);
-
-  // Inizializza la messaggistica FCM
-  useEffect(() => {
-    const initMessaging = async () => {
-      const permissionGranted = await requestUserPermission();
-      if (permissionGranted) {
-        const token = await messaging().getToken();
-        console.log("FCM Token:", token);
-      }
-      // Controlla se l'app è stata aperta da una notifica in stato "quit"
-      messaging()
-        .getInitialNotification()
-        .then((remoteMessage) => {
-          if (remoteMessage) {
-            console.log(
-              "Notification opened app from quit state:",
-              remoteMessage.notification
-            );
-          }
-        });
-
-      // Ascolta le notifiche quando l'app è in primo piano
-      const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-        Alert.alert("Nuovo messaggio FCM!", JSON.stringify(remoteMessage));
-      });
-      return unsubscribe;
-    };
-
-    const unsubscribeMessaging = initMessaging();
-    return () => {
-      if (unsubscribeMessaging && typeof unsubscribeMessaging === "function") {
-        unsubscribeMessaging();
-      }
-    };
-  }, []);
-
+  registerNNPushToken(22645, "RLdbS1bBfc9vjKoy0FA8x1");
   const getFonts = async () => {
     return Font.loadAsync({
       "cherry-regular": require("./assets/fonts/CherryBomb.ttf"),
@@ -105,12 +29,9 @@ export default function App() {
     });
   };
 
+  const [appIsReady, setAppIsReady] = useState(false);
+
   useEffect(() => {
-    if (Platform.OS === "ios") {
-      messaging()
-        .subscribeToTopic("all_ios")
-        .then(() => console.log('Iscritto al topic "all_ios"'));
-    }
     async function prepare() {
       try {
         await getFonts();
@@ -120,6 +41,7 @@ export default function App() {
         setAppIsReady(true);
       }
     }
+
     prepare();
   }, []);
 
@@ -133,7 +55,12 @@ export default function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <NavigationContainer>
-            <SafeAreaView style={{ flex: 1, backgroundColor: colors.primary }}>
+            <SafeAreaView
+              style={{
+                flex: 1,
+                backgroundColor: colors.primary,
+              }}
+            >
               <AuthNavigator />
             </SafeAreaView>
           </NavigationContainer>
@@ -151,3 +78,30 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+-(
+  {
+    /* <Onboarding
+      pages={[
+        {
+          backgroundColor: '#fff',
+          image: <Image source={require('./assets/icon.png')} />,
+          title: '1',
+          subtitle: 'Done with React Native Onboarding Swiper',
+        },
+        {
+          backgroundColor: '#fff',
+          image: <Image source={require('./assets/icon.png')} />,
+          title: '2',
+          subtitle: 'Done with React Native Onboarding Swiper',
+        },
+        {
+          backgroundColor: '#fff',
+          image: <Image source={require('./assets/icon.png')} />,
+          title: '3',
+          subtitle: 'Done with React Native Onboarding Swiper',
+        },
+      ]}
+      // onDone={<MainStack />}
+    /> */
+  }
+);

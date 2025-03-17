@@ -34,6 +34,17 @@ export default function EventStatus({ navigation, route }) {
     eventLocation = "Torino",
   } = route.params || {};
 
+  function getCurrentStep(status) {
+    if (status == "pending") {
+      return 1;
+    } else if (status == "pay") {
+      return 2;
+    } else if (status == "waiting team") {
+      return 3;
+    }
+    return 0;
+  }
+
   // Header section with event details and info button
   const renderHeaderInfo = () => {
     return (
@@ -139,7 +150,7 @@ export default function EventStatus({ navigation, route }) {
       <Header />
       <View style={styles.container}>
         {/* {renderHeaderInfo()} */}
-        <BookingProgressBar currentStep={status == "pay" ? 1 : 2} />
+        <BookingProgressBar currentStep={getCurrentStep(status)} />
         <View style={styles.centerContainer}>{renderStatusCard()}</View>
       </View>
     </>
