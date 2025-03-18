@@ -104,43 +104,9 @@ export default function EventBooking({ navigation, route }) {
             <BookOpenTextIcon size={80} color={colors.primary} />
             <Text style={styles.headerTitle}>COMPILA IL QUESTIONARIO</Text>
             <View style={styles.formContainer}>
-              {/* <TouchableOpacity
-                disabled={!completedPrivacyPolicy}
-                style={[
-                  styles.formButton,
-                  {
-                    backgroundColor: completedPrivacyPolicy
-                    ? colors.bg
-                    : "gray",
-                    },
-                    ]}
-                    onPress={() => {
-                      Alert.alert(
-                        "Attenzione!",
-                        "Se non invii il modulo della personalità non potrai essere selezionato per l'evento",
-                        [
-                          {
-                            text: "Compila",
-                            onPress: () => {
-                              handleSendRequest();
-                              Linking.openURL(formLink);
-                              },
-                              },
-                              { text: "Esci", onPress: () => null, style: "cancel" },
-                              ],
-                              { cancelable: true }
-                              );
-                              }}
-                              >
-                              <Image
-                              source={require("@//assets/googledocs.png")}
-                              style={styles.formIcon}
-                              />
-                              <Text style={styles.formButtonText}>Google Form</Text>
-                              </TouchableOpacity> */}
               <Text style={styles.formFooterText}>
-                Se hai già inviato il form attendi di essere accettato
-                altrimenti
+                Se hai già inviato il questionario, iscriviti all'app per poter
+                iniziare l'avventura!
               </Text>
               <View style={styles.checkboxRow}>
                 <CheckBox
@@ -313,7 +279,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.primary,
     textAlign: "center",
-    marginTop: 10,
+    marginVertical: 10,
   },
   buttonsContainer: {
     flexDirection: "row",
