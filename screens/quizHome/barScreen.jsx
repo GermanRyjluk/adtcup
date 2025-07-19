@@ -15,13 +15,13 @@ import { colors } from "@//shared/colors";
 import { font } from "@//shared/fonts";
 import { MapPin, Info, X } from "lucide-react-native";
 
-const HEADER_HEIGHT = 80; // adjust to your Header's height
-const DRAWER_HEIGHT = 180; // adjust to your custom Drawer height
+const HEADER_HEIGHT = 80;
+const DRAWER_HEIGHT = 180;
 
 const BarScreen = ({ navigation, eventID, barData }) => {
   const { height } = useWindowDimensions();
   // Calculate card height dynamically.
-  const cardHeight = height - HEADER_HEIGHT - DRAWER_HEIGHT - 40; // 40 for extra padding
+  const cardHeight = height - HEADER_HEIGHT - DRAWER_HEIGHT - 40;
 
   // State to track whether additional info is visible.
   const [moreInfoVisible, setMoreInfoVisible] = useState(false);
