@@ -124,6 +124,7 @@ export default function Home({ navigation }) {
         }
       } else {
         navigation.navigate("EventInfo", { eventID: eventID });
+        console.log("vamosss: ", eventID);
       }
     } catch (e) {
       console.error(e);
