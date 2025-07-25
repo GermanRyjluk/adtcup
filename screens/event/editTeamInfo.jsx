@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -9,108 +8,89 @@ import {
   TextInput,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Header } from "@//components/header";
+import { font } from "@//shared/fonts";
 
-import { auth, db } from "../firebase/firebase";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { db } from "@//firebase/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 // import { fonts } from '../../shared/fonts.js';
 // const font = fonts;
 
-import { colors } from "../shared/colors";
-import { font } from "../shared/fonts";
+import { colors } from "@//shared/colors";
+
 const primaryColor = colors.primary;
 const secondaryColor = colors.secondary;
 
-export default function RestorePWD({ navigation, route }) {
-  const [email, setUserEmail] = useState("");
+export default function EditTeamInfo({ navigation, route }) {
+  const [nome, setNome] = useState(route.params.nome);
+  const teamNumber = route.params.number;
 
-  // if (route.params.email != undefined) {
-  //   setUserEmail(route.params.email);
-  // }
-
-  const UserRegistration = async () => {
-    if (email.length != 0) {
-      sendPasswordResetEmail(auth, email).then(() => {
-        Alert.alert(
-          "Email inviata",
-          "Controlla la tua casella email per recuparare la password",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                navigation.navigate("Login");
-              },
-            },
-          ],
-          { cancelable: false }
+  const changeName = async () => {
+    if (nome.length != 0 && nome != route.params.nome) {
+      try {
+        await updateDoc(
+          doc(
+            db,
+            "events",
+            "1VgaAztg9yvbzRLuIjql",
+            "teams",
+            teamNumber.toString()
+          ),
+          { name: nome }
         );
-      }).catch((e) => {
-        if (e.code == "auth/user-not-found") {
-          Alert.alert("Email incorretto o inesistente");
-        }
-        if (e.code == "auth/wrong-password") {
-          Alert.alert("Password errata");
-        }
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-      });
+        Alert.alert(
+          "Nome squadra cambiato con successo!",
+          'Il nuovo nome "' + nome + '" verrà applicato se fai refresh"'
+        );
+        navigation.goBack();
+      } catch (e) {
+        console.error(e);
+      }
     } else {
-      Alert.alert("Inserire credenziali");
+      if (nome.length == 0) Alert.alert("Inserire credenziali");
+      else Alert.alert("Inserire un nome diverso");
     }
   };
 
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <KeyboardAwareScrollView style={styles.backGround}>
         <View style={styles.box}>
           <View style={styles.topZone}>
-            <TouchableOpacity
-              style={{ marginBottom: 50 }} onPress={() => navigation.navigate("Login")}>
-
-              <Ionicons
-                name="arrow-back"
-                size={40}
-                color={colors.secondary}
-              />
-            </TouchableOpacity>
-            <Text style={styles.loginText}>Recupera password</Text>
+            <Text style={styles.loginText}>Modifica nome</Text>
             <Text style={styles.loginSubText}>
-              Inserisci l'email, controlla la casella e segui i passi!
+              Inserisci il nuovo nome che vuoi dare alla tua squadra!
             </Text>
           </View>
 
           <View style={styles.midZone}>
             <View style={styles.midOne}>
-
               <View style={styles.inputBox}>
-                <Icon name="alternate-email" size={20} color="white" />
+                <Icon name="groups" size={20} color="white" />
                 <TextInput
                   style={styles.input}
-                  onChangeText={(tryEmail) => setUserEmail(tryEmail)}
+                  onChangeText={(nome) => setNome(nome)}
                   underlineColorAndroid="transparent"
-                  placeholder="Email"
                   placeholderTextColor="rgba(200, 200, 200,0.7)"
-                  keyboardType="email-address"
                   returnKeyType={"next"}
-                />
+                >
+                  {nome}
+                </TextInput>
               </View>
             </View>
             <View style={styles.midTwo}>
               <TouchableOpacity
                 style={styles.loginButton}
-                onPress={UserRegistration}
+                onPress={() => changeName()}
               >
-                <Text style={styles.buttonText}>RECUPERA</Text>
+                <Text style={styles.buttonText}>CAMBIA</Text>
               </TouchableOpacity>
             </View>
           </View>
-
-
         </View>
         {/* <StatusBar style="light" /> */}
       </KeyboardAwareScrollView>
@@ -185,7 +165,7 @@ const styles = StyleSheet.create({
     fontFamily: font.medium,
     fontSize: 15,
     marginLeft: 5,
-    marginTop: 10
+    marginTop: 10,
   },
   inputBox: {
     flexDirection: "row",
@@ -202,13 +182,13 @@ const styles = StyleSheet.create({
     width: "90%",
     height: 40,
     color: "white",
-    fontFamily: font.bold,
+    // fontFamily: font,
     fontSize: 15,
     marginLeft: 10,
   },
 
   logoText: {
-    fontFamily: font.bold,
+    // fontFamily: font,
     color: "white",
     marginTop: -10,
     fontSize: 35,

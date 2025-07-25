@@ -1,3 +1,4 @@
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,9 +6,11 @@ import {
   Switch,
   ScrollView,
   TouchableOpacity,
+  TextInput,
+  RefreshControl,
+  Alert,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import { colors } from "../../../shared/colors";
+import { useSelector } from "react-redux";
 import {
   collection,
   doc,
@@ -17,217 +20,236 @@ import {
   orderBy,
   query,
   updateDoc,
+  writeBatch,
 } from "firebase/firestore";
+
 import { db } from "../../../firebase/firebase";
 import { Header } from "../../../components/header";
-
-import { useSelector } from "react-redux";
+import { colors } from "../../../shared/colors";
+import { font } from "../../../shared/fonts";
 
 export default function Scoreboard() {
   const eventID = useSelector((state) => state.eventID.value);
 
   const [isPublic, setIsPublic] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Teams array with { name, points, number } each
   const [teams, setTeams] = useState([]);
 
+  // A local state to store changes to points: { [teamNumber]: "stringValue" }
+  const [pointsChange, setPointsChange] = useState({});
+
+  // Toggle scoreboard public
   const handleSwitch = async () => {
-    setIsPublic((previousState) => !previousState);
+    setIsPublic((prev) => !prev);
     await updateDoc(doc(db, "events", eventID), {
       scoreboardPublic: !isPublic,
     });
-    console.log("updated");
+    console.log("scoreboardPublic updated to:", !isPublic);
   };
 
+  // Get scoreboard status
   const getScoreboardStatus = async () => {
-    await getDoc(doc(db, "events", eventID)).then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.data()["scoreboardPublic"]);
-        setIsPublic(snapshot.data()["scoreboardPublic"]);
-      }
-    });
+    const eventRef = doc(db, "events", eventID);
+    const snapshot = await getDoc(eventRef);
+    if (snapshot.exists()) {
+      setIsPublic(snapshot.data().scoreboardPublic);
+    }
   };
 
+  // Fetch teams from Firestore, ordered desc by "points"
   const getTeamsFromDB = useCallback(async () => {
     setRefreshing(true);
     try {
-      const snapshot = getDocs(
-        query(
-          collection(db, "/events", eventID, "/teams"),
-          orderBy("points", "desc")
-        )
-      ).then((QuerySnapshot) => {
-        setTeams(QuerySnapshot.docs.map((doc) => doc.data()));
+      const teamsRef = collection(db, "events", eventID, "teams");
+      const q = query(teamsRef, orderBy("points", "desc"));
+      const querySnapshot = await getDocs(q);
+
+      const teamList = querySnapshot.docs.map((docSnap) => ({
+        // "number" is presumably a unique ID. If the doc ID is the actual number, you can do docSnap.id
+        number: docSnap.data().number,
+        name: docSnap.data().name,
+        points: docSnap.data().points || 0,
+      }));
+
+      setTeams(teamList);
+
+      // Initialize pointsChange for each team (e.g., "0" by default)
+      const tempChanges = {};
+      teamList.forEach((team) => {
+        tempChanges[team.number] = "0"; // start with "0" meaning no change
       });
+      setPointsChange(tempChanges);
     } catch (e) {
       console.error(e);
     }
     setRefreshing(false);
-  }, []);
+  }, [eventID]);
 
   useEffect(() => {
     getScoreboardStatus();
     getTeamsFromDB();
-  }, []);
+  }, [getTeamsFromDB]);
 
-  const updateDB = async (type, number, points) => {
-    if (type == "add") {
-      try {
-        await updateDoc(
-          doc(db, "events", eventID, "teams", number.toString()),
-          {
-            points: increment(1),
-          }
+  // Single batch update for all teams
+  const handleBatchUpdate = async () => {
+    try {
+      const batch = writeBatch(db);
+      teams.forEach((team) => {
+        const delta = parseInt(pointsChange[team.number]) || 0;
+        // newPoints = current points + delta
+        const newPoints = team.points + delta;
+
+        const teamDocRef = doc(
+          db,
+          "events",
+          eventID,
+          "teams",
+          team.number.toString()
         );
-      } catch (e) {
-        console.error("Error increasing: ", e);
-      }
-    } else if (type == "minus") {
-      try {
-        await updateDoc(
-          doc(db, "events", eventID, "teams", number.toString()),
-          {
-            points: increment(-1),
-          }
-        );
-      } catch (e) {
-        console.error("Error decreasing: ", e);
-      }
+        batch.update(teamDocRef, { points: newPoints });
+      });
+
+      await batch.commit();
+      Alert.alert("Successo", "Punteggi aggiornati correttamente!");
+
+      // Re-fetch the updated data
+      getTeamsFromDB();
+    } catch (error) {
+      console.error("Error updating points in batch:", error);
+      Alert.alert("Errore", "Non è stato possibile aggiornare i punteggi.");
     }
-  };
-
-  const handleIncrease = async (number, points) => {
-    const updatedData = teams.map((team) =>
-      team.number === number ? { ...team, points: team.points + 1 } : team
-    );
-    setTeams(updatedData);
-    // console.log(teams);
-    console.log("Added");
-    updateDB("add", number, points);
-  };
-  const handleDecrease = (number, points) => {
-    const updatedData = teams.map((team) =>
-      team.number === number ? { ...team, points: team.points - 1 } : team
-    );
-    setTeams(updatedData);
-    // console.log(teams);
-    console.log("Decreased");
-    updateDB("minus", number, points);
   };
 
   return (
     <>
       <Header />
-      <View style={{ flex: 1, backgroundColor: colors.primary, padding: 20 }}>
-        <View
-          style={{
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexDirection: "row",
-            backgroundColor: colors.bg,
-            marginBottom: 20,
-            padding: 5,
-            borderRadius: 10,
-            padding: 20,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "800",
-              marginLeft: 10,
-            }}
-          >
-            Classifica pubblica
-          </Text>
+      <View style={styles.container}>
+        {/* Toggle scoreboardPublic */}
+        <View style={styles.publicToggle}>
+          <Text style={styles.publicToggleText}>Classifica pubblica</Text>
           <Switch
             trackColor={{ false: "#767577", true: colors.primary }}
             thumbColor={isPublic ? colors.secondary : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={() => handleSwitch()}
+            onValueChange={handleSwitch}
             value={isPublic}
           />
         </View>
-        <ScrollView>
-          {teams.map((team, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: "row",
-                  width: "100%",
-                  height: 70,
-                  justifyContent: "space-between",
-                }}
-                key={i}
-              >
-                <View style={{ width: 250 }}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontWeight: "800",
-                      marginBottom: 3,
-                      color: colors.bg,
-                    }}
-                  >
-                    {team.name}: {team.points}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      width: 30,
-                      height: 30,
-                      backgroundColor: colors.secondary,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: 20,
-                      marginHorizontal: 10,
-                    }}
-                    onPress={() => handleIncrease(team.number, team.points)}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "800",
-                        marginBottom: 3,
-                      }}
-                    >
-                      +
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      width: 30,
-                      height: 30,
-                      backgroundColor: colors.secondary,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: 20,
-                    }}
-                    onPress={() => handleDecrease(team.number, team.points)}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "800",
-                        marginBottom: 3,
-                      }}
-                    >
-                      -
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={getTeamsFromDB}
+            />
+          }
+        >
+          {teams.map((team, i) => (
+            <View style={styles.teamRow} key={i}>
+              <View style={styles.teamInfo}>
+                <Text style={styles.teamText}>
+                  {i + 1}. {team.name}
+                </Text>
+                <Text style={styles.pointsText}>
+                  Punti attuali: {team.points}
+                </Text>
               </View>
-            );
-          })}
+
+              {/* Input for points change */}
+              <TextInput
+                style={styles.pointsInput}
+                keyboardType="numeric"
+                value={pointsChange[team.number] || ""}
+                onChangeText={(val) =>
+                  setPointsChange((prev) => ({
+                    ...prev,
+                    [team.number]: val,
+                  }))
+                }
+                placeholder="+5 / -3..."
+                placeholderTextColor="#888"
+              />
+            </View>
+          ))}
         </ScrollView>
+
+        {/* Button to confirm batch update */}
+        <TouchableOpacity
+          style={styles.updateButton}
+          onPress={handleBatchUpdate}
+        >
+          <Text style={styles.updateButtonText}>Conferma Aggiornamenti</Text>
+        </TouchableOpacity>
       </View>
     </>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.primary,
+    padding: 20,
+  },
+  publicToggle: {
+    width: "100%",
+    flexDirection: "row",
+    backgroundColor: colors.bg,
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  publicToggleText: {
+    fontSize: 20,
+    fontWeight: "800",
+    marginLeft: 10,
+  },
+  teamRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.bg,
+    marginBottom: 15,
+    borderRadius: 10,
+    padding: 15,
+  },
+  teamInfo: {
+    flex: 1,
+    marginRight: 10,
+  },
+  teamText: {
+    fontSize: 20,
+    fontFamily: font.bold,
+    color: colors.primary,
+    marginBottom: 5,
+  },
+  pointsText: {
+    fontSize: 16,
+    fontFamily: font.regular,
+    color: "black",
+  },
+  pointsInput: {
+    width: 80,
+    height: 40,
+    backgroundColor: colors.bg,
+    borderRadius: 5,
+    textAlign: "center",
+    fontSize: 18,
+    fontFamily: font.bold,
+  },
+  updateButton: {
+    marginTop: 20,
+    backgroundColor: colors.secondary,
+    borderRadius: 10,
+    paddingVertical: 15,
+    alignItems: "center",
+  },
+  updateButtonText: {
+    color: colors.primary,
+    fontSize: 18,
+    fontFamily: font.bold,
+  },
+});

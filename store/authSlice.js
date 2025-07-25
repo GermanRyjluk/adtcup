@@ -120,14 +120,27 @@ export const logoutAccount = createAsyncThunk("auth/logout", async () => {
 
 export const deleteAccount = createAsyncThunk(
   "auth/delete",
-  async ({ email, password }) => {
+  async ({ email, password, navigation }) => {
     let user = auth.currentUser;
+    console.log(user);
     if (user) {
       try {
         await deleteDoc(doc(db, "users", auth.currentUser.uid));
         await deleteUser(user);
       } catch (e) {
         console.error(e);
+        if (e.code === "auth/requires-recent-login") {
+          console.log("Retrying...");
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+          } catch (e) {
+            console.error(e);
+          } finally {
+            await deleteDoc(doc(db, "users", auth.currentUser.uid));
+            await deleteUser(user);
+            navigation.navigate("Home");
+          }
+        }
       }
       navigation.navigate("Home");
       Alert.alert(
@@ -139,10 +152,10 @@ export const deleteAccount = createAsyncThunk(
         await signInWithEmailAndPassword(auth, email, password).then(() => {
           let user = auth.currentUser;
           if (user) {
-            // console.log(email, password);
-            // deleteUser(user);
-            // deleteDoc(doc(db, "users", auth.currentUser.uid));
-            // navigation.navigate("Home");
+            console.log(email, password);
+            deleteUser(user);
+            deleteDoc(doc(db, "users", auth.currentUser.uid));
+            navigation.navigate("Home");
             Alert.alert(
               "Account eliminato",
               "Tutti i dati relativi al tuo account sono stati eliminati"
@@ -159,6 +172,23 @@ export const deleteAccount = createAsyncThunk(
       }
     }
     return {};
+  }
+);
+
+export const checkEmailVerified = createAsyncThunk(
+  "auth/checkEmailVerified",
+  async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await user.reload(); // Refresh user information
+        return user.emailVerified; // Return the updated emailVerified status
+      }
+      return false;
+    } catch (error) {
+      console.error("Error checking email verification: ", error);
+      throw error;
+    }
   }
 );
 
@@ -267,6 +297,20 @@ export const userSlice = createSlice({
       };
     });
     builder.addCase(deleteAccount.rejected, (state, actions) => {});
+
+    // Check Email Verified
+    builder.addCase(checkEmailVerified.fulfilled, (state, action) => {
+      state.currentUser.emailVerified = action.payload;
+      // console.log(
+      //   "state.currentUser.emailVerified:",
+      //   state.currentUser.emailVerified,
+      //   "|| action.payload:",
+      //   action.payload
+      // );
+    });
+    builder.addCase(checkEmailVerified.rejected, (state) => {
+      // Handle rejection, if needed
+    });
   },
 });
 

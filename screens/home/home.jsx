@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,24 +8,25 @@ import {
   ImageBackground,
   Image,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 
-import { Header } from "../components/header";
+import { Header } from "@//components/header";
 
-import { colors } from "../shared/colors";
+import { colors } from "@//shared/colors";
 
 import Icon1 from "react-native-vector-icons/FontAwesome5"; //Trophy (trophy)
-import { db } from "../firebase/firebase";
+import { db } from "@//firebase/firebase";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
-import { font } from "../shared/fonts";
-import { useCallback, useEffect, useState } from "react";
-import Loading from "../components/loading";
+import { font } from "@//shared/fonts";
+import Loading from "@//components/loading";
 
 import * as SplashScreen from "expo-splash-screen";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { checkEmailVerified } from "@//store/authSlice";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -33,7 +35,7 @@ const Tab = createMaterialTopTabNavigator();
 const pastEvents = [
   {
     name: "TORINO",
-    photo: "../assets/torino(fake).jpeg",
+    photo: "@//assets/torino(fake).jpeg",
     date: "09-05-2023",
   },
 ];
@@ -45,6 +47,7 @@ export default function Home({ navigation }) {
   const [currentEvents, setCurrentEvents] = useState([]);
 
   const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const preloadImages = () => {
     currentEvents.map((doc) => {
@@ -66,12 +69,22 @@ export default function Home({ navigation }) {
     loadEvents();
     preloadImages();
 
+    if (!auth.currentUser.emailVerified) {
+      try {
+        dispatch(checkEmailVerified());
+        console.log("EmailVerified: ", auth.currentUser.emailVerified);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     setTimeout(() => {
       setLoading(false);
     }, 1000);
   }, []);
 
   const checkBookingStatus = async (eventID, scoreboardPublic) => {
+    setPressed(true);
     try {
       const snapshot = await getDoc(
         doc(db, "/events", eventID, "/bookings", auth.currentUser.uid)
@@ -79,15 +92,24 @@ export default function Home({ navigation }) {
 
       if (snapshot.exists()) {
         if (
-          snapshot.data().status == "pending" ||
-          snapshot.data().status == "pay" ||
+          // snapshot.data().status == "pending" ||
+          // snapshot.data().status == "pay" ||
           snapshot.data().status == "waiting team"
         ) {
           navigation.navigate("EventStatus", {
             status: snapshot.data().status,
+            eventID: eventID,
           });
         } else if (snapshot.data().status == "pay") {
-          navigation.navigate("EventStatus", { status: "pay" });
+          navigation.navigate("EventStatus", {
+            status: "pay",
+            eventID: eventID,
+          });
+        } else if (snapshot.data().status == "eliminated") {
+          navigation.navigate("EventStatus", {
+            status: "eliminated",
+            eventID: eventID,
+          });
         } else if (snapshot.data().status == "can play") {
           navigation.navigate("Ticket", {
             eventID: eventID,
@@ -97,6 +119,8 @@ export default function Home({ navigation }) {
             eventID: eventID,
             scoreboardPublic: scoreboardPublic,
           });
+        } else if (snapshot.data().status == "pending") {
+          navigation.navigate("EventInfo", { eventID: eventID });
         }
       } else {
         navigation.navigate("EventInfo", { eventID: eventID });
@@ -104,26 +128,27 @@ export default function Home({ navigation }) {
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setPressed(false);
     }
   };
 
   const handlePress = (eventID, scoreboardPublic) => {
-    setPressed(true);
-    // console.log(eventID);
     auth.auth
       ? checkBookingStatus(eventID, scoreboardPublic)
       : navigation.navigate("EventInfo", { eventID: eventID });
-    setPressed(false);
   };
 
   const handleLocked = () => {
     Alert.alert(
-      "Oh, che ti tocchi?!",
+      "Oh, perchè tocchi?!",
       "Non vedi che non si puo giocare?",
       [
         {
           text: "Chiudi",
-          onPress: () => console.log("Cancel Pressed"),
+          onPress: () => {
+            // console.log("Cancel Pressed");
+          },
           style: "cancel",
         },
       ],
@@ -246,15 +271,19 @@ export default function Home({ navigation }) {
                         justifyContent: "center",
                       }}
                     >
-                      <Text
-                        style={{
-                          fontSize: 25,
-                          color: data.data().isLocked ? "#FFFFFF" : "#000000",
-                          fontFamily: font.bold,
-                        }}
-                      >
-                        Gioca
-                      </Text>
+                      {pressed ? (
+                        <ActivityIndicator color="black" />
+                      ) : (
+                        <Text
+                          style={{
+                            fontSize: 25,
+                            color: data.data().isLocked ? "#FFFFFF" : "#000000",
+                            fontFamily: font.bold,
+                          }}
+                        >
+                          GIOCA
+                        </Text>
+                      )}
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -280,7 +309,7 @@ export default function Home({ navigation }) {
               style={styles.eventCard}
             >
               <ImageBackground
-                source={require("../assets/torino(fake).jpeg")}
+                source={require("@//assets/torino(fake).jpeg")}
                 imageStyle={{
                   borderRadius: 15,
                 }}
@@ -387,7 +416,7 @@ export default function Home({ navigation }) {
           <View style={styles.trophyBox}>
             {/* <Icon1 name="trophy" size={50} color={colors.secondary} /> */}
             <Image
-              source={require("../assets/trophyY.png")}
+              source={require("@//assets/trophyY.png")}
               style={{ width: 63, height: 63 }}
             />
           </View>

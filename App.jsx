@@ -1,11 +1,14 @@
 import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
-import { colors } from "./shared/colors";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import AuthNavigator from "./navigation/authNavigator";
+
+import { colors } from "./shared/colors";
 import * as Font from "expo-font";
+
 import Loading from "./components/loading";
 
 // Redux
@@ -17,7 +20,6 @@ import registerNNPushToken from "native-notify";
 
 export default function App() {
   registerNNPushToken(22645, "RLdbS1bBfc9vjKoy0FA8x1");
-  // console.log("State: ", store.getState())
   const getFonts = async () => {
     return Font.loadAsync({
       "cherry-regular": require("./assets/fonts/CherryBomb.ttf"),

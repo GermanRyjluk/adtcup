@@ -7,6 +7,9 @@ import {
   ScrollView,
   RefreshControl,
   TextInput,
+  Modal,
+  TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
 import { useSelector } from "react-redux";
 import CheckBox from "expo-checkbox";
@@ -41,6 +44,9 @@ export default function Bookings({ navigation }) {
   const [orange, setOrange] = useState(false);
   const [blue, setBlue] = useState(false);
   const [green, setGreen] = useState(false);
+  const [grey, setGrey] = useState(false);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const getTeamsFromDB = useCallback(async () => {
     setRefreshing(true);
@@ -66,35 +72,75 @@ export default function Bookings({ navigation }) {
     if (status == "waiting team") return "#FF6033";
     if (status == "can play") return "#3B9BE1";
     if (status == "playing") return "#2ADF7D";
+    if (status == "eliminated") return "#7d7d7d";
   };
 
-  const handleDelete = async (uid) => {
-    Alert.alert(
-      "Elimina giocatore",
-      "Attenzione, quest'azione è irreversibile!",
-      [
-        {
-          text: "Conferma",
-          onPress: async () => {
-            try {
-              await deleteDoc(doc(db, "/events", eventID, "/bookings", uid));
-              Alert.alert("Eliminato!", "Giocatore eliminato permanentemente");
-            } catch (e) {
-              console.error(e);
-            }
+  const handleDelete = async (status, uid) => {
+    if (status == "eliminated") {
+      Alert.alert(
+        "Rianima giocatore",
+        "Attenzione, ora potrà scannerizzare i QR!",
+        [
+          {
+            text: "Conferma",
+            onPress: async () => {
+              try {
+                await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
+                  status: "playing",
+                });
+                Alert.alert(
+                  "Rianimato",
+                  "Il giocatore è stato rianimato e può ricominciare a giocare"
+                );
+              } catch (e) {
+                console.error(e);
+              }
+            },
+            style: "cancel",
           },
-          style: "cancel",
-        },
+          {
+            text: "Anulla",
+            onPress: () => null,
+            style: "cancel",
+          },
+        ],
         {
-          text: "Anulla",
-          onPress: () => null,
-          style: "cancel",
-        },
-      ],
-      {
-        cancelable: true,
-      }
-    );
+          cancelable: true,
+        }
+      );
+    } else {
+      Alert.alert(
+        "Elimina giocatore",
+        "Attenzione, non potrà più scannerizzare i QR!",
+        [
+          {
+            text: "Conferma",
+            onPress: async () => {
+              try {
+                await updateDoc(doc(db, "/events", eventID, "/bookings", uid), {
+                  status: "eliminated",
+                });
+                Alert.alert(
+                  "Eliminato",
+                  "Il giocatore è stato eliminato e aspetta di essere reinserito"
+                );
+              } catch (e) {
+                console.error(e);
+              }
+            },
+            style: "cancel",
+          },
+          {
+            text: "Anulla",
+            onPress: () => null,
+            style: "cancel",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    }
   };
 
   const handleUpgradeState = async (status, uid) => {
@@ -202,9 +248,14 @@ export default function Bookings({ navigation }) {
               justifyContent: "center",
               padding: 10,
             }}
-            onPress={() => handleDelete(player.uid)}
+            onPress={() => handleDelete(player.status, player.uid)}
           >
-            <Ionicons name="trash" size={30} />
+            {player.status == "playing" ? (
+              <Ionicons name="trash" size={30} />
+            ) : null}
+            {player.status == "eliminated" ? (
+              <Ionicons name="reload" size={30} />
+            ) : null}
           </TouchableOpacity>
           {player.status == "waiting team" ||
           player.status == "can play" ||
@@ -244,6 +295,169 @@ export default function Bookings({ navigation }) {
   return (
     <>
       <Header />
+
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 10,
+          right: 30,
+          zIndex: 10,
+          backgroundColor: colors.primary,
+          borderRadius: 50,
+          padding: 10,
+          alignItems: "center",
+          justifyContent: "center",
+          borderWidth: 3,
+          borderColor: colors.secondary,
+        }}
+        onPress={() => setModalVisible(true)}
+      >
+        <Ionicons
+          name="information-circle-outline"
+          size={50}
+          color={colors.secondary}
+        />
+      </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>
+            Glossario degli stati di prenotazione
+          </Text>
+
+          <View
+            style={{
+              marginVertical: 15,
+              alignItems: "baseline",
+            }}
+          >
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={red}
+                onValueChange={(state) => setRed(state)}
+                color={"#DF2A2A"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In attesa di essere accettato
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={yellow}
+                onValueChange={(state) => setYellow(state)}
+                color={colors.secondary}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In attesa di pagamento
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={orange}
+                onValueChange={(state) => setOrange(state)}
+                color={"#FF6033"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In attesa di avere una squadra
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={blue}
+                onValueChange={(state) => setBlue(state)}
+                color={"#3B9BE1"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In attesa di inizio evento
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={green}
+                onValueChange={(state) => setGreen(state)}
+                color={"#2ADF7D"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                In gioco
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+                marginBottom: 10,
+              }}
+            >
+              <CheckBox
+                style={{ width: 30, height: 30, borderRadius: 5 }}
+                value={grey}
+                onValueChange={(state) => setGrey(state)}
+                color={"#7d7d7d"}
+              />
+              <Text style={{ marginLeft: 10, color: "white", fontSize: 18 }}>
+                Eliminato
+              </Text>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.textStyle}>Chiudi</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
       <ScrollView
         style={{
           flex: 1,
@@ -310,38 +524,48 @@ export default function Bookings({ navigation }) {
               onValueChange={(state) => setGreen(state)}
               color={"#2ADF7D"}
             />
+            <CheckBox
+              style={{ width: 30, height: 30, borderRadius: 5 }}
+              value={grey}
+              onValueChange={(state) => setGrey(state)}
+              color={"#7d7d7d"}
+            />
           </View>
         </View>
         {players.map((player, i) => {
-          if (search == "") {
-            if (red && player.status == "pending") {
+          const shouldRenderPlayer = (player) => {
+            const { status } = player; // Destructure for clarity
+            const colorConditions = {
+              red: status === "pending" && red,
+              yellow: status === "can pay" && yellow,
+              orange: status === "waiting team" && orange,
+              blue: status === "can play" && blue,
+              green: status === "playing" && green,
+              grey: status === "eliminated" && grey,
+            };
+
+            // Check if any of the color conditions are true
+            return (
+              Object.values(colorConditions).some(Boolean) ||
+              (!red && !yellow && !orange && !blue && !green && !grey)
+            );
+          };
+
+          const renderPlayerIfNeeded = (player, i) => {
+            if (shouldRenderPlayer(player)) {
               return render(player, i);
-            } else if (yellow && player.status == "can pay") {
-              return render(player, i);
-            } else if (orange && player.status == "waiting team") {
-              return render(player, i);
-            } else if (blue && player.status == "can play") {
-              return render(player, i);
-            } else if (green && player.status == "playing") {
-              return render(player, i);
-            } else if (!red && !yellow && !orange && !blue && !green) {
-              return render(player, i);
-            } else return null;
+            }
+            return null;
+          };
+
+          // Main rendering logic
+          if (search === "") {
+            return renderPlayerIfNeeded(player, i);
           } else if (player.name.toLowerCase().includes(search.toLowerCase())) {
-            if (red && player.status == "pending") {
-              return render(player, i);
-            } else if (yellow && player.status == "can pay") {
-              return render(player, i);
-            } else if (orange && player.status == "waiting team") {
-              return render(player, i);
-            } else if (blue && player.status == "can play") {
-              return render(player, i);
-            } else if (green && player.status == "playing") {
-              return render(player, i);
-            } else if (!red && !yellow && !orange && !blue && !green) {
-              return render(player, i);
-            } else return null;
-          } else return null;
+            return renderPlayerIfNeeded(player, i);
+          }
+
+          return null;
         })}
         <View style={{ height: 50 }} />
       </ScrollView>
@@ -359,5 +583,42 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: "white",
     letterSpacing: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "55%", // 3/4 dello schermo
+    backgroundColor: colors.primary,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    paddingTop: 30,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: colors.secondary,
+    textAlign: "center",
+  },
+  closeButton: {
+    position: "absolute",
+    bottom: 50,
+    backgroundColor: colors.secondary,
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    elevation: 2,
+  },
+  textStyle: {
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

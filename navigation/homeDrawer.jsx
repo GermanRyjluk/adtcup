@@ -1,22 +1,22 @@
 import React from "react";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import Home from "../screens/home";
-import Settings from "../screens/settings";
+import Home from "../screens/home/home";
+import Settings from "../screens/drawer/settings";
 import CustomDrawer from "../components/customDrawer";
 
 import { colors } from "../shared/colors";
-import Login from "../screens/login";
-import Register from "../screens/register";
-import RestorePWD from "../screens/restorePassword";
-import TermsAndConditions from "../screens/termsAndConditions";
+import Login from "../screens/auth/login";
+import Register from "../screens/auth/register";
+import RestorePWD from "../screens/auth/restorePassword";
+import TermsAndConditions from "../screens/drawer/termsAndConditions";
 
 import { LoggedInStack, NotLoggedInStack } from "./mainStack";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { font } from "../shared/fonts";
-import AdtTeam from "../screens/adtTeam";
-import QrCodeUser from "../screens/qrCodeUser";
+import AdtTeam from "../screens/home/adtTeam";
+import QrCodeUser from "../screens/drawer/qrCodeUser";
 
 const Drawer = createDrawerNavigator();
 
